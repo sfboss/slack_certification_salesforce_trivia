@@ -14,17 +14,25 @@ public with sharing class CertGameAchievementService {
         }
         if (playerIds.isEmpty()) return;
 
-        // Load player stats
-        Map<Id, AggregateResult> stats = new Map<Id, AggregateResult>();
+        // Load player stats (totals + points)
+        Map<Id, Integer> totalByPlayer = new Map<Id, Integer>();
+        Map<Id, Decimal> pointsByPlayer = new Map<Id, Decimal>();
         for (AggregateResult ar : [
-            SELECT Player__c pid,
-                   COUNT(Id) total,
-                   SUM(CASE WHEN Is_Correct__c = true THEN 1 ELSE 0 END) correctCnt,
-                   SUM(Points_Awarded__c) pts
+            SELECT Player__c pid, COUNT(Id) total, SUM(Points_Awarded__c) pts
             FROM Player_Answer__c WHERE Player__c IN :playerIds
             WITH USER_MODE GROUP BY Player__c
         ]) {
-            stats.put((Id) ar.get('pid'), ar);
+            Id pid = (Id) ar.get('pid');
+            totalByPlayer.put(pid, ar.get('total') == null ? 0 : (Integer) ar.get('total'));
+            pointsByPlayer.put(pid, ar.get('pts') == null ? 0 : (Decimal) ar.get('pts'));
+        }
+        Map<Id, Integer> correctByPlayer = new Map<Id, Integer>();
+        for (AggregateResult ar : [
+            SELECT Player__c pid, COUNT(Id) c
+            FROM Player_Answer__c WHERE Player__c IN :playerIds AND Is_Correct__c = true
+            WITH USER_MODE GROUP BY Player__c
+        ]) {
+            correctByPlayer.put((Id) ar.get('pid'), ar.get('c') == null ? 0 : (Integer) ar.get('c'));
         }
 
         // Load active achievements

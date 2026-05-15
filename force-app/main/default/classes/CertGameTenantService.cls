@@ -48,7 +48,7 @@ public with sharing class CertGameTenantService {
     public static String handleUninstall(String slackTeamId) {
         Tenant__c t = findTenant(slackTeamId);
         if (t == null) return '';
-        t.Status__c = 'Uninstalled';
+        t.Status__c = 'Cancelled';
         update as user t;
         AuditLogger.log('uninstall', 'Tenant', t.Id, null, slackTeamId, null);
         return '';
