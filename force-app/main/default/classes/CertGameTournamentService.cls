@@ -54,10 +54,17 @@ public with sharing class CertGameTournamentService {
         if (!EntitlementGuard.canCreateTournament(t.Id)) {
             return CertGameSlackRenderService.text(CertGameStrings.LOCKED_PREMIUM, true);
         }
-        Map<String, Object> state = (Map<String, Object>)((Map<String, Object>) view.get('state')).get('values');
+        if (view == null) return '';
+        Map<String, Object> stateWrap = (Map<String, Object>) view.get('state');
+        if (stateWrap == null) return '';
+        Map<String, Object> state = (Map<String, Object>) stateWrap.get('values');
+        String examId = readVal(state, 'exam_block', 'exam');
+        String name = readVal(state, 'name_block', 'name');
+        if (String.isBlank(examId) || String.isBlank(name)) return '';
         Tournament__c tn = new Tournament__c(
             Tenant__c = t.Id,
-            Name = readVal(state, 'name_block', 'name'),
+            Certification_Exam__c = examId,
+            Name = name,
             Bracket_Type__c = readVal(state, 'format_block', 'format'),
             Status__c = 'Scheduled'
         );

@@ -23,7 +23,7 @@ public with sharing class CertGameBillingService {
                         'action_id' => 'plan',
                         'options' => new List<Object>{
                             opt('Free', 'Free'),
-                            opt('Team', 'Team'),
+                            opt('Pro', 'Pro'),
                             opt('Enterprise', 'Enterprise')
                         }
                     }
@@ -36,8 +36,15 @@ public with sharing class CertGameBillingService {
     }
 
     public static String handleUpgradeSubmission(String slackTeamId, String slackUserId, Map<String, Object> view) {
-        Map<String, Object> state = (Map<String, Object>)((Map<String, Object>) view.get('state')).get('values');
-        Map<String, Object> plan = (Map<String, Object>)((Map<String, Object>) state.get('plan_block')).get('plan');
+        if (view == null) return '';
+        Map<String, Object> stateWrap = (Map<String, Object>) view.get('state');
+        if (stateWrap == null) return '';
+        Map<String, Object> state = (Map<String, Object>) stateWrap.get('values');
+        if (state == null) return '';
+        Map<String, Object> planBlock = (Map<String, Object>) state.get('plan_block');
+        if (planBlock == null) return '';
+        Map<String, Object> plan = (Map<String, Object>) planBlock.get('plan');
+        if (plan == null) return '';
         Map<String, Object> selected = (Map<String, Object>) plan.get('selected_option');
         String chosen = selected == null ? null : (String) selected.get('value');
         if (String.isBlank(chosen)) return '';

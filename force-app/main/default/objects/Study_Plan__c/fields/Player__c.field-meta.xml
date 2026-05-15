@@ -7,5 +7,5 @@
     <referenceTo>Player__c</referenceTo>
     <relationshipName>Study_Plans</relationshipName>
     <relationshipLabel>Player</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

@@ -148,7 +148,7 @@ public with sharing class CertGameSessionService {
             Game_Session__c = session.Id,
             Trivia_Question__c = picks[0].questionId,
             Round_Number__c = roundNum,
-            Status__c = 'Open',
+            Status__c = 'Posted',
             Started_At__c = System.now()
         );
         insert as user r;

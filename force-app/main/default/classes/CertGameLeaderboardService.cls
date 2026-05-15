@@ -58,13 +58,16 @@ public with sharing class CertGameLeaderboardService {
         if (p == null) return CertGameSlackRenderService.text(CertGameStrings.NO_STATS, true);
 
         AggregateResult[] ars = [
-            SELECT COUNT(Id) total, SUM(Points_Awarded__c) pts,
-                   SUM(CASE WHEN Is_Correct__c = true THEN 1 ELSE 0 END) correctCnt
+            SELECT COUNT(Id) total, SUM(Points_Awarded__c) pts
             FROM Player_Answer__c WHERE Player__c = :p.Id WITH USER_MODE
+        ];
+        AggregateResult[] arsCorrect = [
+            SELECT COUNT(Id) c FROM Player_Answer__c
+            WHERE Player__c = :p.Id AND Is_Correct__c = true WITH USER_MODE
         ];
         Integer total = ars.isEmpty() ? 0 : (Integer) ars[0].get('total');
         Decimal pts = ars.isEmpty() ? 0 : (Decimal)(ars[0].get('pts') == null ? 0 : ars[0].get('pts'));
-        Integer correctCnt = ars.isEmpty() ? 0 : (Integer)(ars[0].get('correctCnt') == null ? 0 : ars[0].get('correctCnt'));
+        Integer correctCnt = arsCorrect.isEmpty() ? 0 : (Integer)(arsCorrect[0].get('c') == null ? 0 : arsCorrect[0].get('c'));
         Decimal acc = total == 0 ? 0 : (Decimal) correctCnt * 100 / total;
 
         String txt = '*Your stats*\n'

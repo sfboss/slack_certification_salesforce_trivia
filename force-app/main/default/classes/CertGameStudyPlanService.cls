@@ -54,7 +54,7 @@ public with sharing class CertGameStudyPlanService {
             Player__c = p.Id,
             Certification_Exam__c = exams[0].Id,
             Target_Exam_Date__c = parseDate(targetStr),
-            Daily_Question_Goal__c = parseInt(dailyStr, 5),
+            Daily_Questions__c = parseInt(dailyStr, 5),
             Status__c = 'Active'
         );
         insert as user sp;

@@ -7,5 +7,5 @@
     <referenceTo>Achievement__c</referenceTo>
     <relationshipName>Awards</relationshipName>
     <relationshipLabel>Achievement</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

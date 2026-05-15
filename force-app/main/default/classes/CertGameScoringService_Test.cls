@@ -2,10 +2,10 @@
 private class CertGameScoringService_Test {
 
     @IsTest static void easyCorrectHasBase10() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = true; in.difficulty = 'Easy';
-        in.timeRemainingSec = 0; in.timeLimitSec = 30; in.streakLength = 0;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = true; inp.difficulty = 'Easy';
+        inp.timeRemainingSec = 0; inp.timeLimitSec = 30; inp.streakLength = 0;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertEquals(10, o.basePoints);
         System.assertEquals(10, o.pointsAwarded);
         System.assertEquals(1, o.newStreakLength);
@@ -17,10 +17,10 @@ private class CertGameScoringService_Test {
     }
 
     @IsTest static void hardWithFullTimeAndStreak() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = true; in.difficulty = 'Hard';
-        in.timeRemainingSec = 30; in.timeLimitSec = 30; in.streakLength = 5;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = true; inp.difficulty = 'Hard';
+        inp.timeRemainingSec = 30; inp.timeLimitSec = 30; inp.streakLength = 5;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertEquals(30, o.basePoints);
         System.assertEquals(15, o.timeBonus);
         System.assertEquals(10, o.streakBonus);
@@ -28,45 +28,45 @@ private class CertGameScoringService_Test {
     }
 
     @IsTest static void streakBonusCappedAt20() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = true; in.difficulty = 'Easy';
-        in.timeRemainingSec = 0; in.timeLimitSec = 30; in.streakLength = 50;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = true; inp.difficulty = 'Easy';
+        inp.timeRemainingSec = 0; inp.timeLimitSec = 30; inp.streakLength = 50;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertEquals(20, o.streakBonus);
     }
 
     @IsTest static void wrongWithoutPenalty() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = false; in.difficulty = 'Medium';
-        in.timeRemainingSec = 10; in.timeLimitSec = 30; in.streakLength = 3;
-        in.penaltyEnabled = false;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = false; inp.difficulty = 'Medium';
+        inp.timeRemainingSec = 10; inp.timeLimitSec = 30; inp.streakLength = 3;
+        inp.penaltyEnabled = false;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertEquals(0, o.pointsAwarded);
         System.assertEquals(0, o.newStreakLength);
     }
 
     @IsTest static void wrongWithPenalty() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = false; in.difficulty = 'Hard';
-        in.timeRemainingSec = 0; in.timeLimitSec = 30; in.streakLength = 0;
-        in.penaltyEnabled = true;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = false; inp.difficulty = 'Hard';
+        inp.timeRemainingSec = 0; inp.timeLimitSec = 30; inp.streakLength = 0;
+        inp.penaltyEnabled = true;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertEquals(-15, o.pointsAwarded);
     }
 
     @IsTest static void negativeTimeClampsToZero() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = true; in.difficulty = 'Easy';
-        in.timeRemainingSec = -5; in.timeLimitSec = 30; in.streakLength = 0;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = true; inp.difficulty = 'Easy';
+        inp.timeRemainingSec = -5; inp.timeLimitSec = 30; inp.streakLength = 0;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertEquals(0, o.timeBonus);
     }
 
     @IsTest static void zeroTimeLimitGuard() {
-        CertGameScoringService.Input in = new CertGameScoringService.Input();
-        in.correct = true; in.difficulty = 'Easy';
-        in.timeRemainingSec = 5; in.timeLimitSec = 0; in.streakLength = 0;
-        CertGameScoringService.Output o = CertGameScoringService.score(in);
+        CertGameScoringService.Input inp = new CertGameScoringService.Input();
+        inp.correct = true; inp.difficulty = 'Easy';
+        inp.timeRemainingSec = 5; inp.timeLimitSec = 0; inp.streakLength = 0;
+        CertGameScoringService.Output o = CertGameScoringService.score(inp);
         System.assertNotEquals(null, o.pointsAwarded);
     }
 

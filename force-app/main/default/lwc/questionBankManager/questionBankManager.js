@@ -7,6 +7,8 @@ export default class QuestionBankManager extends LightningElement {
     @track loading = false;
     @track lastResult;
 
+    placeholderText = '{ "exam": ..., "questionBank": ..., "questions": [...] }';
+
     handleChange(e) { this.jsonText = e.target.value; }
 
     async handleUpload() {

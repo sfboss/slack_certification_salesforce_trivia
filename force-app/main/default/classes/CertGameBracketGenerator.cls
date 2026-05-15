@@ -21,6 +21,7 @@ public with sharing class CertGameBracketGenerator {
     // Circle method round-robin
     public static List<Pairing> roundRobin(List<String> players) {
         List<Pairing> out = new List<Pairing>();
+        if (players == null || players.size() < 2) return out;
         List<String> p = new List<String>(players);
         if (Math.mod(p.size(), 2) == 1) p.add(null); // bye marker
         Integer n = p.size();

@@ -50,7 +50,8 @@ public with sharing class SlackApiClient {
 
     private static Map<String, Object> call(String method, Map<String, Object> body) {
         Integer attempts = 0;
-        while (true) {
+        Map<String, Object> parsed = null;
+        while (attempts < 2) {
             attempts++;
             HttpRequest req = new HttpRequest();
             req.setEndpoint('callout:Slack_Bot/' + method);
@@ -69,7 +70,6 @@ public with sharing class SlackApiClient {
             Integer code = resp.getStatusCode();
             String respBody = resp.getBody();
             if (code >= 500 && attempts < 2) continue;
-            Map<String, Object> parsed;
             try { parsed = (Map<String, Object>) JSON.deserializeUntyped(respBody); }
             catch (Exception e) { throw new SlackApiException('Bad Slack response: ' + respBody); }
             Boolean ok = parsed.get('ok') == true;
@@ -80,5 +80,6 @@ public with sharing class SlackApiClient {
             }
             return parsed;
         }
+        return parsed;
     }
 }

@@ -4,6 +4,5 @@
     <label>Description</label>
     <type>LongTextArea</type>
     <length>32768</length>
-    <length>32768</length>
     <visibleLines>4</visibleLines>
 </CustomField>

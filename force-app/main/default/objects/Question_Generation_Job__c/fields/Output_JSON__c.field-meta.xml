@@ -4,6 +4,5 @@
     <label>Output JSON</label>
     <type>LongTextArea</type>
     <length>131072</length>
-    <length>131072</length>
     <visibleLines>20</visibleLines>
 </CustomField>

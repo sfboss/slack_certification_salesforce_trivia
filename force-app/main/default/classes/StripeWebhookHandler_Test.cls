@@ -64,7 +64,7 @@ private class StripeWebhookHandler_Test {
                     'status' => 'active',
                     'items' => new Map<String,Object>{
                         'data' => new List<Object>{ new Map<String,Object>{
-                            'price' => new Map<String,Object>{ 'nickname' => 'Team' }
+                            'price' => new Map<String,Object>{ 'nickname' => 'Pro' }
                         }}
                     }
                 }
@@ -77,14 +77,14 @@ private class StripeWebhookHandler_Test {
         Test.stopTest();
         System.assertEquals(200, RestContext.response.statusCode);
         Tenant__c t = [SELECT Plan__c, Status__c FROM Tenant__c WHERE Stripe_Customer_Id__c = 'cus_abc'];
-        System.assertEquals('Team', t.Plan__c);
+        System.assertEquals('Pro', t.Plan__c);
         System.assertEquals('Active', t.Status__c);
     }
 
     @IsTest static void duplicateEventIsAck() {
         StripeSignatureVerifier.secretOverride = 'whsec';
         insert new License_Event__c(
-            Stripe_Event_Id__c = 'evt_dup_1', Event_Type__c = 'x',
+            Stripe_Event_Id__c = 'evt_dup_1', Event_Type__c = 'Other',
             Payload_JSON__c = '{}', Occurred_At__c = System.now()
         );
         String body = JSON.serialize(new Map<String,Object>{ 'id' => 'evt_dup_1', 'type' => 'customer.subscription.deleted', 'data' => new Map<String,Object>{ 'object' => new Map<String,Object>{ 'customer' => 'cus_abc' } } });
@@ -116,6 +116,52 @@ private class StripeWebhookHandler_Test {
         StripeWebhookHandler.doPost();
         Tenant__c t = [SELECT Status__c FROM Tenant__c WHERE Stripe_Customer_Id__c = 'cus_abc'];
         System.assertEquals('PastDue', t.Status__c);
+    }
+
+    @IsTest static void subscriptionPastDueStatusMapped() {
+        StripeSignatureVerifier.secretOverride = 'whsec';
+        String body = JSON.serialize(new Map<String,Object>{
+            'id' => 'evt_pd_1', 'type' => 'customer.subscription.updated',
+            'data' => new Map<String,Object>{ 'object' => new Map<String,Object>{
+                'customer' => 'cus_abc', 'status' => 'past_due'
+            }}
+        });
+        buildRequest(body, signedHeader(body));
+        StripeWebhookHandler.doPost();
+        Tenant__c t = [SELECT Status__c FROM Tenant__c WHERE Stripe_Customer_Id__c = 'cus_abc'];
+        System.assertEquals('PastDue', t.Status__c);
+    }
+
+    @IsTest static void subscriptionCanceledStatusMapped() {
+        StripeSignatureVerifier.secretOverride = 'whsec';
+        String body = JSON.serialize(new Map<String,Object>{
+            'id' => 'evt_cx_1', 'type' => 'customer.subscription.updated',
+            'data' => new Map<String,Object>{ 'object' => new Map<String,Object>{
+                'customer' => 'cus_abc', 'status' => 'canceled'
+            }}
+        });
+        buildRequest(body, signedHeader(body));
+        StripeWebhookHandler.doPost();
+        Tenant__c t = [SELECT Status__c FROM Tenant__c WHERE Stripe_Customer_Id__c = 'cus_abc'];
+        System.assertEquals('Cancelled', t.Status__c);
+    }
+
+    @IsTest static void applyEventBlankCustomerNoop() {
+        // Hits updateTenantByCustomer early return for blank customerId, and applyEvent null guards.
+        StripeWebhookHandler.applyEvent('customer.subscription.deleted',
+            new Map<String,Object>{ 'object' => new Map<String,Object>{ 'customer' => '' } });
+        StripeWebhookHandler.applyEvent('customer.subscription.deleted', null);
+        StripeWebhookHandler.applyEvent('customer.subscription.deleted',
+            new Map<String,Object>{ 'object' => null });
+    }
+
+    @IsTest static void nullRequestCaughtAsHandled() {
+        // Exercises catch block: request is null, response captures 'handled' ack.
+        RestContext.request = null;
+        RestContext.response = new RestResponse();
+        StripeWebhookHandler.doPost();
+        System.assertEquals(200, RestContext.response.statusCode);
+        System.assertEquals('handled', RestContext.response.responseBody.toString());
     }
 
     @IsTest static void checkoutCompletedSetsPlan() {

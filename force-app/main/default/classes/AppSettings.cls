@@ -41,5 +41,5 @@ public with sharing class AppSettings {
     }
 
     @TestVisible
-    private static void override(App_Setting__mdt s) { cached = s; }
+    private static void overrideSetting(App_Setting__mdt s) { cached = s; }
 }

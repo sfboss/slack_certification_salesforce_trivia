@@ -7,5 +7,5 @@
     <referenceTo>Trivia_Question__c</referenceTo>
     <relationshipName>Rounds</relationshipName>
     <relationshipLabel>Trivia Question</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

@@ -8,7 +8,7 @@ public with sharing class OpenAIQuestionProvider implements QuestionGenerationPr
 
     public String generate(String examCode, List<String> domains, String difficulty, Integer count) {
         App_Setting__mdt s = AppSettings.get();
-        String model = String.isBlank(s.OpenAI_Model__c) ? 'gpt-4.1-mini' : s.OpenAI_Model__c;
+        String model = String.isBlank(s.Default_Model__c) ? 'gpt-4.1-mini' : s.Default_Model__c;
 
         String prompt = buildPrompt(examCode, domains, difficulty, count);
         Map<String, Object> body = new Map<String, Object>{

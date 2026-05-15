@@ -17,7 +17,7 @@ public with sharing class CertGameNudgeScheduler implements Schedulable {
 
         List<Study_Plan__c> plans = [
             SELECT Id, Player__c, Player__r.Slack_User_Id__c, Player__r.Tenant__c,
-                   Daily_Question_Goal__c, Certification_Exam__c
+                   Daily_Questions__c, Certification_Exam__c
             FROM Study_Plan__c WHERE Status__c = 'Active' WITH USER_MODE LIMIT 1000
         ];
         if (plans.isEmpty()) return;
@@ -37,7 +37,7 @@ public with sharing class CertGameNudgeScheduler implements Schedulable {
 
         for (Study_Plan__c p : plans) {
             Integer answered = answeredToday.containsKey(p.Player__c) ? answeredToday.get(p.Player__c) : 0;
-            Integer goal = p.Daily_Question_Goal__c == null ? 5 : p.Daily_Question_Goal__c.intValue();
+            Integer goal = p.Daily_Questions__c == null ? 5 : p.Daily_Questions__c.intValue();
             if (answered >= goal) continue;
             try {
                 Map<String, Object> openResp = SlackApiClient.openConversation(new List<String>{ p.Player__r.Slack_User_Id__c });

@@ -3,7 +3,6 @@
     <fullName>Trivia_Question__c</fullName>
     <label>Trivia Question</label>
     <type>MasterDetail</type>
-    <required>true</required>
     <referenceTo>Trivia_Question__c</referenceTo>
     <relationshipName>Choices</relationshipName>
     <relationshipLabel>Trivia Question</relationshipLabel>

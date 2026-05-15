@@ -34,21 +34,25 @@ public with sharing class SlackRequestRouter {
                 return res;
             }
 
-            // Idempotency
-            Slack_Event_Log__c log = new Slack_Event_Log__c(
-                Slack_Event_Id__c = synthId,
-                Slack_Team_Id__c = (String) extractTeamId(payload),
-                Event_Type__c = inferType(payload),
-                Payload_Hash__c = sha256(rawBody),
-                Received_At__c = System.now(),
-                Processed__c = false
-            );
-            Database.UpsertResult ur = Database.upsert(log, Slack_Event_Log__c.Slack_Event_Id__c, false);
-            // Re-query to see if it was already processed
-            Slack_Event_Log__c current = [
+            // Idempotency: check first, only insert if new
+            List<Slack_Event_Log__c> existing = [
                 SELECT Id, Processed__c FROM Slack_Event_Log__c
                 WHERE Slack_Event_Id__c = :synthId WITH USER_MODE LIMIT 1
             ];
+            Slack_Event_Log__c current;
+            if (existing.isEmpty()) {
+                current = new Slack_Event_Log__c(
+                    Slack_Event_Id__c = synthId,
+                    Slack_Team_Id__c = (String) extractTeamId(payload),
+                    Event_Type__c = inferType(payload),
+                    Payload_Hash__c = sha256(rawBody),
+                    Received_At__c = System.now(),
+                    Processed__c = false
+                );
+                insert as user current;
+            } else {
+                current = existing[0];
+            }
             if (current.Processed__c == true) {
                 res.alreadyProcessed = true;
                 return res;

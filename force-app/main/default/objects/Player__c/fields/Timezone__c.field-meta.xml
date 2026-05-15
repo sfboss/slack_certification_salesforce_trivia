@@ -4,5 +4,4 @@
     <label>Timezone</label>
     <type>Text</type>
     <length>64</length>
-    <length>64</length>
 </CustomField>

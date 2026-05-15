@@ -4,7 +4,7 @@
     <label>Event Type</label>
     <type>Picklist</type>
     <valueSet>
-        <restricted>true</restricted>
+        <restricted>false</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>

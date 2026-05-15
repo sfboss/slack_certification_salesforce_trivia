@@ -48,12 +48,12 @@ public with sharing class EntitlementGuard {
         // Defaults; in production read from App_Setting__mdt / Plan_Config__mdt
         if (key == 'games_per_month') {
             if (plan == 'Free') return 100;
-            if (plan == 'Team') return 5000;
+            if (plan == 'Pro') return 5000;
             return -1; // Enterprise unlimited
         }
         if (key == 'gen_questions_per_month') {
             if (plan == 'Free') return 0;
-            if (plan == 'Team') return 200;
+            if (plan == 'Pro') return 200;
             return -1;
         }
         return -1;

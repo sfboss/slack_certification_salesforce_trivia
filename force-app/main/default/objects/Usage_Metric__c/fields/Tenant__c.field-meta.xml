@@ -7,5 +7,5 @@
     <referenceTo>Tenant__c</referenceTo>
     <relationshipName>Usage_Metrics</relationshipName>
     <relationshipLabel>Tenant</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

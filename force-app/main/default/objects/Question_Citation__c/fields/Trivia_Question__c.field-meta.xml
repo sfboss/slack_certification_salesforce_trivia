@@ -7,5 +7,5 @@
     <referenceTo>Trivia_Question__c</referenceTo>
     <relationshipName>Citations</relationshipName>
     <relationshipLabel>Trivia Question</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

@@ -1,12 +1,19 @@
 {
   "packageDirectories": [
     {
-      "path": ".",
-      "default": true
+      "path": "force-app",
+      "default": true,
+      "package": "CertGameSlackManager",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/project-scratch-def.json"
     }
   ],
-  "name": "slackcert",
+  "name": "CertGameSlackManager",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "66.0"
+  "sourceApiVersion": "60.0",
+  "packageAliases": {
+    "CertGameSlackManager": "0Ho000000000000AAA"
+  }
 }

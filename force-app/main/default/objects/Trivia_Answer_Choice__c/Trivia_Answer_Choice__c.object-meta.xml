@@ -16,6 +16,6 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Trivia Answer Choices</pluralLabel>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

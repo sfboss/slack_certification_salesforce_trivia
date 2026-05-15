@@ -16,7 +16,8 @@ public with sharing class QuestionJsonValidator {
         if (String.isBlank(json)) { r.valid = false; r.errors.add('Empty body.'); return r; }
         Map<String, Object> root;
         try {
-            root = (Map<String, Object>) JSON.deserializeUntyped(json);
+            Object parsed = System.JSON.deserializeUntyped(json);
+            root = (Map<String, Object>) parsed;
         } catch (Exception e) {
             r.valid = false; r.errors.add('Invalid JSON: ' + e.getMessage()); return r;
         }

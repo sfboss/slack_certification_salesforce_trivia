@@ -4,5 +4,4 @@
     <label>Slack Team Id</label>
     <type>Text</type>
     <length>40</length>
-    <length>40</length>
 </CustomField>

@@ -18,7 +18,7 @@ private class CertGameImportService_Test {
                         new Map<String,Object>{'label'=>'B','text'=>'bb','isCorrect'=>false},
                         new Map<String,Object>{'label'=>'C','text'=>'cc','isCorrect'=>false}
                     },
-                    'citations'=>new List<Object>{ new Map<String,Object>{'title'=>'T','url'=>'https://x','sourceType'=>'Help'}}
+                    'citations'=>new List<Object>{ new Map<String,Object>{'title'=>'T','url'=>'https://x','sourceType'=>'Salesforce Help'}}
                 }
             }
         });

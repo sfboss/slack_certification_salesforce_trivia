@@ -7,5 +7,5 @@
     <referenceTo>Game_Session__c</referenceTo>
     <relationshipName>Rounds</relationshipName>
     <relationshipLabel>Game Session</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

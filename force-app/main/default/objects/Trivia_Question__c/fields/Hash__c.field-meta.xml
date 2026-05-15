@@ -4,5 +4,4 @@
     <label>Hash</label>
     <type>Text</type>
     <length>128</length>
-    <length>128</length>
 </CustomField>

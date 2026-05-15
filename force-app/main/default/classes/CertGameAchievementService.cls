@@ -53,11 +53,10 @@ public with sharing class CertGameAchievementService {
         }
 
         List<Player_Achievement__c> toInsert = new List<Player_Achievement__c>();
-        for (Id pid : stats.keySet()) {
-            AggregateResult ar = stats.get(pid);
-            Integer total = ar.get('total') == null ? 0 : (Integer) ar.get('total');
-            Integer correctCnt = ar.get('correctCnt') == null ? 0 : (Integer) ar.get('correctCnt');
-            Integer pts = ar.get('pts') == null ? 0 : ((Decimal) ar.get('pts')).intValue();
+        for (Id pid : totalByPlayer.keySet()) {
+            Integer total = totalByPlayer.get(pid);
+            Integer correctCnt = correctByPlayer.containsKey(pid) ? correctByPlayer.get(pid) : 0;
+            Integer pts = pointsByPlayer.get(pid) == null ? 0 : pointsByPlayer.get(pid).intValue();
             Set<Id> existing = playerToAchSet.containsKey(pid) ? playerToAchSet.get(pid) : new Set<Id>();
             for (Achievement__c a : achs) {
                 if (existing.contains(a.Id)) continue;

@@ -7,7 +7,7 @@ private class EntitlementGuard_Test {
             Status__c = 'Active', Installed_At__c = System.now()
         );
         Tenant__c team = new Tenant__c(
-            Slack_Team_Id__c = 'T_TEAM', Workspace_Name__c = 'Team WS', Plan__c = 'Team',
+            Slack_Team_Id__c = 'T_TEAM', Workspace_Name__c = 'Team WS', Plan__c = 'Pro',
             Status__c = 'Active', Installed_At__c = System.now()
         );
         Tenant__c ent = new Tenant__c(

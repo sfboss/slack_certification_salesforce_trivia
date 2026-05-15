@@ -7,5 +7,5 @@
     <referenceTo>Certification_Exam__c</referenceTo>
     <relationshipName>Questions</relationshipName>
     <relationshipLabel>Certification Exam</relationshipLabel>
-    <deleteConstraint>SetNull</deleteConstraint>
+    <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

@@ -4,5 +4,4 @@
     <label>Started By Slack User Id</label>
     <type>Text</type>
     <length>40</length>
-    <length>40</length>
 </CustomField>

@@ -4,5 +4,4 @@
     <label>Event Type</label>
     <type>Text</type>
     <length>80</length>
-    <length>80</length>
 </CustomField>

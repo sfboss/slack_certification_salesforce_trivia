@@ -41,18 +41,21 @@ global without sharing class StripeWebhookHandler {
             }
 
             // Idempotency via unique external id; if not newly created, treat as duplicate.
+            List<License_Event__c> existing = [
+                SELECT Id FROM License_Event__c WHERE Stripe_Event_Id__c = :stripeEventId LIMIT 1
+            ];
+            if (!existing.isEmpty()) {
+                resp.statusCode = 200;
+                resp.responseBody = Blob.valueOf('duplicate');
+                return;
+            }
             License_Event__c rec = new License_Event__c(
                 Stripe_Event_Id__c = stripeEventId,
                 Event_Type__c = type,
                 Payload_JSON__c = body.left(131000),
                 Occurred_At__c = System.now()
             );
-            Database.UpsertResult ur = Database.upsert(rec, License_Event__c.Stripe_Event_Id__c, false);
-            if (ur != null && ur.isSuccess() && !ur.isCreated()) {
-                resp.statusCode = 200;
-                resp.responseBody = Blob.valueOf('duplicate');
-                return;
-            }
+            insert rec;
 
             applyEvent(type, (Map<String, Object>) evt.get('data'));
 

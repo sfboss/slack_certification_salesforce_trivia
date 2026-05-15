@@ -5,7 +5,7 @@
                 Paste a Cert Game question pack JSON. Everything imports as Draft and must be reviewed before play.
             </p>
             <lightning-textarea label="Pack JSON" value={jsonText} onchange={handleChange}
-                                placeholder='{ "exam": ..., "questionBank": ..., "questions": [...] }'
+                                placeholder={placeholderText}
                                 class="slds-m-bottom_small"></lightning-textarea>
             <lightning-button label="Import" variant="brand" onclick={handleUpload} disabled={loading}></lightning-button>
             <template if:true={loading}>

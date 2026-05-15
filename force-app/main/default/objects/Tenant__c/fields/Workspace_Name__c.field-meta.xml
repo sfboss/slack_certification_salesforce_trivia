@@ -4,5 +4,4 @@
     <label>Workspace Name</label>
     <type>Text</type>
     <length>120</length>
-    <length>120</length>
 </CustomField>
