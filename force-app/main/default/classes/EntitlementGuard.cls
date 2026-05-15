@@ -12,7 +12,7 @@ public with sharing class EntitlementGuard {
         if (t.Status__c != 'Active' && t.Status__c != 'Trial') return false;
         Integer monthlyLimit = limitFor(t.Plan__c, 'games_per_month');
         if (monthlyLimit < 0) return true; // unlimited
-        Integer used = usedThisMonth(tenantId, 'games_started');
+        Integer used = usedThisMonth(tenantId, 'Games_Started__c');
         return used < monthlyLimit;
     }
 
@@ -22,7 +22,7 @@ public with sharing class EntitlementGuard {
         if (t.Status__c != 'Active' && t.Status__c != 'Trial') return false;
         Integer monthlyLimit = limitFor(t.Plan__c, 'gen_questions_per_month');
         if (monthlyLimit < 0) return true;
-        Integer used = usedThisMonth(tenantId, 'questions_generated');
+        Integer used = usedThisMonth(tenantId, 'Questions_Served__c');
         return (used + (requested == null ? 1 : requested)) <= monthlyLimit;
     }
 
@@ -59,14 +59,20 @@ public with sharing class EntitlementGuard {
         return -1;
     }
 
-    private static Integer usedThisMonth(Id tenantId, String metric) {
-        DateTime start = DateTime.newInstance(System.today().year(), System.today().month(), 1, 0, 0, 0);
-        AggregateResult[] ars = [
-            SELECT SUM(Value__c) total FROM Usage_Metric__c
-            WHERE Tenant__c = :tenantId AND Metric__c = :metric AND Period_Start__c >= :start
-            WITH USER_MODE
-        ];
-        if (ars.isEmpty() || ars[0].get('total') == null) return 0;
-        return ((Decimal) ars[0].get('total')).intValue();
+    private static Integer usedThisMonth(Id tenantId, String fieldApi) {
+        String period = currentPeriod();
+        String soql = 'SELECT ' + fieldApi + ' FROM Usage_Metric__c '
+                    + 'WHERE Tenant__c = :tenantId AND Period__c = :period '
+                    + 'WITH USER_MODE LIMIT 1';
+        List<Usage_Metric__c> rs = Database.query(soql);
+        if (rs.isEmpty()) return 0;
+        Object v = rs[0].get(fieldApi);
+        return v == null ? 0 : ((Decimal) v).intValue();
+    }
+
+    public static String currentPeriod() {
+        Date t = System.today();
+        String mm = String.valueOf(t.month()).leftPad(2, '0');
+        return t.year() + '-' + mm;
     }
 }

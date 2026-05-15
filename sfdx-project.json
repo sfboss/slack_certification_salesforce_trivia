@@ -1,15 +1,12 @@
 {
   "packageDirectories": [
     {
-      "path": "force-app",
-      "default": true,
-      "package": "CertGameSlackManager",
-      "versionName": "ver 0.1",
-      "versionNumber": "0.1.0.NEXT"
+      "path": ".",
+      "default": true
     }
   ],
-  "name": "cert-trivia-slack-manager",
+  "name": "slackcert",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "60.0"
+  "sourceApiVersion": "66.0"
 }

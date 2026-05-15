@@ -85,7 +85,7 @@ global without sharing class StripeWebhookHandler {
         } else if (type == 'customer.subscription.deleted') {
             updateTenantByCustomer(customerId, 'Free', 'Active');
         } else if (type == 'invoice.payment_failed') {
-            updateTenantByCustomer(customerId, null, 'Past_Due');
+            updateTenantByCustomer(customerId, null, 'PastDue');
         } else if (type == 'checkout.session.completed') {
             String plan = (String) obj.get('client_reference_id'); // we stash plan name here
             updateTenantByCustomer(customerId, plan, 'Active');
@@ -95,7 +95,7 @@ global without sharing class StripeWebhookHandler {
     private static String mapSubscriptionStatus(String s) {
         if (s == null) return 'Active';
         if (s == 'active' || s == 'trialing') return 'Active';
-        if (s == 'past_due' || s == 'unpaid') return 'Past_Due';
+        if (s == 'past_due' || s == 'unpaid') return 'PastDue';
         if (s == 'canceled' || s == 'incomplete_expired') return 'Cancelled';
         return 'Active';
     }

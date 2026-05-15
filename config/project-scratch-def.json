@@ -1,17 +1,13 @@
 {
-  "orgName": "Certification Trivia Manager",
+  "orgName": "clayboss company",
   "edition": "Developer",
-  "features": ["EnableSetPasswordInApi", "Communities", "Sites", "PlatformCache"],
+  "features": ["EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
     },
     "mobileSettings": {
       "enableS1EncryptedStoragePref2": false
-    },
-    "communitiesSettings": {
-      "enableNetworksEnabled": true
     }
-  },
-  "hasSampleData": false
+  }
 }

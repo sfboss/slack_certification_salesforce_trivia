@@ -76,14 +76,14 @@ public with sharing class CertGameGenerationJobQueueable implements Queueable, D
     }
 
     private void recordUsage(Id tenantId, Integer count) {
-        Date today = System.today();
-        DateTime start = DateTime.newInstance(today.year(), today.month(), 1, 0, 0, 0);
+        String period = EntitlementGuard.currentPeriod();
+        String uniqueKey = tenantId + ':' + period;
         Usage_Metric__c m = new Usage_Metric__c(
             Tenant__c = tenantId,
-            Metric__c = 'questions_generated',
-            Period_Start__c = start,
-            Value__c = count
+            Period__c = period,
+            Questions_Served__c = count,
+            Unique_Key__c = uniqueKey
         );
-        insert as user m;
+        Database.upsert(m, Usage_Metric__c.Unique_Key__c, false);
     }
 }
