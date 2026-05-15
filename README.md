@@ -1,6 +1,20 @@
-# Salesforce DX Project: Next Steps
+# Slack Certification Salesforce Trivia
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+A Salesforce-powered Slack app for certification exam trivia and study management.
+
+## Quick Start
+
+### GitHub Actions & Slack Notifications
+
+This repository includes automated CI/CD workflows with Slack notifications. To enable:
+
+1. **Set up Slack Webhook** (5 minutes) - [Quick Setup Guide](docs/slack-webhook-quick-setup.md)
+2. **Add GitHub Secret**: `SLACK_WEBHOOK_URL` - [Full Documentation](docs/slack-notifications-setup.md)
+
+You'll get automatic notifications for:
+- CI builds (success/failure)
+- Pull requests (opened/merged/closed)
+- Scratch org deployments
 
 ## How Do You Plan to Deploy Your Changes?
 
