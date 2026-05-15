@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSetGroup xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Bundles all Certification Trivia admin permission sets.</description>
+    <label>Cert Game All Admin</label>
+    <permissionSets>Cert_Game_Admin</permissionSets>
+    <permissionSets>Cert_Game_Question_Reviewer</permissionSets>
+    <permissionSets>Cert_Game_Player_Manager</permissionSets>
+    <permissionSets>Cert_Game_Tenant_Admin</permissionSets>
+</PermissionSetGroup>

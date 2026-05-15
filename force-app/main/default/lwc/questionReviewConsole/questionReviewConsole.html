@@ -1,0 +1,60 @@
+<template>
+    <lightning-card title="Question Review Console" icon-name="standard:question_feed">
+        <div class="slds-p-horizontal_medium">
+            <lightning-combobox label="Status filter" value={status}
+                options={statusOptions} onchange={handleStatusChange}></lightning-combobox>
+        </div>
+        <template if:true={loading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+        <template if:true={hasQuestions}>
+            <div class="slds-p-around_medium">
+                <template for:each={questions} for:item="q">
+                    <article key={q.id} class="slds-card slds-m-bottom_medium slds-p-around_medium">
+                        <header class="slds-text-heading_small">
+                            <strong>{q.externalId}</strong> &mdash; {q.examName} / {q.domainName}
+                            <span class="slds-badge slds-m-left_small">{q.difficulty}</span>
+                            <span class="slds-badge slds-m-left_x-small">{q.questionType}</span>
+                            <span class="slds-badge slds-m-left_x-small">{q.status}</span>
+                        </header>
+                        <template if:true={q.scenarioText}>
+                            <p class="slds-text-color_weak slds-m-top_x-small">{q.scenarioText}</p>
+                        </template>
+                        <p class="slds-m-top_x-small"><strong>Q:</strong> {q.questionText}</p>
+                        <ul class="slds-m-top_x-small">
+                            <template for:each={q.choices} for:item="c">
+                                <li key={c.id}>
+                                    <strong>{c.label}.</strong> {c.text}
+                                    <template if:true={c.isCorrect}>
+                                        <span class="slds-badge slds-theme_success slds-m-left_x-small">Correct</span>
+                                    </template>
+                                </li>
+                            </template>
+                        </ul>
+                        <template if:true={q.citations.length}>
+                            <p class="slds-m-top_x-small slds-text-title">Citations:</p>
+                            <ul>
+                                <template for:each={q.citations} for:item="ct">
+                                    <li key={ct.id}>
+                                        <a href={ct.url} target="_blank">{ct.title}</a>
+                                        <span class="slds-text-color_weak"> &mdash; {ct.sourceType}</span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+                        <footer class="slds-m-top_small">
+                            <template if:true={nextStatusValue}>
+                                <lightning-button label={nextStatusLabel}
+                                    data-id={q.id} data-next={nextStatusValue}
+                                    onclick={handleSetStatus} variant="brand"></lightning-button>
+                            </template>
+                        </footer>
+                    </article>
+                </template>
+            </div>
+        </template>
+        <template if:false={hasQuestions}>
+            <div class="slds-p-around_medium slds-text-color_weak">No questions in this status.</div>
+        </template>
+    </lightning-card>
+</template>

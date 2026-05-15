@@ -1,0 +1,37 @@
+<template>
+    <lightning-card title="Question Bank Manager" icon-name="standard:document">
+        <div class="slds-p-around_medium">
+            <p class="slds-text-color_weak slds-m-bottom_x-small">
+                Paste a Cert Game question pack JSON. Everything imports as Draft and must be reviewed before play.
+            </p>
+            <lightning-textarea label="Pack JSON" value={jsonText} onchange={handleChange}
+                                placeholder='{ "exam": ..., "questionBank": ..., "questions": [...] }'
+                                class="slds-m-bottom_small"></lightning-textarea>
+            <lightning-button label="Import" variant="brand" onclick={handleUpload} disabled={loading}></lightning-button>
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Importing"></lightning-spinner>
+            </template>
+            <template if:true={lastResult}>
+                <div class="slds-m-top_medium">
+                    <p>Created: {lastResult.questionsCreated} · Updated: {lastResult.questionsUpdated}</p>
+                    <template if:true={hasErrors}>
+                        <p class="slds-text-color_error slds-m-top_x-small">Errors:</p>
+                        <ul>
+                            <template for:each={lastResult.errors} for:item="er">
+                                <li key={er} class="slds-text-color_error">{er}</li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:true={hasDuplicates}>
+                        <p class="slds-text-color_warning slds-m-top_x-small">Potential duplicates:</p>
+                        <ul>
+                            <template for:each={lastResult.duplicateExternalIds} for:item="d">
+                                <li key={d}>{d}</li>
+                            </template>
+                        </ul>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

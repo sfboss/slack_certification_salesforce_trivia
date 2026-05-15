@@ -1,0 +1,4 @@
+# forceignore
+**/__tests__/**
+**/*.test.js
+**/jest.config.js

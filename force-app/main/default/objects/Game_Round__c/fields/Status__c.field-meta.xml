@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <label>Status</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Posted</fullName>
+                <label>Posted</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Answered</fullName>
+                <label>Answered</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Expired</fullName>
+                <label>Expired</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Explained</fullName>
+                <label>Explained</label>
+                <default>false</default>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

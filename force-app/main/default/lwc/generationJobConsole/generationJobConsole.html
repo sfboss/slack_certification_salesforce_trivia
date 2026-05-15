@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Generation Job Console" icon-name="standard:job">
+        <div class="slds-p-around_medium">
+            <p class="slds-text-color_weak">Live updates from QuestionGenerationJob__e.</p>
+            <template if:true={events.length}>
+                <table class="slds-table slds-table_bordered slds-m-top_small">
+                    <thead>
+                        <tr><th>Time</th><th>Job</th><th>Tenant</th><th>Status</th><th>Count</th><th>Message</th></tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={events} for:item="e">
+                            <tr key={e.jobId}>
+                                <td>{e.ts}</td>
+                                <td>{e.jobId}</td>
+                                <td>{e.tenantId}</td>
+                                <td>{e.status}</td>
+                                <td>{e.count}</td>
+                                <td>{e.message}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={events.length}>
+                <p class="slds-text-color_weak slds-m-top_small">No events yet…</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

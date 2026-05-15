@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mode__c</fullName>
+    <label>Mode</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Solo</fullName>
+                <label>Solo</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Channel</fullName>
+                <label>Channel</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Team Battle</fullName>
+                <label>Team Battle</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Lightning</fullName>
+                <label>Lightning</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Study</fullName>
+                <label>Study</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Exam Sim</fullName>
+                <label>Exam Sim</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Tournament</fullName>
+                <label>Tournament</label>
+                <default>false</default>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Game_Round__c</fullName>
+    <label>Game Round</label>
+    <type>Lookup</type>
+    <required>true</required>
+    <referenceTo>Game_Round__c</referenceTo>
+    <relationshipName>Answers</relationshipName>
+    <relationshipLabel>Game Round</relationshipLabel>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

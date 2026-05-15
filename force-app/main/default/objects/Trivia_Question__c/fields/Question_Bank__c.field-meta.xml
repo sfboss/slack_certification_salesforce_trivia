@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Question_Bank__c</fullName>
+    <label>Question Bank</label>
+    <type>Lookup</type>
+    <referenceTo>Question_Bank__c</referenceTo>
+    <relationshipName>Questions</relationshipName>
+    <relationshipLabel>Question Bank</relationshipLabel>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

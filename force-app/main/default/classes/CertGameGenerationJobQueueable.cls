@@ -1,0 +1,89 @@
+/**
+ * Async pipeline: provider callout → schema validation → duplicate detection → import as Draft.
+ * Records lifecycle on Question_Generation_Job__c and emits QuestionGenerationJob__e.
+ */
+public with sharing class CertGameGenerationJobQueueable implements Queueable, Database.AllowsCallouts {
+
+    private Id jobId;
+
+    public CertGameGenerationJobQueueable(Id jobId) { this.jobId = jobId; }
+
+    public void execute(QueueableContext ctx) {
+        Question_Generation_Job__c job;
+        try {
+            List<Question_Generation_Job__c> jobs = [
+                SELECT Id, Tenant__c, Certification_Exam__c, Certification_Exam__r.Certification_Code__c,
+                       Requested_Question_Count__c, Provider__c, Status__c, Prompt_Text__c
+                FROM Question_Generation_Job__c WHERE Id = :jobId WITH USER_MODE LIMIT 1
+            ];
+            if (jobs.isEmpty()) return;
+            job = jobs[0];
+
+            Integer count = job.Requested_Question_Count__c == null ? 5 : job.Requested_Question_Count__c.intValue();
+            if (!EntitlementGuard.canGenerateQuestions(job.Tenant__c, count)) {
+                fail(job, CertGameStrings.QUOTA_REACHED);
+                return;
+            }
+
+            setStatus(job, 'Running', null);
+
+            QuestionGenerationProvider p = QuestionGenerationProviderFactory.provider();
+            String examCode = job.Certification_Exam__r == null ? null : job.Certification_Exam__r.Certification_Code__c;
+            String genJson = p.generate(examCode, new List<String>(), null, count);
+
+            QuestionJsonValidator.Result vr = QuestionJsonValidator.validate(genJson);
+            if (!vr.valid) {
+                fail(job, 'Validation failed: ' + String.join(vr.errors, '; '));
+                return;
+            }
+
+            CertGameImportService.ImportResult ir = CertGameImportService.importPack(genJson);
+            if (!ir.success) {
+                fail(job, 'Import failed: ' + String.join(ir.errors, '; '));
+                return;
+            }
+
+            recordUsage(job.Tenant__c, vr.questionCount);
+            job.Generated_Question_Count__c = ir.questionsCreated + ir.questionsUpdated;
+            job.Output_JSON__c = genJson.left(131000);
+            setStatus(job, 'Completed', null);
+            emit(job, 'Completed', ir.questionsCreated + ir.questionsUpdated, null);
+        } catch (Exception e) {
+            AppLogger.error('GenerationJob', 'execute', 'Job ' + jobId, e);
+            if (job != null) fail(job, e.getMessage());
+        }
+    }
+
+    private void fail(Question_Generation_Job__c job, String reason) {
+        setStatus(job, 'Failed', reason);
+        emit(job, 'Failed', 0, reason);
+    }
+
+    private void setStatus(Question_Generation_Job__c job, String status, String message) {
+        job.Status__c = status;
+        if (message != null) job.Error_Message__c = message.left(32000);
+        update as user job;
+    }
+
+    private void emit(Question_Generation_Job__c job, String status, Integer count, String message) {
+        EventBus.publish(new QuestionGenerationJob__e(
+            Job_Id__c = job.Id,
+            Tenant_Id__c = job.Tenant__c,
+            Status__c = status,
+            Generated_Count__c = count,
+            Message__c = message == null ? '' : message.left(255)
+        ));
+    }
+
+    private void recordUsage(Id tenantId, Integer count) {
+        Date today = System.today();
+        DateTime start = DateTime.newInstance(today.year(), today.month(), 1, 0, 0, 0);
+        Usage_Metric__c m = new Usage_Metric__c(
+            Tenant__c = tenantId,
+            Metric__c = 'questions_generated',
+            Period_Start__c = start,
+            Value__c = count
+        );
+        insert as user m;
+    }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Criteria_Type__c</fullName>
+    <label>Criteria Type</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>TotalAnswers</fullName><default>true</default><label>TotalAnswers</label></value>
+            <value><fullName>CorrectAnswers</fullName><default>false</default><label>CorrectAnswers</label></value>
+            <value><fullName>TotalPoints</fullName><default>false</default><label>TotalPoints</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

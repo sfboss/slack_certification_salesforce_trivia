@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Difficulty__c</fullName>
+    <label>Difficulty</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Beginner</fullName>
+                <label>Beginner</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Intermediate</fullName>
+                <label>Intermediate</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Advanced</fullName>
+                <label>Advanced</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Expert</fullName>
+                <label>Expert</label>
+                <default>false</default>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

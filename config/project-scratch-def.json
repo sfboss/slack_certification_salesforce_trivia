@@ -1,0 +1,17 @@
+{
+  "orgName": "Certification Trivia Manager",
+  "edition": "Developer",
+  "features": ["EnableSetPasswordInApi", "Communities", "Sites", "PlatformCache"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    }
+  },
+  "hasSampleData": false
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Slack_User_Id__c</fullName>
+    <label>Slack User Id</label>
+    <type>Text</type>
+    <externalId>true</externalId>
+    <length>40</length>
+    <length>40</length>
+</CustomField>

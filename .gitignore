@@ -1,0 +1,26 @@
+# Salesforce DX
+.sf/
+.sfdx/
+.localdevserver/
+deploy-options.json
+
+# Logs
+*.log
+
+# Node
+node_modules/
+dist/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS / IDE
+.DS_Store
+.vscode/settings.json
+.idea/
+
+# Local secrets
+.env
+*.secret

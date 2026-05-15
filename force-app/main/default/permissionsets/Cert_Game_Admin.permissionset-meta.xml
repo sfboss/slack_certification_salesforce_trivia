@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Cert Game Admin</label>
+    <description>Full administration of Certification Trivia app.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+
+<objectPermissions>
+    <object>Certification_Exam__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Exam_Domain__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Question_Bank__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Trivia_Question__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Trivia_Answer_Choice__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Question_Citation__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Game_Session__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Game_Round__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Player__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Player_Answer__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Leaderboard_Snapshot__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Tournament__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Achievement__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Player_Achievement__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Study_Plan__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Tenant__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>License_Event__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Usage_Metric__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Question_Generation_Job__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Slack_Event_Log__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>Audit_Log__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+
+<objectPermissions>
+    <object>App_Log__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>true</allowCreate>
+    <allowEdit>true</allowEdit>
+    <allowDelete>true</allowDelete>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+</objectPermissions>
+</PermissionSet>

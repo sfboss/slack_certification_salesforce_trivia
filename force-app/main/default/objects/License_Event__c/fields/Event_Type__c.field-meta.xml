@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Type__c</fullName>
+    <label>Event Type</label>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>TrialStarted</fullName>
+                <label>TrialStarted</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Upgraded</fullName>
+                <label>Upgraded</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Downgraded</fullName>
+                <label>Downgraded</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Renewed</fullName>
+                <label>Renewed</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Cancelled</fullName>
+                <label>Cancelled</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>PaymentFailed</fullName>
+                <label>PaymentFailed</label>
+                <default>false</default>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <label>Other</label>
+                <default>false</default>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

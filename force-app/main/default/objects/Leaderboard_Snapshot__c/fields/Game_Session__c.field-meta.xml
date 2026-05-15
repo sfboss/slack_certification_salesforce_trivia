@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Game_Session__c</fullName>
+    <label>Game Session</label>
+    <type>Lookup</type>
+    <required>true</required>
+    <referenceTo>Game_Session__c</referenceTo>
+    <relationshipName>Leaderboard_Snapshots</relationshipName>
+    <relationshipLabel>Game Session</relationshipLabel>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>
