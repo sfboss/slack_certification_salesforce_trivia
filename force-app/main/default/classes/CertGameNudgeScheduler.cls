@@ -18,7 +18,7 @@ public with sharing class CertGameNudgeScheduler implements Schedulable {
         List<Study_Plan__c> plans = [
             SELECT Id, Player__c, Player__r.Slack_User_Id__c, Player__r.Tenant__c,
                    Daily_Questions__c, Certification_Exam__c
-            FROM Study_Plan__c WHERE Status__c = 'Active' WITH USER_MODE LIMIT 1000
+            FROM Study_Plan__c WHERE Status__c = 'Active' WITH SYSTEM_MODE LIMIT 1000
         ];
         if (plans.isEmpty()) return;
 
@@ -30,7 +30,7 @@ public with sharing class CertGameNudgeScheduler implements Schedulable {
         for (AggregateResult ar : [
             SELECT Player__c pid, COUNT(Id) cnt FROM Player_Answer__c
             WHERE Player__c IN :playerIds AND Answered_At__c >= :startOfDay
-            WITH USER_MODE GROUP BY Player__c
+            WITH SYSTEM_MODE GROUP BY Player__c
         ]) {
             answeredToday.put((Id) ar.get('pid'), (Integer) ar.get('cnt'));
         }

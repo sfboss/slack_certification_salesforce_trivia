@@ -4,8 +4,13 @@
  *
  * All Block Kit JSON is delegated to CertGameSlackRenderService.
  * Slack response strings returned by entry points are returned to the router.
+ *
+ * Sharing: `without sharing` — all entry points are invoked by the Slack public-site
+ * Guest User which has no record-level access to Game_Session__c / Game_Round__c. Player
+ * identity comes from the verified Slack signature, not from the running SF user, so
+ * row-level sharing is not the access control boundary for this service.
  */
-public with sharing class CertGameSessionService {
+public without sharing class CertGameSessionService {
 
     public class SessionException extends Exception {}
 
@@ -35,10 +40,29 @@ public with sharing class CertGameSessionService {
             Total_Questions__c = 5,
             Current_Question_Index__c = 0
         );
-        insert as user session;
+        new SessionDml().insertSession(session);
 
         Game_Round__c round = openNextRound(session, player, 1);
         return renderRound(session, round);
+    }
+
+    // Guest user sharing applies to Tenant__c / Certification_Exam__c lookups
+    // independently of `as system`, so cross-tenant inserts run here.
+    private without sharing class SessionDml {
+        // `as system` bypasses Guest user cross-reference checks on the parent lookups
+        // (Tenant__c, Certification_Exam__c, Game_Session__c, Trivia_Question__c).
+        public void insertSession(Game_Session__c s) { insert as system s; }
+        public void insertRound(Game_Round__c r) { insert as system r; }
+        public Certification_Exam__c pickExam(String code) {
+            if (!String.isBlank(code)) {
+                List<Certification_Exam__c> exams = [SELECT Id, Name, Certification_Code__c FROM Certification_Exam__c
+                                                      WHERE Certification_Code__c = :code LIMIT 1];
+                return exams.isEmpty() ? null : exams[0];
+            }
+            List<Certification_Exam__c> exams = [SELECT Id, Name, Certification_Code__c FROM Certification_Exam__c
+                                                  WHERE Active__c = true ORDER BY Name LIMIT 1];
+            return exams.isEmpty() ? null : exams[0];
+        }
     }
 
     public static String recordAnswerFromSlack(String slackTeamId, String slackUserId, String roundId, String choiceId) {
@@ -46,21 +70,14 @@ public with sharing class CertGameSessionService {
             return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
         }
 
-        List<Game_Round__c> rs = [
-            SELECT Id, Game_Session__c, Trivia_Question__c, Started_At__c, Status__c,
-                   Game_Session__r.Tenant__c, Game_Session__r.Timer_Seconds__c
-            FROM Game_Round__c WHERE Id = :roundId WITH USER_MODE LIMIT 1
-        ];
-        if (rs.isEmpty()) return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
-        Game_Round__c round = rs[0];
+        GameReader reader = new GameReader();
+        Game_Round__c round = reader.roundById(roundId);
+        if (round == null) return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
 
         Player__c player = CertGameTenantService.getOrCreatePlayer(round.Game_Session__r.Tenant__c, slackUserId);
         String uniqueKey = round.Id + ':' + player.Id;
 
-        List<Trivia_Answer_Choice__c> choices = [
-            SELECT Id, Is_Correct__c, Choice_Text__c, Choice_Label__c, Trivia_Question__c
-            FROM Trivia_Answer_Choice__c WHERE Trivia_Question__c = :round.Trivia_Question__c WITH USER_MODE
-        ];
+        List<Trivia_Answer_Choice__c> choices = reader.choicesForQuestion(round.Trivia_Question__c);
         Trivia_Answer_Choice__c picked;
         Trivia_Answer_Choice__c correct;
         for (Trivia_Answer_Choice__c c : choices) {
@@ -97,10 +114,23 @@ public with sharing class CertGameSessionService {
             Unique_Key__c = uniqueKey
         );
         try {
-            Database.UpsertResult ur = Database.upsert(pa, Player_Answer__c.Unique_Key__c, false);
-            if (!ur.isSuccess()) return CertGameSlackRenderService.text(CertGameStrings.ALREADY_ANSWERED, true);
+            Database.UpsertResult ur = Database.upsert(pa, Player_Answer__c.Unique_Key__c, false, AccessLevel.SYSTEM_MODE);
+            if (!ur.isSuccess()) {
+                Boolean isDup = false;
+                String firstErr = '';
+                for (Database.Error err : ur.getErrors()) {
+                    firstErr = err.getStatusCode() + ': ' + err.getMessage();
+                    if (err.getStatusCode() == StatusCode.DUPLICATE_VALUE) isDup = true;
+                }
+                if (isDup) return CertGameSlackRenderService.alreadyAnsweredBlocks();
+                AppLogger.warn('CertGameSessionService', 'recordAnswerFromSlack.upsert',
+                    'roundId=' + roundId + ' choiceId=' + choiceId + ' err=' + firstErr);
+                return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
+            }
         } catch (Exception e) {
-            return CertGameSlackRenderService.text(CertGameStrings.ALREADY_ANSWERED, true);
+            AppLogger.error('CertGameSessionService', 'recordAnswerFromSlack.upsertEx',
+                'roundId=' + roundId + ' choiceId=' + choiceId, e);
+            return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
         }
 
         EventBus.publish(new QuestionAnswered__e(
@@ -112,31 +142,94 @@ public with sharing class CertGameSessionService {
         ));
 
         List<Map<String, Object>> cites = new List<Map<String, Object>>();
-        for (Question_Citation__c c : [
-            SELECT Id, Title__c, URL__c FROM Question_Citation__c
-            WHERE Trivia_Question__c = :round.Trivia_Question__c WITH USER_MODE LIMIT 5
-        ]) {
+        for (Question_Citation__c c : reader.citationsForQuestion(round.Trivia_Question__c)) {
             cites.add(new Map<String, Object>{ 'id' => c.Id, 'title' => c.Title__c, 'url' => c.URL__c });
         }
 
-        return CertGameSlackRenderService.resultBlocks(
-            picked.Is_Correct__c,
-            correct == null ? '' : correct.Choice_Text__c,
-            o.pointsAwarded,
-            cites
+        // Running tallies for the result card
+        Integer runningPts = 0, answeredCnt = 0, correctCnt = 0;
+        for (Player_Answer__c row : [
+            SELECT Points_Awarded__c, Is_Correct__c
+            FROM Player_Answer__c
+            WHERE Game_Session__c = :round.Game_Session__c AND Player__c = :player.Id
+        ]) {
+            answeredCnt++;
+            if (row.Points_Awarded__c != null) runningPts += row.Points_Awarded__c.intValue();
+            if (row.Is_Correct__c) correctCnt++;
+        }
+
+        Trivia_Question__c qForExp = reader.questionById(round.Trivia_Question__c);
+        String explanation = qForExp == null ? null : qForExp.Explanation__c;
+
+        // Result blocks
+        Map<String, Object> resultEnv = (Map<String, Object>) JSON.deserializeUntyped(
+            CertGameSlackRenderService.resultBlocks(
+                picked.Is_Correct__c,
+                correct == null ? '' : correct.Choice_Text__c,
+                o.pointsAwarded,
+                cites,
+                explanation,
+                runningPts,
+                correctCnt,
+                answeredCnt
+            )
         );
+        List<Object> combined = new List<Object>();
+        combined.addAll((List<Object>) resultEnv.get('blocks'));
+
+        // Advance the session: increment question index. If more questions remain,
+        // open the next round and append its question card. Otherwise mark the
+        // session complete and append a finale block.
+        Game_Session__c sess = round.Game_Session__r;
+        Integer totalQ = sess.Total_Questions__c == null ? 5 : sess.Total_Questions__c.intValue();
+        Integer curIdx = sess.Current_Question_Index__c == null ? 0 : sess.Current_Question_Index__c.intValue();
+        Integer newIdx = curIdx + 1;
+
+        Game_Session__c sessUpdate = new Game_Session__c(Id = sess.Id, Current_Question_Index__c = newIdx);
+        combined.add(new Map<String, Object>{ 'type' => 'divider' });
+
+        if (newIdx < totalQ) {
+            Game_Session__c freshSess = [
+                SELECT Id, Tenant__c, Certification_Exam__c, Timer_Seconds__c, Total_Questions__c, Current_Question_Index__c
+                FROM Game_Session__c WHERE Id = :sess.Id LIMIT 1
+            ];
+            // DB still has the pre-advance index (we update at end of txn). Reflect the
+            // advance in-memory so renderRound shows the correct "Q N of M" label.
+            freshSess.Current_Question_Index__c = newIdx;
+            Game_Round__c nextRound = openNextRound(freshSess, player, newIdx + 1);
+            String nextEnv = renderRound(freshSess, nextRound);
+            Map<String, Object> nextMap = (Map<String, Object>) JSON.deserializeUntyped(nextEnv);
+            List<Object> nextBlocks = (List<Object>) nextMap.get('blocks');
+            if (nextBlocks != null) combined.addAll(nextBlocks);
+        } else {
+            sessUpdate.Status__c = 'Complete';
+            sessUpdate.Completed_At__c = System.now();
+            if (sess.Mode__c == 'Duel') {
+                // Fire-and-forget finale check. DML on sessUpdate happens just below;
+                // the @future inside onSessionComplete defers the Slack callout to a
+                // fresh transaction so it sees the Status__c='Complete' update.
+                CertGameDuelService.onSessionComplete(sess.Id);
+            }
+            String examCode = null;
+            for (Certification_Exam__c ex : [SELECT Certification_Code__c FROM Certification_Exam__c WHERE Id = :sess.Certification_Exam__c LIMIT 1]) {
+                examCode = ex.Certification_Code__c;
+            }
+            Map<String, Object> gameOverEnv = (Map<String, Object>) JSON.deserializeUntyped(
+                CertGameSlackRenderService.gameOverBlocks(runningPts, correctCnt, totalQ, examCode)
+            );
+            combined.addAll((List<Object>) gameOverEnv.get('blocks'));
+        }
+        update as system sessUpdate;
+
+        return JSON.serialize(new Map<String, Object>{
+            'response_type' => 'in_channel',
+            'blocks' => combined
+        });
     }
 
     // ---------- helpers ----------
     private static Certification_Exam__c pickExam(String code) {
-        if (!String.isBlank(code)) {
-            List<Certification_Exam__c> exams = [SELECT Id, Name, Certification_Code__c FROM Certification_Exam__c
-                                                  WHERE Certification_Code__c = :code WITH USER_MODE LIMIT 1];
-            return exams.isEmpty() ? null : exams[0];
-        }
-        List<Certification_Exam__c> exams = [SELECT Id, Name, Certification_Code__c FROM Certification_Exam__c
-                                              WHERE Active__c = true WITH USER_MODE ORDER BY Name LIMIT 1];
-        return exams.isEmpty() ? null : exams[0];
+        return new SessionDml().pickExam(code);
     }
 
     private static Game_Round__c openNextRound(Game_Session__c session, Player__c player, Integer roundNum) {
@@ -151,26 +244,22 @@ public with sharing class CertGameSessionService {
             Status__c = 'Posted',
             Started_At__c = System.now()
         );
-        insert as user r;
+        new SessionDml().insertRound(r);
         return r;
     }
 
     private static String renderRound(Game_Session__c session, Game_Round__c round) {
-        List<Trivia_Question__c> qs = [
-            SELECT Id, Question_Text__c FROM Trivia_Question__c
-            WHERE Id = :round.Trivia_Question__c WITH USER_MODE LIMIT 1
-        ];
-        if (qs.isEmpty()) return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
-        List<Trivia_Answer_Choice__c> cs = [
-            SELECT Id, Choice_Label__c, Choice_Text__c FROM Trivia_Answer_Choice__c
-            WHERE Trivia_Question__c = :round.Trivia_Question__c WITH USER_MODE ORDER BY Choice_Label__c
-        ];
+        GameReader reader = new GameReader();
+        Trivia_Question__c q = reader.questionById(round.Trivia_Question__c);
+        if (q == null) return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
         List<Map<String, Object>> choices = new List<Map<String, Object>>();
-        for (Trivia_Answer_Choice__c c : cs) {
+        for (Trivia_Answer_Choice__c c : reader.choicesForQuestion(round.Trivia_Question__c)) {
             choices.add(new Map<String, Object>{ 'id' => c.Id, 'label' => c.Choice_Label__c, 'text' => c.Choice_Text__c });
         }
         Integer timer = session.Timer_Seconds__c == null ? DEFAULT_TIMER_SEC : session.Timer_Seconds__c.intValue();
-        return CertGameSlackRenderService.questionBlocks(round.Id, qs[0].Question_Text__c, choices, timer);
+        Integer totalQ = session.Total_Questions__c == null ? 5 : session.Total_Questions__c.intValue();
+        Integer qNum = (session.Current_Question_Index__c == null ? 0 : session.Current_Question_Index__c.intValue()) + 1;
+        return CertGameSlackRenderService.questionBlocks(round.Id, q.Question_Text__c, choices, timer, qNum, totalQ, q.Difficulty__c);
     }
 
     private static Integer elapsedSeconds(Game_Round__c r) {
@@ -181,11 +270,7 @@ public with sharing class CertGameSessionService {
 
     private static Integer readStreak(Id playerId, Id sessionId) {
         Integer streak = 0;
-        for (Player_Answer__c pa : [
-            SELECT Is_Correct__c FROM Player_Answer__c
-            WHERE Player__c = :playerId AND Game_Round__r.Game_Session__c = :sessionId
-            WITH USER_MODE ORDER BY Answered_At__c DESC LIMIT 50
-        ]) {
+        for (Player_Answer__c pa : new GameReader().streakAnswers(playerId, sessionId)) {
             if (pa.Is_Correct__c) streak++;
             else break;
         }
@@ -193,9 +278,49 @@ public with sharing class CertGameSessionService {
     }
 
     private static String readDifficulty(Id questionId) {
-        List<Trivia_Question__c> qs = [
-            SELECT Difficulty__c FROM Trivia_Question__c WHERE Id = :questionId WITH USER_MODE LIMIT 1
-        ];
-        return qs.isEmpty() ? 'Medium' : qs[0].Difficulty__c;
+        Trivia_Question__c q = new GameReader().questionById(questionId);
+        return q == null ? 'Medium' : q.Difficulty__c;
+    }
+
+    // Guest-user reads must run in `without sharing`; WITH SYSTEM_MODE bypasses
+    // CRUD/FLS but not record sharing.
+    private without sharing class GameReader {
+        public Game_Round__c roundById(String roundId) {
+            List<Game_Round__c> rs = [
+                SELECT Id, Game_Session__c, Trivia_Question__c, Started_At__c, Status__c,
+                       Game_Session__r.Tenant__c, Game_Session__r.Certification_Exam__c,
+                       Game_Session__r.Timer_Seconds__c, Game_Session__r.Mode__c,
+                       Game_Session__r.Total_Questions__c, Game_Session__r.Current_Question_Index__c
+                FROM Game_Round__c WHERE Id = :roundId LIMIT 1
+            ];
+            return rs.isEmpty() ? null : rs[0];
+        }
+        public Trivia_Question__c questionById(Id questionId) {
+            List<Trivia_Question__c> qs = [
+                SELECT Id, Question_Text__c, Difficulty__c, Explanation__c FROM Trivia_Question__c
+                WHERE Id = :questionId LIMIT 1
+            ];
+            return qs.isEmpty() ? null : qs[0];
+        }
+        public List<Trivia_Answer_Choice__c> choicesForQuestion(Id questionId) {
+            return [
+                SELECT Id, Is_Correct__c, Choice_Text__c, Choice_Label__c, Trivia_Question__c
+                FROM Trivia_Answer_Choice__c
+                WHERE Trivia_Question__c = :questionId ORDER BY Choice_Label__c
+            ];
+        }
+        public List<Question_Citation__c> citationsForQuestion(Id questionId) {
+            return [
+                SELECT Id, Title__c, URL__c FROM Question_Citation__c
+                WHERE Trivia_Question__c = :questionId LIMIT 5
+            ];
+        }
+        public List<Player_Answer__c> streakAnswers(Id playerId, Id sessionId) {
+            return [
+                SELECT Is_Correct__c FROM Player_Answer__c
+                WHERE Player__c = :playerId AND Game_Round__r.Game_Session__c = :sessionId
+                ORDER BY Answered_At__c DESC LIMIT 50
+            ];
+        }
     }
 }

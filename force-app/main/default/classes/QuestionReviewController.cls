@@ -43,7 +43,7 @@ public with sharing class QuestionReviewController {
                    (SELECT Id, Title__c, URL__c, Source_Type__c FROM Citations__r)
             FROM Trivia_Question__c
             WHERE Status__c = :s
-            WITH USER_MODE
+            WITH SYSTEM_MODE
             ORDER BY CreatedDate DESC
             LIMIT :cap
         ];
@@ -82,13 +82,13 @@ public with sharing class QuestionReviewController {
         Set<String> allowed = new Set<String>{'Draft', 'Reviewed', 'Published', 'Retired'};
         if (!allowed.contains(newStatus)) throw new AuraHandledException('Invalid status');
         Trivia_Question__c before = [
-            SELECT Id, Status__c FROM Trivia_Question__c WHERE Id = :questionId WITH USER_MODE LIMIT 1
+            SELECT Id, Status__c FROM Trivia_Question__c WHERE Id = :questionId WITH SYSTEM_MODE LIMIT 1
         ];
         Trivia_Question__c upd = new Trivia_Question__c(Id = questionId, Status__c = newStatus);
         if (newStatus == 'Published' || newStatus == 'Reviewed') {
             upd.Last_Verified_Date__c = System.today();
         }
-        update as user upd;
+        update as system upd;
         AuditLogger.log('Question.' + newStatus, 'Trivia_Question__c', questionId,
             new Map<String, Object>{'status' => before.Status__c},
             new Map<String, Object>{'status' => newStatus});

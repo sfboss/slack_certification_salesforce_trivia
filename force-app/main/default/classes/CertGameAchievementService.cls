@@ -20,7 +20,7 @@ public with sharing class CertGameAchievementService {
         for (AggregateResult ar : [
             SELECT Player__c pid, COUNT(Id) total, SUM(Points_Awarded__c) pts
             FROM Player_Answer__c WHERE Player__c IN :playerIds
-            WITH USER_MODE GROUP BY Player__c
+            WITH SYSTEM_MODE GROUP BY Player__c
         ]) {
             Id pid = (Id) ar.get('pid');
             totalByPlayer.put(pid, ar.get('total') == null ? 0 : (Integer) ar.get('total'));
@@ -30,7 +30,7 @@ public with sharing class CertGameAchievementService {
         for (AggregateResult ar : [
             SELECT Player__c pid, COUNT(Id) c
             FROM Player_Answer__c WHERE Player__c IN :playerIds AND Is_Correct__c = true
-            WITH USER_MODE GROUP BY Player__c
+            WITH SYSTEM_MODE GROUP BY Player__c
         ]) {
             correctByPlayer.put((Id) ar.get('pid'), ar.get('c') == null ? 0 : (Integer) ar.get('c'));
         }
@@ -38,7 +38,7 @@ public with sharing class CertGameAchievementService {
         // Load active achievements
         List<Achievement__c> achs = [
             SELECT Id, Code__c, Name, Criteria_Type__c, Threshold__c
-            FROM Achievement__c WHERE Active__c = true WITH USER_MODE
+            FROM Achievement__c WHERE Active__c = true WITH SYSTEM_MODE
         ];
         if (achs.isEmpty()) return;
 
@@ -46,7 +46,7 @@ public with sharing class CertGameAchievementService {
         Map<Id, Set<Id>> playerToAchSet = new Map<Id, Set<Id>>();
         for (Player_Achievement__c pa : [
             SELECT Player__c, Achievement__c FROM Player_Achievement__c
-            WHERE Player__c IN :playerIds WITH USER_MODE
+            WHERE Player__c IN :playerIds WITH SYSTEM_MODE
         ]) {
             if (!playerToAchSet.containsKey(pa.Player__c)) playerToAchSet.put(pa.Player__c, new Set<Id>());
             playerToAchSet.get(pa.Player__c).add(pa.Achievement__c);
@@ -75,7 +75,7 @@ public with sharing class CertGameAchievementService {
             }
         }
         if (!toInsert.isEmpty()) {
-            insert as user toInsert;
+            insert as system toInsert;
             for (Player_Achievement__c pa : toInsert) {
                 AuditLogger.log('achievement_awarded', 'Player_Achievement__c', pa.Id, null, pa.Achievement__c, null);
             }

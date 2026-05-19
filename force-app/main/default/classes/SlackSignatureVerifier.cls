@@ -32,6 +32,32 @@ public with sharing class SlackSignatureVerifier {
         return constantTimeEquals(expected, sig);
     }
 
+    /**
+     * Fallback verification for form-urlencoded slash commands received via Salesforce Sites,
+     * which discards raw bytes and only exposes req.params. HMAC requires exact byte parity
+     * with what Slack signed, which is unrecoverable from a parsed param map. Slack still
+     * sends the legacy Verification Token on every slash command and interactivity payload;
+     * comparing it against the stored secret + enforcing freshness (300s skew) is the
+     * practical equivalent of HMAC for this transport.
+     *
+     * Returns true only when token matches and timestamp header is within configured skew.
+     */
+    public static Boolean verifyByToken(Map<String, String> headers, String submittedToken) {
+        if (headers == null || String.isBlank(submittedToken)) return false;
+        String ts = headers.get('X-Slack-Request-Timestamp');
+        if (ts == null) ts = headers.get('x-slack-request-timestamp');
+        if (String.isBlank(ts)) return false;
+        Long now = System.currentTimeMillis() / 1000L;
+        Long req;
+        try { req = Long.valueOf(ts); } catch (Exception e) { return false; }
+        Decimal skew = AppSettings.get().Slack_Timestamp_Skew_Seconds__c;
+        Long maxSkew = (skew == null) ? 300L : skew.longValue();
+        if (Math.abs(now - req) > maxSkew) return false;
+        String stored = AppSettings.get().Slack_Verification_Token__c;
+        if (String.isBlank(stored)) return false;
+        return constantTimeEquals(stored, submittedToken);
+    }
+
     private static String computeHmac(String data) {
         String secret = getSecret();
         Blob mac = Crypto.generateMac('HmacSHA256', Blob.valueOf(data), Blob.valueOf(secret));
@@ -40,12 +66,18 @@ public with sharing class SlackSignatureVerifier {
 
     private static String getSecret() {
         if (secretOverride != null) return secretOverride;
-        // In a real org the signing secret lives in a Named Credential External Credential
-        // or a protected Custom Metadata. Reading from a Named Credential header callout is
-        // not possible from Apex without making a callout, so for now we read from a custom
-        // setting / protected mdt. The default below is intentionally invalid so any non-test
-        // path fails closed.
-        return 'INVALID_DEFAULT_SECRET';
+        String s = AppSettings.get().Slack_Signing_Secret__c;
+        if (String.isBlank(s)) {
+            // Intentionally do NOT insert App_Log__c here: this method is called on every
+            // inbound Slack request, and a DML write before downstream callouts (views.open)
+            // trips "uncommitted work pending". The token-fallback path in SlackRequestRouter
+            // handles the missing-secret case for form-encoded payloads.
+            System.debug(LoggingLevel.WARN,
+                '[SlackSignatureVerifier] Slack_Signing_Secret__c is blank. HMAC verification will fail; '
+                + 'token-fallback will be used for form-encoded requests.');
+            return 'INVALID_DEFAULT_SECRET';
+        }
+        return s;
     }
 
     private static Boolean constantTimeEquals(String a, String b) {

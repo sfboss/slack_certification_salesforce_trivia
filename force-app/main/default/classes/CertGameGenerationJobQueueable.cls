@@ -14,7 +14,7 @@ public with sharing class CertGameGenerationJobQueueable implements Queueable, D
             List<Question_Generation_Job__c> jobs = [
                 SELECT Id, Tenant__c, Certification_Exam__c, Certification_Exam__r.Certification_Code__c,
                        Requested_Question_Count__c, Provider__c, Status__c, Prompt_Text__c
-                FROM Question_Generation_Job__c WHERE Id = :jobId WITH USER_MODE LIMIT 1
+                FROM Question_Generation_Job__c WHERE Id = :jobId WITH SYSTEM_MODE LIMIT 1
             ];
             if (jobs.isEmpty()) return;
             job = jobs[0];
@@ -62,7 +62,7 @@ public with sharing class CertGameGenerationJobQueueable implements Queueable, D
     private void setStatus(Question_Generation_Job__c job, String status, String message) {
         job.Status__c = status;
         if (message != null) job.Error_Message__c = message.left(32000);
-        update as user job;
+        update as system job;
     }
 
     private void emit(Question_Generation_Job__c job, String status, Integer count, String message) {

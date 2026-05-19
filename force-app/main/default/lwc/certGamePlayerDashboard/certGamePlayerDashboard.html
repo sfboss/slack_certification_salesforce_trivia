@@ -1,0 +1,138 @@
+<template>
+    <lightning-card title="Player Dashboard" icon-name="standard:avatar">
+        <template if:true={loading}>
+            <div class="slds-p-around_medium"><lightning-spinner alternative-text="Loading"></lightning-spinner></div>
+        </template>
+
+        <template if:true={hasPlayer}>
+            <!-- Hero -->
+            <div class="slds-p-around_medium">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_2-of-3">
+                        <h2 class="slds-text-heading_medium">{data.player.displayName}</h2>
+                        <p class="slds-text-color_weak slds-text-body_small">
+                            {data.player.tenantName} · {data.player.timezone}
+                        </p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                        <template if:true={data.player.rank}>
+                            <lightning-badge label={rankLabel} class="slds-theme_inverse"></lightning-badge>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                    <template for:each={statTiles} for:item="s">
+                        <div key={s.label} class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4 slds-p-vertical_x-small">
+                            <div class="slds-box slds-box_x-small">
+                                <p class="slds-text-color_weak slds-text-body_small">{s.label}</p>
+                                <p class="slds-text-heading_medium">{s.value}</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Domain accuracy -->
+            <template if:true={hasDomains}>
+                <div class="slds-p-around_medium">
+                    <h3 class="slds-text-title_caps slds-m-bottom_x-small">Accuracy by domain</h3>
+                    <template for:each={data.domains} for:item="d">
+                        <div key={d.domainId} class="slds-m-bottom_x-small">
+                            <div class="slds-grid slds-grid_align-spread slds-text-body_small">
+                                <span>{d.domainName}</span>
+                                <span class="slds-text-color_weak">{d.correct}/{d.answered} · {d.accuracy}%</span>
+                            </div>
+                            <lightning-progress-bar value={d.accuracy} variant="base" size="medium"></lightning-progress-bar>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Recent answers -->
+            <template if:true={hasAnswers}>
+                <div class="slds-p-around_medium">
+                    <h3 class="slds-text-title_caps slds-m-bottom_x-small">Recent answers</h3>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead><tr>
+                            <th>When</th><th>Exam</th><th>Question</th>
+                            <th class="slds-text-align_center">Correct</th>
+                            <th class="slds-text-align_right">Pts</th>
+                            <th class="slds-text-align_right">ms</th>
+                        </tr></thead>
+                        <tbody>
+                            <template for:each={data.recentAnswers} for:item="a">
+                                <tr key={a.id}>
+                                    <td><lightning-formatted-date-time value={a.answeredAt} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time></td>
+                                    <td>{a.examName}</td>
+                                    <td class="slds-truncate" title={a.questionText}>{a.questionText}</td>
+                                    <td class="slds-text-align_center">
+                                        <template if:true={a.isCorrect}><lightning-icon icon-name="utility:check" alternative-text="correct" size="x-small" variant="success"></lightning-icon></template>
+                                        <template if:false={a.isCorrect}><lightning-icon icon-name="utility:close" alternative-text="wrong" size="x-small" variant="error"></lightning-icon></template>
+                                    </td>
+                                    <td class="slds-text-align_right">{a.points}</td>
+                                    <td class="slds-text-align_right">{a.responseMs}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+
+            <!-- Achievements + study plans -->
+            <div class="slds-grid slds-wrap slds-gutters slds-p-horizontal_medium slds-p-bottom_medium">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <h3 class="slds-text-title_caps slds-m-bottom_x-small">Achievements</h3>
+                    <template if:true={hasAchievements}>
+                        <ul>
+                            <template for:each={data.achievements} for:item="a">
+                                <li key={a.id} class="slds-p-around_x-small slds-border_bottom">
+                                    <strong>{a.iconEmoji} {a.name}</strong>
+                                    <span class="slds-text-color_weak slds-text-body_small slds-m-left_x-small">+{a.points}</span>
+                                    <div class="slds-text-body_small slds-text-color_weak">{a.description}</div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:false={hasAchievements}>
+                        <p class="slds-text-color_weak">No badges yet. Keep playing!</p>
+                    </template>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <h3 class="slds-text-title_caps slds-m-bottom_x-small">Study plans</h3>
+                    <template if:true={hasPlans}>
+                        <ul>
+                            <template for:each={data.studyPlans} for:item="p">
+                                <li key={p.id} class="slds-p-around_x-small slds-border_bottom">
+                                    <strong>{p.examName}</strong>
+                                    <template if:true={p.active}>
+                                        <lightning-badge label="Active" class="slds-m-left_x-small slds-theme_success"></lightning-badge>
+                                    </template>
+                                    <div class="slds-text-body_small slds-text-color_weak">
+                                        Target: <lightning-formatted-date-time value={p.targetExamDate}></lightning-formatted-date-time> ·
+                                        {p.dailyQuestions} q/day
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:false={hasPlans}>
+                        <p class="slds-text-color_weak">No study plan. Create one from Slack with <code>/certgame plan</code>.</p>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template if:false={hasPlayer}>
+            <template if:false={loading}>
+                <div class="slds-p-around_medium slds-text-color_weak">
+                    No player record found. Connect a Slack workspace first.
+                </div>
+            </template>
+        </template>
+
+        <template if:true={error}>
+            <div class="slds-p-around_medium slds-text-color_error">{error}</div>
+        </template>
+    </lightning-card>
+</template>

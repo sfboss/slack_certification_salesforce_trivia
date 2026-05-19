@@ -1,0 +1,108 @@
+<template>
+    <lightning-card title="Plan & Billing" icon-name="standard:portal_roles">
+        <template if:true={loading}>
+            <div class="slds-p-around_medium"><lightning-spinner alternative-text="Loading"></lightning-spinner></div>
+        </template>
+
+        <template if:true={data}>
+            <div class="slds-p-around_medium">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_2-of-3">
+                        <h2 class="slds-text-heading_medium">{data.tenantName}</h2>
+                        <p class="slds-text-color_weak slds-text-body_small">
+                            Workspace: <code>{data.slackTeamId}</code>
+                        </p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                        <lightning-badge label={data.currentPlan} class="slds-theme_inverse slds-m-right_x-small"></lightning-badge>
+                        <lightning-badge label={data.status}></lightning-badge>
+                        <div class="slds-text-color_weak slds-text-body_small slds-m-top_x-small">
+                            Est. MRR: <strong>${data.mrrUsd}</strong>
+                        </div>
+                        <template if:true={data.stripePortalUrl}>
+                            <lightning-button
+                                class="slds-m-top_x-small"
+                                label="Open Stripe Customer Portal"
+                                variant="brand"
+                                icon-name="utility:new_window"
+                                onclick={openPortal}></lightning-button>
+                        </template>
+                    </div>
+                </div>
+
+                <template if:true={data.trialEndsAt}>
+                    <p class="slds-text-color_weak slds-m-top_x-small">
+                        Trial ends: <lightning-formatted-date-time value={data.trialEndsAt}></lightning-formatted-date-time>
+                    </p>
+                </template>
+            </div>
+
+            <!-- Plan comparison -->
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <h3 class="slds-text-title_caps slds-m-bottom_x-small">Plans</h3>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <template for:each={planTiles} for:item="p">
+                        <div key={p.plan} class={p.boxClass}>
+                            <div class="slds-text-heading_medium">{p.plan}</div>
+                            <div class="slds-text-heading_large slds-m-vertical_x-small">${p.monthlyUsd}<span class="slds-text-body_small slds-text-color_weak">/mo</span></div>
+                            <ul class="slds-text-body_small">
+                                <li>Players: {p.maxPlayers}</li>
+                                <li>Games/day: {p.maxGamesPerDay}</li>
+                                <li>AI generation/day: {p.maxGenerationPerDay}</li>
+                                <li>{p.tournamentsLabel}</li>
+                                <li>{p.dynamicLabel}</li>
+                                <li>{p.sponsorLabel}</li>
+                                <li>{p.ssoLabel}</li>
+                                <li>{p.supportLabel}</li>
+                            </ul>
+                            <template if:true={p.isCurrent}>
+                                <lightning-badge label="Current" class="slds-theme_success slds-m-top_x-small"></lightning-badge>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Usage -->
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <h3 class="slds-text-title_caps slds-m-bottom_x-small">This period — {data.usage.period}</h3>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <template for:each={usageTiles} for:item="u">
+                        <div key={u.label} class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                            <div class="slds-box slds-box_x-small">
+                                <p class="slds-text-color_weak slds-text-body_small">{u.label}</p>
+                                <p class="slds-text-heading_medium">{u.value}</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Events -->
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <h3 class="slds-text-title_caps slds-m-bottom_x-small">Billing events</h3>
+                <template if:true={hasEvents}>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead><tr><th>When</th><th>Event</th><th>Stripe Event Id</th></tr></thead>
+                        <tbody>
+                            <template for:each={data.events} for:item="e">
+                                <tr key={e.id}>
+                                    <td><lightning-formatted-date-time value={e.occurredAt} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time></td>
+                                    <td>{e.eventType}</td>
+                                    <td><code>{e.stripeEventId}</code></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasEvents}>
+                    <p class="slds-text-color_weak">No billing events yet.</p>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="slds-p-around_medium slds-text-color_error">{error}</div>
+        </template>
+    </lightning-card>
+</template>

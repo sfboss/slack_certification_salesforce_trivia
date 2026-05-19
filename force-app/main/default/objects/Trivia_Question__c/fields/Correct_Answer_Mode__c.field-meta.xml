@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Correct_Answer_Mode__c</fullName>
+    <externalId>false</externalId>
     <label>Correct Answer Mode</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -9,18 +13,18 @@
             <sorted>false</sorted>
             <value>
                 <fullName>Exact</fullName>
-                <label>Exact</label>
                 <default>false</default>
+                <label>Exact</label>
             </value>
             <value>
                 <fullName>AnyOf</fullName>
-                <label>AnyOf</label>
                 <default>false</default>
+                <label>AnyOf</label>
             </value>
             <value>
                 <fullName>MultiRequired</fullName>
-                <label>MultiRequired</label>
                 <default>false</default>
+                <label>MultiRequired</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -3,10 +3,44 @@ public with sharing class AppLogger {
 
     public static void info(String cls, String method, String msg) { write('INFO', cls, method, msg, null, null); }
     public static void warn(String cls, String method, String msg) { write('WARN', cls, method, msg, null, null); }
+
+    public static String currentCorrelationId() {
+        return Request.getCurrent() == null ? null : Request.getCurrent().getRequestId();
+    }
     public static void error(String cls, String method, String msg, Exception e) {
-        write('ERROR', cls, method, msg, e == null ? null : e.getStackTraceString(), null);
+        String fullMsg = msg;
+        String stack = null;
+        if (e != null) {
+            fullMsg = (msg == null ? '' : msg + ' :: ') + e.getTypeName() + ': ' + e.getMessage();
+            stack = e.getStackTraceString();
+        }
+        write('ERROR', cls, method, fullMsg, stack, null);
     }
     public static void info(String cls, String method, String msg, Id tenantId) { write('INFO', cls, method, msg, null, tenantId); }
+
+    /**
+     * Async logger safe to call from inside a callout chain. Use this from code that
+     * makes Slack/HTTP callouts where a synchronous insert would trip "uncommitted
+     * work pending" on a follow-up retry or sibling callout.
+     */
+    @future
+    public static void writeAsync(String level, String cls, String method, String msg, String stack) {
+        write(level, cls, method, msg, stack, null);
+    }
+
+    /**
+     * Logs synchronously if already in an async context (where @future cannot be
+     * invoked), otherwise enqueues writeAsync. Use this from code that may run
+     * either sync or async (e.g., SlackApiClient.call which runs from REST and
+     * from @future callout wrappers).
+     */
+    public static void writeSafe(String level, String cls, String method, String msg, String stack) {
+        if (System.isFuture() || System.isBatch() || System.isQueueable() || System.isScheduled()) {
+            write(level, cls, method, msg, stack, null);
+        } else {
+            writeAsync(level, cls, method, msg, stack);
+        }
+    }
 
     private static void write(String level, String cls, String method, String msg, String stack, Id tenantId) {
         try {

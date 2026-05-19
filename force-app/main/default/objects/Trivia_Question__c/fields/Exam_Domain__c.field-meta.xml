@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Exam_Domain__c</fullName>
-    <label>Exam Domain</label>
-    <type>Lookup</type>
-    <referenceTo>Exam_Domain__c</referenceTo>
-    <relationshipName>Questions</relationshipName>
-    <relationshipLabel>Exam Domain</relationshipLabel>
     <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Exam Domain</label>
+    <referenceTo>Exam_Domain__c</referenceTo>
+    <relationshipLabel>Exam Domain</relationshipLabel>
+    <relationshipName>Questions</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
 </CustomField>

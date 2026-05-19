@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Source_Type__c</fullName>
+    <externalId>false</externalId>
     <label>Source Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -9,33 +13,38 @@
             <sorted>false</sorted>
             <value>
                 <fullName>Salesforce Help</fullName>
-                <label>Salesforce Help</label>
                 <default>false</default>
+                <label>Salesforce Help</label>
             </value>
             <value>
                 <fullName>Trailhead</fullName>
-                <label>Trailhead</label>
                 <default>false</default>
+                <label>Trailhead</label>
             </value>
             <value>
                 <fullName>Release Notes</fullName>
-                <label>Release Notes</label>
                 <default>false</default>
+                <label>Release Notes</label>
             </value>
             <value>
                 <fullName>Internal Guide</fullName>
-                <label>Internal Guide</label>
                 <default>false</default>
+                <label>Internal Guide</label>
             </value>
             <value>
                 <fullName>Vendor Docs</fullName>
-                <label>Vendor Docs</label>
                 <default>false</default>
+                <label>Vendor Docs</label>
             </value>
             <value>
                 <fullName>Other</fullName>
-                <label>Other</label>
                 <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Developer Docs</fullName>
+                <default>false</default>
+                <label>Developer Docs</label>
             </value>
         </valueSetDefinition>
     </valueSet>

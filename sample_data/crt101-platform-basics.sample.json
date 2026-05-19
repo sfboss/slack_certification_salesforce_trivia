@@ -1,0 +1,95 @@
+{
+  "exam": { "name": "Salesforce Platform Basics", "code": "CRT-101", "vendor": "Salesforce" },
+  "questionBank": {
+    "name": "CRT-101 Quickfire Pack",
+    "version": "1.0.0",
+    "sourceType": "Manual",
+    "status": "Draft",
+    "externalId": "BANK-CRT101-001"
+  },
+  "questions": [
+    {
+      "externalId": "CRT101-Q1",
+      "domain": "Platform Fundamentals",
+      "difficulty": "Beginner",
+      "questionType": "Single Select",
+      "question": "Which Salesforce edition supports custom objects and the Apex programming language?",
+      "choices": [
+        { "label": "A", "text": "Essentials", "isCorrect": false, "explanation": "Essentials does not include Apex or unlimited custom objects." },
+        { "label": "B", "text": "Professional", "isCorrect": false, "explanation": "Professional allows limited customization but no Apex." },
+        { "label": "C", "text": "Enterprise", "isCorrect": true, "explanation": "Enterprise edition includes Apex, custom objects, and APIs." },
+        { "label": "D", "text": "Group", "isCorrect": false, "explanation": "Group edition is a legacy small-business tier without Apex." }
+      ],
+      "explanation": "Enterprise edition is the entry point for Apex, custom objects, and the full Salesforce API.",
+      "citations": [
+        { "title": "Salesforce Pricing & Editions", "url": "https://www.salesforce.com/editions-pricing/sales-cloud/", "sourceType": "Salesforce Help", "relevanceNote": "Edition feature comparison." }
+      ]
+    },
+    {
+      "externalId": "CRT101-Q2",
+      "domain": "Platform Fundamentals",
+      "difficulty": "Beginner",
+      "questionType": "Single Select",
+      "question": "What is the primary purpose of an App Page in Lightning App Builder?",
+      "choices": [
+        { "label": "A", "text": "Display a single record", "isCorrect": false, "explanation": "Record Pages display a single record." },
+        { "label": "B", "text": "Show a custom landing page or dashboard for users", "isCorrect": true, "explanation": "App Pages are stand-alone pages typically used as app landing pages." },
+        { "label": "C", "text": "List records of one object", "isCorrect": false, "explanation": "List view pages handle that." },
+        { "label": "D", "text": "Run a Flow", "isCorrect": false, "explanation": "Flows can be embedded but aren't the page's primary purpose." }
+      ],
+      "explanation": "App Pages are versatile dashboards or landing pages for users of an app.",
+      "citations": [
+        { "title": "Lightning App Builder Page Types", "url": "https://help.salesforce.com/s/articleView?id=sf.lightning_app_builder_overview.htm", "sourceType": "Salesforce Help", "relevanceNote": "Explains App, Record, and Home pages." }
+      ]
+    },
+    {
+      "externalId": "CRT101-Q3",
+      "domain": "Data Model",
+      "difficulty": "Intermediate",
+      "questionType": "Single Select",
+      "question": "Which feature lets you store a many-to-many relationship between two custom objects?",
+      "choices": [
+        { "label": "A", "text": "A single master-detail field", "isCorrect": false, "explanation": "One M-D defines one parent only." },
+        { "label": "B", "text": "Two master-detail fields on a junction object", "isCorrect": true, "explanation": "A junction object with two master-detail fields models many-to-many." },
+        { "label": "C", "text": "A hierarchical relationship", "isCorrect": false, "explanation": "Hierarchical only applies to User." },
+        { "label": "D", "text": "An external lookup", "isCorrect": false, "explanation": "External lookups target external objects." }
+      ],
+      "explanation": "Junction objects with two master-detail fields are the canonical M:M pattern.",
+      "citations": [
+        { "title": "Many-to-Many Relationships", "url": "https://help.salesforce.com/s/articleView?id=sf.relationships_manytomany.htm", "sourceType": "Salesforce Help", "relevanceNote": "Defines junction objects." }
+      ]
+    },
+    {
+      "externalId": "CRT101-Q4",
+      "domain": "Automation",
+      "difficulty": "Beginner",
+      "questionType": "Single Select",
+      "question": "Which automation tool is recommended for declarative point-and-click automation in modern Salesforce?",
+      "choices": [
+        { "label": "A", "text": "Workflow Rules", "isCorrect": false, "explanation": "Workflow Rules are deprecated for new automation." },
+        { "label": "B", "text": "Process Builder", "isCorrect": false, "explanation": "Process Builder is retired in favor of Flow." },
+        { "label": "C", "text": "Flow Builder", "isCorrect": true, "explanation": "Flow is the unified declarative automation platform." },
+        { "label": "D", "text": "Apex Triggers", "isCorrect": false, "explanation": "Triggers are code, not declarative." }
+      ],
+      "explanation": "Flow Builder is the recommended replacement for Workflow Rules and Process Builder.",
+      "citations": [
+        { "title": "Migrate to Flow", "url": "https://help.salesforce.com/s/articleView?id=sf.flow_migrate.htm", "sourceType": "Salesforce Help", "relevanceNote": "Official guidance on Flow migration." }
+      ]
+    },
+    {
+      "externalId": "CRT101-Q5",
+      "domain": "User Interface",
+      "difficulty": "Beginner",
+      "questionType": "True False",
+      "question": "Lightning Experience and Salesforce Classic share the same underlying data model.",
+      "choices": [
+        { "label": "A", "text": "True", "isCorrect": true, "explanation": "Both UIs read and write the same records in the same org." },
+        { "label": "B", "text": "False", "isCorrect": false, "explanation": "They share the same database; only the UI differs." }
+      ],
+      "explanation": "LEX and Classic are different UIs over the same data and metadata.",
+      "citations": [
+        { "title": "Lightning Experience vs Classic", "url": "https://help.salesforce.com/s/articleView?id=sf.lex_intro.htm", "sourceType": "Salesforce Help", "relevanceNote": "Compares the two experiences." }
+      ]
+    }
+  ]
+}

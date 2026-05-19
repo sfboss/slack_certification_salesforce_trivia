@@ -88,7 +88,7 @@ public with sharing class CertGameImportService {
             SELECT Id, External_Id__c, Hash__c
             FROM Trivia_Question__c
             WHERE External_Id__c IN :incomingExtIds
-            WITH USER_MODE
+            WITH SYSTEM_MODE
         ]) {
             existing.put(tq.External_Id__c, tq);
         }
@@ -98,7 +98,7 @@ public with sharing class CertGameImportService {
         for (Exam_Domain__c d : [
             SELECT Id, Name FROM Exam_Domain__c
             WHERE Certification_Exam__c = :res.examId
-            WITH USER_MODE
+            WITH SYSTEM_MODE
         ]) {
             domainByName.put(d.Name, d.Id);
         }
@@ -117,7 +117,7 @@ public with sharing class CertGameImportService {
             ));
         }
         if (!domainsToInsert.isEmpty()) {
-            insert as user domainsToInsert;
+            insert as system domainsToInsert;
             for (Exam_Domain__c d : domainsToInsert) domainByName.put(d.Name, d.Id);
         }
 
@@ -169,8 +169,8 @@ public with sharing class CertGameImportService {
         Set<Id> qIds = new Set<Id>();
         for (Trivia_Question__c tq : toUpsert) if (tq.Id != null) qIds.add(tq.Id);
         if (!qIds.isEmpty()) {
-            delete as user [SELECT Id FROM Trivia_Answer_Choice__c WHERE Trivia_Question__c IN :qIds WITH USER_MODE];
-            delete as user [SELECT Id FROM Question_Citation__c    WHERE Trivia_Question__c IN :qIds WITH USER_MODE];
+            delete as system [SELECT Id FROM Trivia_Answer_Choice__c WHERE Trivia_Question__c IN :qIds WITH SYSTEM_MODE];
+            delete as system [SELECT Id FROM Question_Citation__c    WHERE Trivia_Question__c IN :qIds WITH SYSTEM_MODE];
         }
 
         List<Trivia_Answer_Choice__c> choices = new List<Trivia_Answer_Choice__c>();
@@ -205,8 +205,8 @@ public with sharing class CertGameImportService {
                 }
             }
         }
-        if (!choices.isEmpty()) insert as user choices;
-        if (!cites.isEmpty()) insert as user cites;
+        if (!choices.isEmpty()) insert as system choices;
+        if (!cites.isEmpty()) insert as system cites;
 
         // 6. Duplicate detection across pack vs existing (only for new questions)
         Set<String> hashesIn = new Set<String>();

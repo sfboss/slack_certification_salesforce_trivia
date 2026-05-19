@@ -24,3 +24,12 @@ __pycache__/
 # Local secrets
 .env
 *.secret
+
+# Local runtime / debug artifacts (not part of source of truth)
+.apexlog.txt
+.applog.json
+applog.json
+.slash_resp.txt
+*-diagnosis.json
+.org-snapshot/
+deploy-*.json

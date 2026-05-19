@@ -4,10 +4,33 @@
  */
 public with sharing class CertGameTournamentService {
 
+    public class ExamOption {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String label;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<ExamOption> listExams() {
+        List<ExamOption> out = new List<ExamOption>();
+        for (Certification_Exam__c e : [SELECT Id, Name, Certification_Code__c
+                                        FROM Certification_Exam__c
+                                        WITH SYSTEM_MODE
+                                        ORDER BY Name LIMIT 200]) {
+            ExamOption o = new ExamOption();
+            o.id = e.Id;
+            o.label = e.Name + ' (' + e.Certification_Code__c + ')';
+            out.add(o);
+        }
+        return out;
+    }
+
     @AuraEnabled
     public static Id createTournament(String name, String bracketType, Id examId, DateTime startAt, DateTime endAt) {
         if (String.isBlank(name) || String.isBlank(bracketType)) {
             throw new AuraHandledException('Name and bracket type are required.');
+        }
+        if (examId == null) {
+            throw new AuraHandledException('Pick a certification exam before creating a tournament.');
         }
         Tournament__c t = new Tournament__c(
             Name = name,
@@ -17,7 +40,7 @@ public with sharing class CertGameTournamentService {
             End_At__c = endAt,
             Status__c = 'Scheduled'
         );
-        insert as user t;
+        insert as system t;
         AuditLogger.log('tournament_create', 'Tournament__c', t.Id, null, JSON.serialize(t), null);
         return t.Id;
     }
@@ -25,14 +48,14 @@ public with sharing class CertGameTournamentService {
     @AuraEnabled
     public static String buildBracket(Id tournamentId, List<Id> playerIds) {
         List<Tournament__c> ts = [SELECT Id, Bracket_Type__c FROM Tournament__c
-                                  WHERE Id = :tournamentId WITH USER_MODE LIMIT 1];
+                                  WHERE Id = :tournamentId WITH SYSTEM_MODE LIMIT 1];
         if (ts.isEmpty()) throw new AuraHandledException('Tournament not found.');
         List<String> ids = new List<String>();
         for (Id pid : playerIds) ids.add(String.valueOf(pid));
         List<CertGameBracketGenerator.Pairing> pairings = CertGameBracketGenerator.generate(ts[0].Bracket_Type__c, ids);
         String json = JSON.serialize(pairings);
         ts[0].Bracket_Json__c = json.left(131000);
-        update as user ts[0];
+        update as system ts[0];
         return json;
     }
 
@@ -42,7 +65,7 @@ public with sharing class CertGameTournamentService {
         Player__c p = CertGameTenantService.getOrCreatePlayer(t.Id, slackUserId);
 
         List<Tournament__c> ts = [SELECT Id, Status__c, Tenant__c FROM Tournament__c
-                                  WHERE Id = :tournamentId AND Tenant__c = :t.Id WITH USER_MODE LIMIT 1];
+                                  WHERE Id = :tournamentId AND Tenant__c = :t.Id WITH SYSTEM_MODE LIMIT 1];
         if (ts.isEmpty()) return CertGameSlackRenderService.text(CertGameStrings.TOURNAMENT_NOT_FOUND, true);
 
         AuditLogger.log('tournament_join', 'Tournament__c', ts[0].Id, null, p.Id, slackUserId);
@@ -68,7 +91,7 @@ public with sharing class CertGameTournamentService {
             Bracket_Type__c = readVal(state, 'format_block', 'format'),
             Status__c = 'Scheduled'
         );
-        insert as user tn;
+        insert as system tn;
         AuditLogger.log('tournament_create', 'Tournament__c', tn.Id, null, JSON.serialize(tn), slackUserId);
         return '';
     }

@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="Cert Game Admin Console" icon-name="custom:custom14">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-text-body_small slds-text-color_weak">
+                Single entry point for managing certification trivia: import question banks,
+                review and publish drafts, run generation jobs, and build tournaments.
+            </p>
+        </div>
+        <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+            <lightning-tab label="Dashboard" value="dashboard">
+                <c-cert-game-admin-dashboard></c-cert-game-admin-dashboard>
+            </lightning-tab>
+            <lightning-tab label="Leaderboard" value="leaderboard">
+                <c-cert-game-leaderboard></c-cert-game-leaderboard>
+            </lightning-tab>
+            <lightning-tab label="Review Drafts" value="review">
+                <c-question-review-console></c-question-review-console>
+            </lightning-tab>
+            <lightning-tab label="Question Bank" value="bank">
+                <c-question-bank-manager></c-question-bank-manager>
+            </lightning-tab>
+            <lightning-tab label="Generation Jobs" value="gen">
+                <c-generation-job-console></c-generation-job-console>
+            </lightning-tab>
+            <lightning-tab label="Tournaments" value="tournaments">
+                <c-tournament-builder></c-tournament-builder>
+            </lightning-tab>
+        </lightning-tabset>
+    </lightning-card>
+</template>

@@ -2,6 +2,9 @@
     <lightning-card title="Tournament Builder" icon-name="standard:event">
         <div class="slds-p-around_medium">
             <lightning-input label="Name" value={name} onchange={handleName}></lightning-input>
+            <lightning-combobox label="Certification exam" value={examId}
+                                options={examOptions} onchange={handleExam}
+                                placeholder="Select an exam"></lightning-combobox>
             <lightning-combobox label="Bracket type" value={bracketType}
                                 options={typeOptions} onchange={handleType}></lightning-combobox>
             <lightning-button label="Create tournament" variant="brand"

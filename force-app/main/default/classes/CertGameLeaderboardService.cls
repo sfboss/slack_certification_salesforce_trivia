@@ -19,7 +19,7 @@ public with sharing class CertGameLeaderboardService {
                     + 'WHERE Player__r.Tenant__c = :tId';
         Id tId = tenant.Id;
         if (since != null) soql += ' AND Answered_At__c >= :since';
-        soql += ' WITH USER_MODE LIMIT 10000';
+        soql += ' WITH SYSTEM_MODE LIMIT 10000';
         for (Player_Answer__c pa : Database.query(soql)) {
             if (pa.Points_Awarded__c == null) continue;
             Decimal cur = totals.containsKey(pa.Player__c) ? totals.get(pa.Player__c) : 0;
@@ -27,7 +27,7 @@ public with sharing class CertGameLeaderboardService {
         }
 
         Map<Id, Player__c> pmap = new Map<Id, Player__c>([
-            SELECT Id, Display_Name__c FROM Player__c WHERE Id IN :totals.keySet() WITH USER_MODE
+            SELECT Id, Display_Name__c FROM Player__c WHERE Id IN :totals.keySet() WITH SYSTEM_MODE
         ]);
 
         List<Map<String, Object>> rows = new List<Map<String, Object>>();
@@ -59,11 +59,11 @@ public with sharing class CertGameLeaderboardService {
 
         AggregateResult[] ars = [
             SELECT COUNT(Id) total, SUM(Points_Awarded__c) pts
-            FROM Player_Answer__c WHERE Player__c = :p.Id WITH USER_MODE
+            FROM Player_Answer__c WHERE Player__c = :p.Id WITH SYSTEM_MODE
         ];
         AggregateResult[] arsCorrect = [
             SELECT COUNT(Id) c FROM Player_Answer__c
-            WHERE Player__c = :p.Id AND Is_Correct__c = true WITH USER_MODE
+            WHERE Player__c = :p.Id AND Is_Correct__c = true WITH SYSTEM_MODE
         ];
         Integer total = ars.isEmpty() ? 0 : (Integer) ars[0].get('total');
         Decimal pts = ars.isEmpty() ? 0 : (Decimal)(ars[0].get('pts') == null ? 0 : ars[0].get('pts'));

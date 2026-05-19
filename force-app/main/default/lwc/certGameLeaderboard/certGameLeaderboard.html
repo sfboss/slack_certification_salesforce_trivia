@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Leaderboard" icon-name="standard:reward">
+        <div slot="actions" class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <lightning-combobox
+                    label="Exam"
+                    variant="label-hidden"
+                    placeholder="All exams"
+                    value={examId}
+                    options={examOptions}
+                    onchange={onExamChange}></lightning-combobox>
+            </div>
+            <div class="slds-col">
+                <lightning-button label="Refresh" icon-name="utility:refresh" onclick={refresh}></lightning-button>
+            </div>
+        </div>
+        <template if:true={loading}>
+            <div class="slds-p-around_medium"><lightning-spinner alternative-text="Loading"></lightning-spinner></div>
+        </template>
+        <template if:true={hasRows}>
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead><tr>
+                    <th class="slds-text-align_right">#</th>
+                    <th>Player</th>
+                    <th class="slds-text-align_right">Points</th>
+                    <th class="slds-text-align_right">Games</th>
+                    <th class="slds-text-align_right">Accuracy</th>
+                    <th class="slds-text-align_right">Streak</th>
+                </tr></thead>
+                <tbody>
+                    <template for:each={data.rows} for:item="r">
+                        <tr key={r.playerId}>
+                            <td class="slds-text-align_right">{r.rank}</td>
+                            <td>{r.displayName}</td>
+                            <td class="slds-text-align_right">{r.points}</td>
+                            <td class="slds-text-align_right">{r.games}</td>
+                            <td class="slds-text-align_right">{r.accuracy}%</td>
+                            <td class="slds-text-align_right">{r.currentStreak}d</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </template>
+        <template if:false={hasRows}>
+            <template if:false={loading}>
+                <p class="slds-p-around_medium slds-text-color_weak">No leaderboard data yet.</p>
+            </template>
+        </template>
+        <template if:true={error}>
+            <div class="slds-p-around_medium slds-text-color_error">{error}</div>
+        </template>
+    </lightning-card>
+</template>

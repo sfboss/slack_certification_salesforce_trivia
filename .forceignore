@@ -2,3 +2,10 @@
 **/__tests__/**
 **/*.test.js
 **/jest.config.js
+**/jsconfig.json
+**/.eslintrc.json
+
+# Contains live secrets (Slack tokens). Manage values directly in the org;
+# the in-repo copy stays redacted. Remove this line only when the secret
+# fields are removed from App_Setting__mdt.
+force-app/main/default/customMetadata/App_Setting.Default.md-meta.xml

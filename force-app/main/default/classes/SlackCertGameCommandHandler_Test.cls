@@ -24,7 +24,18 @@ private class SlackCertGameCommandHandler_Test {
     }
 
     @IsTest static void planAndBilling() {
+        Test.setMock(HttpCalloutMock.class, new SlackOkMock());
         SlackCertGameCommandHandler.handle(p('plan'));
         SlackCertGameCommandHandler.handle(p('billing'));
+    }
+
+    private class SlackOkMock implements HttpCalloutMock {
+        public HTTPResponse respond(HTTPRequest req) {
+            HttpResponse res = new HttpResponse();
+            res.setStatusCode(200);
+            res.setHeader('Content-Type', 'application/json');
+            res.setBody('{"ok":true}');
+            return res;
+        }
     }
 }

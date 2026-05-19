@@ -1,10 +1,14 @@
 public with sharing class CertGameStrings {
     public static final String HELP_TEXT =
         '*Certification Trivia* commands:\n' +
-        '`/certgame` — open setup\n' +
-        '`/certgame admin 10` — quick start (exam code + question count)\n' +
+        '`/certgame play` — start a quick 5-question game (optionally `play <ExamCode>`)\n' +
+        '`/certgame challenge @user [ExamCode]` — head-to-head duel (5 questions)\n' +
+        '`/certgame games` — list available exams + question counts\n' +
         '`/certgame leaderboard` — show channel leaderboard\n' +
+        '`/certgame stats` — your stats in this workspace\n' +
         '`/certgame plan` — manage study plan\n' +
+        '`/certgame doctor` — run setup + health checks (admins & players)\n' +
+        '`/certgame notify-test` — DM yourself a self-test message to verify notifications work\n' +
         '`/certgame billing` — manage workspace plan (admins)\n' +
         '`/certgame help` — this message';
 

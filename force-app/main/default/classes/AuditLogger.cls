@@ -20,7 +20,7 @@ public with sharing class AuditLogger {
                 After_JSON__c = afterObj == null ? null : JSON.serialize(afterObj).left(32700),
                 Occurred_At__c = System.now()
             );
-            insert as user row;
+            insert as system row;
         } catch (Exception e) {
             System.debug(LoggingLevel.ERROR, '[AuditLogger fallback] ' + action + ' ' + targetType + ' ' + targetId + ': ' + e.getMessage());
         }

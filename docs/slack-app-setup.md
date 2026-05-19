@@ -60,3 +60,8 @@ After deploying the package:
 
 ## 9. Smoke Test
 Run `/certgame help` from any channel after install. You should see the help block.
+
+
+curl -i -X POST 'https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/certgame' \
+     -H 'Content-Type: application/json' \
+     -d '{"type":"url_verification","challenge":"hello123"}'

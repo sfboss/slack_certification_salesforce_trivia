@@ -32,8 +32,7 @@ public with sharing class CertGameStudyPlanService {
                 }
             }
         };
-        try { SlackApiClient.openView(triggerId, view); }
-        catch (Exception e) { AppLogger.warn('Plan', 'openView', e.getMessage()); }
+        SlackApiClient.openView(triggerId, view);
         return '';
     }
 
@@ -46,20 +45,29 @@ public with sharing class CertGameStudyPlanService {
         Tenant__c t = CertGameTenantService.getOrCreateTenant(slackTeamId);
         Player__c p = CertGameTenantService.getOrCreatePlayer(t.Id, slackUserId);
 
-        List<Certification_Exam__c> exams = [SELECT Id FROM Certification_Exam__c
-                                              WHERE Certification_Code__c = :examCode WITH USER_MODE LIMIT 1];
-        if (exams.isEmpty()) return CertGameSlackRenderService.text(CertGameStrings.NO_EXAM, true);
+        PlanDml dml = new PlanDml();
+        Certification_Exam__c exam = dml.findExam(examCode);
+        if (exam == null) return CertGameSlackRenderService.text(CertGameStrings.NO_EXAM, true);
 
         Study_Plan__c sp = new Study_Plan__c(
             Player__c = p.Id,
-            Certification_Exam__c = exams[0].Id,
+            Certification_Exam__c = exam.Id,
             Target_Exam_Date__c = parseDate(targetStr),
             Daily_Questions__c = parseInt(dailyStr, 5),
             Status__c = 'Active'
         );
-        insert as user sp;
+        dml.insertPlan(sp);
         AuditLogger.log('plan_create', 'Study_Plan__c', sp.Id, null, JSON.serialize(sp), slackUserId);
         return '';
+    }
+
+    private without sharing class PlanDml {
+        public Certification_Exam__c findExam(String code) {
+            List<Certification_Exam__c> exams = [SELECT Id FROM Certification_Exam__c
+                                                  WHERE Certification_Code__c = :code LIMIT 1];
+            return exams.isEmpty() ? null : exams[0];
+        }
+        public void insertPlan(Study_Plan__c sp) { insert sp; }
     }
 
     private static String readVal(Map<String, Object> state, String block, String action) {

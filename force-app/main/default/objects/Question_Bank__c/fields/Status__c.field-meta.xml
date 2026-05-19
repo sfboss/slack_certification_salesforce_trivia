@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Status__c</fullName>
+    <externalId>false</externalId>
     <label>Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -9,23 +13,23 @@
             <sorted>false</sorted>
             <value>
                 <fullName>Draft</fullName>
-                <label>Draft</label>
                 <default>false</default>
+                <label>Draft</label>
             </value>
             <value>
                 <fullName>Review</fullName>
-                <label>Review</label>
                 <default>false</default>
+                <label>Review</label>
             </value>
             <value>
                 <fullName>Published</fullName>
-                <label>Published</label>
                 <default>false</default>
+                <label>Published</label>
             </value>
             <value>
                 <fullName>Retired</fullName>
-                <label>Retired</label>
                 <default>false</default>
+                <label>Retired</label>
             </value>
         </valueSetDefinition>
     </valueSet>

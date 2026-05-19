@@ -38,9 +38,18 @@ public with sharing class EntitlementGuard {
 
     private static Tenant__c readTenant(Id tenantId) {
         if (tenantId == null) return null;
-        List<Tenant__c> ts = [SELECT Id, Plan__c, Status__c FROM Tenant__c
-                              WHERE Id = :tenantId WITH USER_MODE LIMIT 1];
-        return ts.isEmpty() ? null : ts[0];
+        return new TenantReader().byId(tenantId);
+    }
+
+    // Guest user sharing is enforced independently of WITH SYSTEM_MODE, so the
+    // tenant read must run without sharing or every Slack-driven entitlement
+    // check will fail closed with "Daily quota reached".
+    private without sharing class TenantReader {
+        public Tenant__c byId(Id tenantId) {
+            List<Tenant__c> ts = [SELECT Id, Plan__c, Status__c FROM Tenant__c
+                                  WHERE Id = :tenantId LIMIT 1];
+            return ts.isEmpty() ? null : ts[0];
+        }
     }
 
     private static Integer limitFor(String plan, String key) {
@@ -63,7 +72,7 @@ public with sharing class EntitlementGuard {
         String period = currentPeriod();
         String soql = 'SELECT ' + fieldApi + ' FROM Usage_Metric__c '
                     + 'WHERE Tenant__c = :tenantId AND Period__c = :period '
-                    + 'WITH USER_MODE LIMIT 1';
+                    + 'WITH SYSTEM_MODE LIMIT 1';
         List<Usage_Metric__c> rs = Database.query(soql);
         if (rs.isEmpty()) return 0;
         Object v = rs[0].get(fieldApi);

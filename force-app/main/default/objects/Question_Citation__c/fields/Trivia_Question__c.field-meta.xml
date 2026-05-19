@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Trivia_Question__c</fullName>
-    <label>Trivia Question</label>
-    <type>Lookup</type>
-    <required>true</required>
-    <referenceTo>Trivia_Question__c</referenceTo>
-    <relationshipName>Citations</relationshipName>
-    <relationshipLabel>Trivia Question</relationshipLabel>
     <deleteConstraint>Restrict</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Trivia Question</label>
+    <referenceTo>Trivia_Question__c</referenceTo>
+    <relationshipLabel>Trivia Question</relationshipLabel>
+    <relationshipName>Citations</relationshipName>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
 </CustomField>

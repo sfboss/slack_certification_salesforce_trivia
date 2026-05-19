@@ -30,8 +30,7 @@ public with sharing class CertGameBillingService {
                 }
             }
         };
-        try { SlackApiClient.openView(triggerId, view); }
-        catch (Exception e) { AppLogger.warn('Billing', 'openView', e.getMessage()); }
+        SlackApiClient.openView(triggerId, view);
         return '';
     }
 
@@ -54,7 +53,7 @@ public with sharing class CertGameBillingService {
         // is returned via DM. Actual plan change happens when the Stripe webhook fires.
         if (chosen == 'Free') {
             t.Plan__c = 'Free';
-            update as user t;
+            update as system t;
             AuditLogger.log('plan_change', 'Tenant', t.Id, null, 'Free', slackUserId);
         } else {
             AuditLogger.log('plan_intent', 'Tenant', t.Id, t.Plan__c, chosen, slackUserId);

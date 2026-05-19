@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Provider__c</fullName>
+    <externalId>false</externalId>
     <label>Provider</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -9,28 +13,28 @@
             <sorted>false</sorted>
             <value>
                 <fullName>OpenAI</fullName>
-                <label>OpenAI</label>
                 <default>false</default>
+                <label>OpenAI</label>
             </value>
             <value>
                 <fullName>Gemini</fullName>
-                <label>Gemini</label>
                 <default>false</default>
+                <label>Gemini</label>
             </value>
             <value>
                 <fullName>Claude</fullName>
-                <label>Claude</label>
                 <default>false</default>
+                <label>Claude</label>
             </value>
             <value>
                 <fullName>Manual</fullName>
-                <label>Manual</label>
                 <default>false</default>
+                <label>Manual</label>
             </value>
             <value>
                 <fullName>Local</fullName>
-                <label>Local</label>
                 <default>false</default>
+                <label>Local</label>
             </value>
         </valueSetDefinition>
     </valueSet>

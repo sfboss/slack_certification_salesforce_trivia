@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Feature_Flag_Nudges__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
     <label>Feature Flag - Nudges</label>
     <type>Checkbox</type>
-    <defaultValue>false</defaultValue>
 </CustomField>
