@@ -1,8 +1,9 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import uploadPack from '@salesforce/apex/QuestionReviewController.uploadPack';
 
 export default class QuestionBankManager extends LightningElement {
+    @api focusLabel;
     @track jsonText = '';
     @track loading = false;
     @track lastResult;
@@ -41,4 +42,5 @@ export default class QuestionBankManager extends LightningElement {
 
     get hasErrors() { return this.lastResult && this.lastResult.errors && this.lastResult.errors.length > 0; }
     get hasDuplicates() { return this.lastResult && this.lastResult.duplicateExternalIds && this.lastResult.duplicateExternalIds.length > 0; }
+    get hasFocusLabel() { return !!this.focusLabel; }
 }

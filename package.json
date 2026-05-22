@@ -38,7 +38,11 @@
       "eslint"
     ],
     "**/lwc/**": [
-        "sfdx-lwc-jest -- --bail --findRelatedTests --passWithNoTests"
+      "sfdx-lwc-jest -- --bail --findRelatedTests --passWithNoTests"
     ]
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "date-fns": "^4.2.1"
   }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Glossary_Terms__c</fullName>
+    <description>JSON array of {term, definition} pairs so the test taker never has to bail on an unrecognized word.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>JSON array: [{&quot;term&quot;:&quot;OWD&quot;,&quot;definition&quot;:&quot;Organization-Wide Defaults...&quot;}]. Rendered as an inline mini-glossary on question cards.</inlineHelpText>
+    <label>Glossary Terms</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

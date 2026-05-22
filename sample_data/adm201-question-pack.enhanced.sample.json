@@ -1,0 +1,43 @@
+{
+  "exam": {
+    "name": "Salesforce Administrator",
+    "code": "ADM-201"
+  },
+  "questionBank": {
+    "name": "ADM-201 Practice Pack 001",
+    "version": "1.1.0",
+    "sourceType": "Imported",
+    "status": "Draft",
+    "externalId": "BANK-ADM201-001"
+  },
+  "questions": [
+    {
+      "externalId": "ADM201-SEC-001",
+      "domain": "Security and Access",
+      "difficulty": "Intermediate",
+      "questionType": "Single Select",
+      "scenario": "A sales manager needs access to records owned by direct reports.",
+      "question": "Which Salesforce feature most directly supports this requirement?",
+      "keywords": ["role hierarchy","record access","manager","sharing"],
+      "tags": ["data-security","sharing"],
+      "namedEntities": [{"type":"Feature","value":"Role Hierarchy"}],
+      "glossaryTerms": [{"term":"Role Hierarchy","definition":"A Salesforce feature that grants record access upward to managers."}],
+      "primaryReferenceUrl": "https://help.salesforce.com/s/articleView?id=sf.security_data_access.htm",
+      "choices": [
+        { "label": "A", "text": "Permission Set Group", "isCorrect": false, "explanation": "PSGs aggregate permissions but do not create hierarchical record access.", "whyIncorrect": "Does not grant access up the management chain.", "directStatement": "Permission Set Groups do not affect record hierarchy.", "misconceptionTag": "confuses-permission-set-with-hierarchy" },
+        { "label": "B", "text": "Organization-Wide Defaults", "isCorrect": false, "explanation": "OWD establishes baseline access only.", "whyIncorrect": "OWD sets baseline, not upward access.", "directStatement": "OWD controls baseline access only.", "misconceptionTag": "confuses-owd-with-hierarchy" },
+        { "label": "C", "text": "Role Hierarchy", "isCorrect": true, "explanation": "Role hierarchy opens record access upward to managers.", "directStatement": "Role hierarchy grants upward access." },
+        { "label": "D", "text": "Login IP Ranges", "isCorrect": false, "explanation": "IP ranges control login, not record access.", "whyIncorrect": "IP ranges do not affect record access.", "directStatement": "Login IP Ranges are for login security." }
+      ],
+      "explanation": "Role hierarchy is the most direct mechanism for upward record access through management structure.",
+      "citations": [
+        {
+          "title": "Salesforce Help: Control Access to Records",
+          "url": "https://help.salesforce.com/s/articleView?id=sf.security_data_access.htm",
+          "sourceType": "Salesforce Help",
+          "relevanceNote": "Explains record access and role hierarchy."
+        }
+      ]
+    }
+  ]
+}

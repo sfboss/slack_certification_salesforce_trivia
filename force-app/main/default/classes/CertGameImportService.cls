@@ -150,6 +150,11 @@ public with sharing class CertGameImportService {
                 Status__c = 'Draft',
                 Correct_Answer_Mode__c = (q.get('questionType') == 'Multi Select') ? 'MultiRequired' : 'Exact',
                 Explanation__c = (String) q.get('explanation'),
+                Keywords__c = joinList(q.get('keywords')),
+                Tags__c = clip(joinList(q.get('tags')), 255),
+                Named_Entities__c = serializeIfList(q.get('namedEntities')),
+                Glossary_Terms__c = serializeIfList(q.get('glossaryTerms')),
+                Primary_Reference_URL__c = (String) q.get('primaryReferenceUrl'),
                 Hash__c = h
             );
             toUpsert.add(tq);
@@ -188,6 +193,9 @@ public with sharing class CertGameImportService {
                     Choice_Text__c = (String) c.get('text'),
                     Is_Correct__c = c.get('isCorrect') == true,
                     Explanation__c = (String) c.get('explanation'),
+                    Why_Incorrect__c = (String) c.get('whyIncorrect'),
+                    Direct_Statement__c = (String) c.get('directStatement'),
+                    Misconception_Tag__c = clip((String) c.get('misconceptionTag'), 120),
                     Sort_Order__c = ++order
                 ));
             }
@@ -227,4 +235,26 @@ public with sharing class CertGameImportService {
     }
 
     public class ImportException extends Exception {}
+
+    private static String joinList(Object o) {
+        if (!(o instanceof List<Object>)) return null;
+        List<String> out = new List<String>();
+        for (Object v : (List<Object>) o) {
+            if (v == null) continue;
+            String s = String.valueOf(v).trim();
+            if (s != '') out.add(s);
+        }
+        return out.isEmpty() ? null : String.join(out, ';');
+    }
+
+    private static String serializeIfList(Object o) {
+        if (!(o instanceof List<Object>)) return null;
+        List<Object> lst = (List<Object>) o;
+        return lst.isEmpty() ? null : JSON.serialize(lst);
+    }
+
+    private static String clip(String s, Integer max) {
+        if (s == null) return null;
+        return s.length() > max ? s.substring(0, max) : s;
+    }
 }

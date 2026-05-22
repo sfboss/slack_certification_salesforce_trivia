@@ -1,6 +1,12 @@
 <template>
     <lightning-card title="Question Bank Manager" icon-name="standard:document">
         <div class="slds-p-around_medium">
+            <template if:true={hasFocusLabel}>
+                <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_small" role="alert">
+                    <span class="slds-assistive-text">Warning</span>
+                    <h2>Focus: {focusLabel}</h2>
+                </div>
+            </template>
             <p class="slds-text-color_weak slds-m-bottom_x-small">
                 Paste a Cert Game question pack JSON. Everything imports as Draft and must be reviewed before play.
             </p>

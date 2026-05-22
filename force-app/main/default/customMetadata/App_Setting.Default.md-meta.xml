@@ -74,4 +74,12 @@
         <field>Stripe_Named_Credential__c</field>
         <value xsi:type="xsd:string">Stripe_API</value>
     </values>
+    <values>
+        <field>Web_Google_Client_Id__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Web_Session_Secret__c</field>
+        <value xsi:nil="true"/>
+    </values>
 </CustomMetadata>

@@ -1,0 +1,145 @@
+site_name: Slack Certification Salesforce Trivia
+site_description: Salesforce-managed Slack app for certification trivia, study plans, and tournaments.
+site_url: https://sfboss.github.io/slack_certification_salesforce_trivia/
+repo_url: https://github.com/sfboss/slack_certification_salesforce_trivia
+repo_name: sfboss/slack_certification_salesforce_trivia
+docs_dir: docs_site
+site_dir: site
+
+theme:
+  name: material
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.tracking
+    - navigation.footer
+    - navigation.instant
+    - navigation.instant.progress
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - announce.dismiss
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/school-outline
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sfboss/slack_certification_salesforce_trivia
+      name: GitHub repository
+    - icon: fontawesome/brands/slack
+      link: https://api.slack.com/apps
+      name: Slack app dashboard
+    - icon: simple/salesforce
+      link: https://developer.salesforce.com/
+      name: Salesforce developer portal
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - getting-started/index.md
+      - Prerequisites: getting-started/prerequisites.md
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quick-start.md
+  - Salesforce:
+      - salesforce/index.md
+      - Overview: salesforce/overview.md
+      - Setup: salesforce/setup.md
+      - Data Model: salesforce/data-model.md
+      - APIs: salesforce/apis.md
+      - Authentication: salesforce/authentication.md
+      - Deployment: salesforce/deployment.md
+  - Slack:
+      - slack/index.md
+      - Overview: slack/overview.md
+      - Setup: slack/setup.md
+      - Slash Commands: slack/commands.md
+      - Events: slack/events.md
+      - Permissions & Scopes: slack/permissions.md
+  - User Guide:
+      - user-guide/index.md
+      - Features: user-guide/features.md
+      - Workflows: user-guide/workflows.md
+      - Troubleshooting: user-guide/troubleshooting.md
+      - FAQ: user-guide/faq.md
+  - Architecture:
+      - architecture/index.md
+      - Overview: architecture/overview.md
+      - Data Flow: architecture/data-flow.md
+      - Components: architecture/components.md
+  - API Reference:
+      - api-reference/index.md
+      - Apex Classes: api-reference/apex.md
+      - Salesforce REST: api-reference/salesforce-api.md
+      - Slack Integration: api-reference/slack-api.md
+      - Lightning Web Components: api-reference/lwc.md
+  - Development:
+      - development/index.md
+      - Contributing: development/contributing.md
+      - Testing: development/testing.md
+      - Deployment: development/deployment.md
+  - Analytics:
+      - Per-User Insights: analytics/per-user-insights.md
+  - Gaps & Follow-ups: _gaps.md

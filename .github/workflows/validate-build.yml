@@ -1,0 +1,236 @@
+name: Validate Build
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate against Salesforce
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      SCRATCH_ALIAS: ci-ephemeral-${{ github.run_id }}
+      DEVHUB_ALIAS: devhub-ci
+
+    outputs:
+      scratchCreated: ${{ steps.org.outputs.scratchCreated }}
+
+    steps:
+      - name: Preflight — required secrets present
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          missing=""
+          [ -z "${SFDX_AUTH_URL:-}" ] && missing="$missing SFDX_AUTH_URL"
+          [ -z "${SLACK_WEBHOOK_URL:-}" ] && missing="$missing SLACK_WEBHOOK_URL"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing required secrets:$missing"
+            # Best-effort Slack failure ping if webhook is present.
+            if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
+              curl -sS -X POST -H 'Content-Type: application/json' \
+                --data "{\"text\":\"❌ validate-build aborted: missing secrets$missing\"}" \
+                "$SLACK_WEBHOOK_URL" || true
+            fi
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Salesforce CLI
+        run: |
+          set -euo pipefail
+          npm install --global @salesforce/cli
+          sf --version
+
+      - name: Notify Slack — start
+        if: always()
+        uses: ./.github/actions/slack-notify
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: start
+          title: Build validation
+          workflow_label: validate-build / validate
+          extra_fields: |
+            [
+              { "label": "Target", "value": "${{ secrets.SFDX_AUTH_URL_SCRATCH != '' && 'pre-provisioned org' || 'ephemeral scratch' }}" }
+            ]
+
+      - name: Authorize Dev Hub
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$SFDX_AUTH_URL" > ./DEVHUB_AUTH.txt
+          sf org login sfdx-url -f ./DEVHUB_AUTH.txt -a "$DEVHUB_ALIAS" -d
+          rm -f ./DEVHUB_AUTH.txt
+
+      - name: Resolve target org (create scratch or auth provided)
+        id: org
+        env:
+          SFDX_AUTH_URL_SCRATCH: ${{ secrets.SFDX_AUTH_URL_SCRATCH }}
+        run: |
+          set -euo pipefail
+          if [ -n "${SFDX_AUTH_URL_SCRATCH:-}" ]; then
+            printf '%s' "$SFDX_AUTH_URL_SCRATCH" > ./TARGET_AUTH.txt
+            sf org login sfdx-url -f ./TARGET_AUTH.txt -a "$SCRATCH_ALIAS"
+            rm -f ./TARGET_AUTH.txt
+            echo "scratchCreated=false" >> "$GITHUB_OUTPUT"
+          else
+            sf org create scratch \
+              -f config/project-scratch-def.json \
+              -a "$SCRATCH_ALIAS" \
+              -y 1 \
+              -w 30 \
+              --no-track-source=false || \
+            sf org create scratch \
+              -f config/project-scratch-def.json \
+              -a "$SCRATCH_ALIAS" \
+              -y 1 \
+              -w 30
+            echo "scratchCreated=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy source
+        id: deploy
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          sf project deploy start \
+            -o "$SCRATCH_ALIAS" \
+            -w 60 \
+            --verbose \
+            --json > reports/deploy.json
+          DEPLOY_ID="$(jq -r '.result.id // .result.deployId // empty' reports/deploy.json)"
+          echo "deployId=$DEPLOY_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Run Apex tests (RunLocalTests + coverage)
+        id: tests
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          sf apex run test \
+            -o "$SCRATCH_ALIAS" \
+            -l RunLocalTests \
+            -w 60 \
+            -c \
+            -r human || true
+          sf apex run test \
+            -o "$SCRATCH_ALIAS" \
+            -l RunLocalTests \
+            -w 60 \
+            -c \
+            -r json > reports/tests.json || true
+          PASS="$(jq -r '.result.summary.passing // 0' reports/tests.json)"
+          FAIL="$(jq -r '.result.summary.failing // 0' reports/tests.json)"
+          COV="$(jq -r '.result.summary.testRunCoverage // .result.summary.orgWideCoverage // "n/a"' reports/tests.json)"
+          echo "pass=$PASS"  >> "$GITHUB_OUTPUT"
+          echo "fail=$FAIL"  >> "$GITHUB_OUTPUT"
+          echo "coverage=$COV" >> "$GITHUB_OUTPUT"
+          if [ "$FAIL" != "0" ]; then
+            echo "::error::$FAIL Apex tests failed"
+            exit 1
+          fi
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validate-build-reports
+          path: reports/
+          if-no-files-found: ignore
+
+      - name: Notify Slack — success
+        if: success()
+        uses: ./.github/actions/slack-notify
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: success
+          title: Build validation
+          workflow_label: validate-build / validate
+          extra_fields: |
+            [
+              { "label": "Deploy ID",  "value": "${{ steps.deploy.outputs.deployId || 'n/a' }}" },
+              { "label": "Tests",      "value": "${{ steps.tests.outputs.pass }} passed / ${{ steps.tests.outputs.fail }} failed" },
+              { "label": "Coverage",   "value": "${{ steps.tests.outputs.coverage }}" },
+              { "label": "Org",        "value": "${{ env.SCRATCH_ALIAS }}" }
+            ]
+
+      - name: Capture failure log tail
+        if: failure()
+        id: failtail
+        run: |
+          set -euo pipefail
+          {
+            echo "----- deploy.json (tail) -----"
+            tail -c 2000 reports/deploy.json 2>/dev/null || echo "(no deploy.json)"
+            echo
+            echo "----- tests.json (failures) -----"
+            jq -r '.result.tests[]? | select(.Outcome=="Fail") | "\(.FullName): \(.Message)"' reports/tests.json 2>/dev/null | tail -c 1500 || echo "(no test failures parsed)"
+          } > reports/failure_tail.txt
+          {
+            echo 'tail<<EOF'
+            cat reports/failure_tail.txt
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Notify Slack — failure
+        if: failure()
+        uses: ./.github/actions/slack-notify
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: failure
+          title: Build validation
+          workflow_label: validate-build / validate
+          extra_fields: |
+            [
+              { "label": "Deploy ID",  "value": "${{ steps.deploy.outputs.deployId || 'n/a' }}" },
+              { "label": "Tests",      "value": "${{ steps.tests.outputs.pass || '0' }} passed / ${{ steps.tests.outputs.fail || '?' }} failed" },
+              { "label": "Coverage",   "value": "${{ steps.tests.outputs.coverage || 'n/a' }}" },
+              { "label": "Org",        "value": "${{ env.SCRATCH_ALIAS }}" }
+            ]
+          log_tail: ${{ steps.failtail.outputs.tail }}
+
+      - name: Cleanup — delete ephemeral scratch org
+        if: always() && steps.org.outputs.scratchCreated == 'true'
+        id: cleanup
+        run: |
+          set -euo pipefail
+          if sf org delete scratch -o "$SCRATCH_ALIAS" -p; then
+            echo "deleted=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deleted=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Failed to delete scratch org $SCRATCH_ALIAS"
+          fi
+
+      - name: Notify Slack — cleanup
+        if: always() && steps.org.outputs.scratchCreated == 'true'
+        uses: ./.github/actions/slack-notify
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: cleanup
+          title: Scratch org cleanup
+          workflow_label: validate-build / cleanup
+          extra_fields: |
+            [
+              { "label": "Org",     "value": "${{ env.SCRATCH_ALIAS }}" },
+              { "label": "Deleted", "value": "${{ steps.cleanup.outputs.deleted || 'false' }}" }
+            ]

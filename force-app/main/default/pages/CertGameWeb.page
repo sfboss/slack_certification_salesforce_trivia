@@ -1,0 +1,305 @@
+<apex:page showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" cache="false">
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CertGame Trivia</title>
+<script src="https://accounts.google.com/gsi/client" async="async" defer="defer"></script>
+<style>
+  :root { --bg:#0b1020; --fg:#e6edf3; --muted:#9aa5b1; --accent:#5b8def; --good:#22c55e; --bad:#ef4444; --card:#141a2e; --border:#23304d; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; }
+  h1 { margin:0; font-size: 22px; }
+  .who { display:flex; align-items:center; gap:10px; font-size: 13px; color:var(--muted); }
+  .who img { width:32px; height:32px; border-radius:50%; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; }
+  .muted { color:var(--muted); font-size:13px; }
+  button, .btn { background:var(--accent); color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600; }
+  button:hover { filter: brightness(1.1); }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  .btn.secondary { background:transparent; border:1px solid var(--border); color:var(--fg); }
+  .choice { display:block; width:100%; text-align:left; padding:14px; margin:8px 0; background:#1a2240; color:var(--fg); border:1px solid var(--border); border-radius:10px; cursor:pointer; font-size:15px; }
+  .choice:hover { border-color:var(--accent); }
+  .choice.correct { border-color:var(--good); background:#13311f; }
+  .choice.wrong { border-color:var(--bad); background:#3a1a1a; }
+  .choice.locked { cursor:not-allowed; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#23304d; font-size:11px; margin-right:6px; }
+  .row { display:flex; gap:12px; align-items:center; }
+  .grow { flex:1; }
+  .explanation { background:#0f1730; border-left:3px solid var(--accent); padding:12px 14px; border-radius:6px; margin-top:12px; white-space:pre-wrap; }
+  select { background:#1a2240; color:var(--fg); border:1px solid var(--border); padding:8px; border-radius:6px; }
+  .weak { padding:10px; border:1px solid var(--border); border-radius:8px; margin:6px 0; font-size:13px; }
+  .err { color:var(--bad); font-size:13px; margin-top:8px; }
+  .ok { color:var(--good); }
+  #signinHost { margin-top: 12px; }
+  .footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>CertGame</h1>
+    <div id="who" class="who" style="display:none"></div>
+  </header>
+
+  <div id="loginCard" class="card" style="display:none">
+    <h2 style="margin-top:0">Sign in to play</h2>
+    <p class="muted">Google sign-in. Your account creates a player profile in Salesforce that tracks every question you attempt.</p>
+    <div id="signinHost"></div>
+    <div id="loginErr" class="err"></div>
+  </div>
+
+  <div id="lobbyCard" class="card" style="display:none">
+    <h2 style="margin-top:0">Pick an exam</h2>
+    <div class="row">
+      <select id="examSelect" class="grow"></select>
+      <select id="qCount">
+        <option value="5">5 questions</option>
+        <option value="10">10 questions</option>
+        <option value="20">20 questions</option>
+      </select>
+      <button id="startBtn">Start</button>
+    </div>
+    <div id="statsBox" class="muted" style="margin-top:12px"></div>
+    <div id="weakBox" style="margin-top:12px"></div>
+    <div id="lobbyErr" class="err"></div>
+  </div>
+
+  <div id="playCard" class="card" style="display:none">
+    <div class="muted" id="progress"></div>
+    <div id="scenario" class="muted" style="margin:8px 0"></div>
+    <h2 id="qText" style="margin:8px 0 12px 0"></h2>
+    <div id="choices"></div>
+    <div id="resultBox" style="display:none">
+      <div id="resultLine" style="margin-top:14px; font-weight:600;"></div>
+      <div id="explanation" class="explanation"></div>
+      <button id="nextBtn" style="margin-top:14px">Next</button>
+    </div>
+  </div>
+
+  <div id="finaleCard" class="card" style="display:none">
+    <h2 style="margin-top:0">Session complete</h2>
+    <div id="finaleStats"></div>
+    <button id="againBtn" class="btn secondary" style="margin-top:12px">Play again</button>
+  </div>
+
+  <div class="footer">
+    <a href="#" id="signoutLink" style="color:var(--muted)">Sign out</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var API_BASE = '/services/apexrest/web';
+  // The certgame site exposes apexrest at /services/apexrest. When this page is
+  // served from the Site root (e.g. /certgame/), absolute paths resolve to the
+  // public Site domain — which is what we want.
+
+  var state = {
+    cfg: null,
+    session: null, // { sessionToken, player }
+    examMap: {},
+    currentRound: null,
+    sessionId: null,
+    answered: 0,
+    correct: 0
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function show(id, on){ var el=$(id); if(el) el.style.display = on ? '' : 'none'; }
+
+  function api(method, path, body, auth){
+    var opts = { method: method, headers: { 'Content-Type':'application/json' } };
+    if (auth && state.session) opts.headers['Authorization'] = 'Bearer ' + state.session.sessionToken;
+    if (body) opts.body = JSON.stringify(body);
+    return fetch(API_BASE + path, opts).then(function(r){
+      return r.json().then(function(j){ return { status: r.status, body: j }; }, function(){ return { status: r.status, body: null }; });
+    });
+  }
+
+  function loadConfig(){
+    return api('GET', '/config').then(function(res){
+      if (res.status !== 200) throw new Error('config_failed');
+      state.cfg = res.body;
+      return state.cfg;
+    });
+  }
+
+  function renderSignIn(){
+    var host = $('signinHost');
+    host.innerHTML = '';
+    if (!state.cfg || !state.cfg.googleClientId) {
+      host.innerHTML = '<div class="err">Google Client ID not configured. An admin must set <code>App_Setting__mdt.Default.Web_Google_Client_Id__c</code>.</div>';
+      return;
+    }
+    function tryInit(){
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+        setTimeout(tryInit, 200);
+        return;
+      }
+      window.google.accounts.id.initialize({
+        client_id: state.cfg.googleClientId,
+        callback: onGoogleCredential,
+        auto_select: false,
+        ux_mode: 'popup'
+      });
+      window.google.accounts.id.renderButton(host, { theme: 'filled_blue', size: 'large', text: 'signin_with', shape: 'pill' });
+    }
+    tryInit();
+  }
+
+  function onGoogleCredential(resp){
+    $('loginErr').textContent = '';
+    api('POST', '/auth/google', { credential: resp.credential }, false).then(function(res){
+      if (res.status !== 200) {
+        $('loginErr').textContent = 'Sign-in failed: ' + (res.body && res.body.error || res.status);
+        return;
+      }
+      state.session = res.body;
+      localStorage.setItem('certgame_session', JSON.stringify(state.session));
+      enterLobby();
+    });
+  }
+
+  function enterLobby(){
+    show('loginCard', false);
+    show('playCard', false);
+    show('finaleCard', false);
+    show('lobbyCard', true);
+    var who = $('who');
+    who.style.display = 'flex';
+    who.innerHTML = '';
+    if (state.session.player.pictureUrl) {
+      var img = document.createElement('img'); img.src = state.session.player.pictureUrl; who.appendChild(img);
+    }
+    var span = document.createElement('span'); span.textContent = state.session.player.name + ' (' + state.session.player.email + ')';
+    who.appendChild(span);
+
+    Promise.all([
+      api('GET', '/exams', null, true),
+      api('GET', '/me', null, true)
+    ]).then(function(arr){
+      var exams = arr[0]; var me = arr[1];
+      if (exams.status === 401 || me.status === 401) { signOut(); return; }
+      var sel = $('examSelect'); sel.innerHTML = '';
+      (exams.body || []).forEach(function(e){
+        state.examMap[e.id] = e;
+        var opt = document.createElement('option'); opt.value = e.id; opt.textContent = e.code + ' — ' + e.name;
+        sel.appendChild(opt);
+      });
+      if (me.body) {
+        $('statsBox').innerHTML = '<span class="pill">Answers: ' + (me.body.totalAnswers||0) + '</span>'
+          + '<span class="pill">Correct: ' + (me.body.totalCorrect||0) + '</span>'
+          + '<span class="pill">Points: ' + (me.body.totalPoints||0) + '</span>'
+          + '<span class="pill">Accuracy: ' + Math.round((me.body.accuracy||0)*100) + '%</span>';
+        var wb = $('weakBox'); wb.innerHTML = '';
+        (me.body.weakSpots||[]).forEach(function(w){
+          var d = document.createElement('div'); d.className = 'weak';
+          d.innerHTML = '<strong>Missed ' + w.wrongCount + 'x</strong> &mdash; ' + escapeHtml((w.questionText||'').slice(0,180));
+          wb.appendChild(d);
+        });
+      }
+    });
+  }
+
+  function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+
+  function startGame(){
+    $('lobbyErr').textContent = '';
+    var examId = $('examSelect').value;
+    var n = parseInt($('qCount').value, 10);
+    api('POST', '/session/start', { examId: examId, numQuestions: n }, true).then(function(res){
+      if (res.status !== 200) { $('lobbyErr').textContent = (res.body && res.body.error) || 'start_failed'; return; }
+      state.sessionId = res.body.sessionId;
+      state.answered = 0; state.correct = 0;
+      renderRound(res.body);
+      show('lobbyCard', false); show('playCard', true);
+    });
+  }
+
+  function renderRound(r){
+    state.currentRound = r;
+    show('resultBox', false);
+    $('progress').textContent = 'Question ' + r.roundNumber + ' of ' + r.totalRounds + (r.difficulty ? '  •  ' + r.difficulty : '');
+    $('scenario').textContent = r.scenarioText || '';
+    $('qText').textContent = r.questionText;
+    var ch = $('choices'); ch.innerHTML = '';
+    (r.choices||[]).forEach(function(c){
+      var b = document.createElement('button'); b.className = 'choice'; b.textContent = c.label + '. ' + c.text;
+      b.onclick = function(){ submitAnswer(c.id, b); };
+      ch.appendChild(b);
+    });
+  }
+
+  function submitAnswer(choiceId, btn){
+    var buttons = $('choices').querySelectorAll('.choice');
+    buttons.forEach(function(b){ b.disabled = true; b.classList.add('locked'); });
+    api('POST', '/answer', { roundId: state.currentRound.roundId, choiceId: choiceId }, true).then(function(res){
+      if (res.status !== 200) { alert('answer_failed: ' + (res.body && res.body.error)); return; }
+      var a = res.body;
+      state.answered++; if (a.correct) state.correct++;
+      buttons.forEach(function(b){
+        var label = b.textContent.split('.')[0];
+        if (a.correctChoiceLabel && label === a.correctChoiceLabel) b.classList.add('correct');
+      });
+      if (!a.correct) btn.classList.add('wrong');
+      $('resultLine').textContent = (a.correct ? '✓ Correct' : '✗ Incorrect') + '  •  +' + (a.pointsAwarded||0) + ' pts';
+      $('resultLine').className = a.correct ? 'ok' : 'err';
+      $('explanation').textContent = a.explanation || '';
+      $('nextBtn').onclick = function(){
+        if (a.next && a.next.finished) { renderFinale(a.summary); }
+        else if (a.next) { renderRound(a.next); }
+      };
+      show('resultBox', true);
+    });
+  }
+
+  function renderFinale(s){
+    show('playCard', false);
+    show('finaleCard', true);
+    $('finaleStats').innerHTML = '<span class="pill">Answered: ' + s.totalAnswered + '</span>'
+      + '<span class="pill">Correct: ' + s.totalCorrect + '</span>'
+      + '<span class="pill">Points: ' + s.totalPoints + '</span>'
+      + '<span class="pill">Accuracy: ' + Math.round((s.accuracy||0)*100) + '%</span>';
+  }
+
+  function signOut(){
+    state.session = null;
+    localStorage.removeItem('certgame_session');
+    show('lobbyCard', false); show('playCard', false); show('finaleCard', false);
+    $('who').style.display = 'none';
+    show('loginCard', true);
+    renderSignIn();
+  }
+
+  $('startBtn').onclick = startGame;
+  $('againBtn').onclick = function(){ enterLobby(); };
+  $('signoutLink').onclick = function(e){ e.preventDefault(); signOut(); };
+
+  // Boot
+  loadConfig().then(function(){
+    var saved = localStorage.getItem('certgame_session');
+    if (saved) {
+      try { state.session = JSON.parse(saved); } catch(e) { state.session = null; }
+    }
+    if (state.session && state.session.sessionToken) {
+      // Validate by calling /me; fall back to login on 401.
+      api('GET', '/me', null, true).then(function(r){
+        if (r.status === 200) enterLobby();
+        else signOut();
+      });
+    } else {
+      show('loginCard', true);
+      renderSignIn();
+    }
+  }).catch(function(e){
+    show('loginCard', true);
+    $('loginErr').textContent = 'Config load failed: ' + e.message;
+  });
+})();
+</script>
+</body>
+</html>
+</apex:page>

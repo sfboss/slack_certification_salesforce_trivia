@@ -1,30 +1,146 @@
 <template>
-    <lightning-card title="Cert Game Admin Console" icon-name="custom:custom14">
-        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
-            <p class="slds-text-body_small slds-text-color_weak">
-                Single entry point for managing certification trivia: import question banks,
-                review and publish drafts, run generation jobs, and build tournaments.
-            </p>
+    <div class="admin-home slds-p-around_medium">
+        <div class="slds-page-header slds-page-header_record-home admin-page-header">
+            <template if:true={loading}>
+                <div class="slds-spinner_container admin-spinner-shell">
+                    <div class="slds-spinner slds-spinner_brand slds-spinner_small" role="status">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </template>
+
+            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-wrap">
+                <div class="slds-col slds-grow slds-p-right_medium">
+                    <div class="slds-media slds-no-space slds-grow">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-knowledge admin-header-icon" title="Cert Game Admin Console">
+                                <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                                    <use xlink:href={headerIconHref}></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate" title="Cert Game Admin Console">Cert Game Admin Console</span>
+                                    </h1>
+                                </div>
+                            </div>
+                            <p class="slds-page-header__name-meta admin-subtitle">Certification trivia management</p>
+                            <p class="slds-text-body_small slds-text-color_weak admin-context-line">{tenantContext}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-col slds-no-flex admin-actions">
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button_brand" data-action="gen" onclick={handleActionClick}>Run Generation Job</button>
+                        <button class="slds-button slds-button_neutral" data-action="tournaments" onclick={handleActionClick}>New Tournament</button>
+                        <div class={headerMenuClass}>
+                            <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="More actions" onclick={handleOverflowToggle}>
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xlink:href={overflowIconHref}></use>
+                                </svg>
+                                <span class="slds-assistive-text">More actions</span>
+                            </button>
+                            <template if:true={headerMenuOpen}>
+                                <div class="slds-dropdown slds-dropdown_right">
+                                    <ul class="slds-dropdown__list" role="menu">
+                                        <li class="slds-dropdown__item" role="presentation">
+                                            <button class="slds-button slds-button_reset slds-dropdown__item-action" role="menuitem" data-action="refresh" onclick={handleOverflowAction}>Refresh</button>
+                                        </li>
+                                        <li class="slds-dropdown__item" role="presentation">
+                                            <button class="slds-button slds-button_reset slds-dropdown__item-action" role="menuitem" data-action="export" onclick={handleOverflowAction}>Export</button>
+                                        </li>
+                                        <li class="slds-dropdown__item" role="presentation">
+                                            <button class="slds-button slds-button_reset slds-dropdown__item-action" role="menuitem" data-action="settings" onclick={handleOverflowAction}>Settings</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-page-header__detail-row admin-detail-row">
+                <div class="slds-page-header__col-details">
+                    <ul class="slds-page-header__detail-list">
+                        <template for:each={metadataItems} for:item="item">
+                            <li key={item.key} class="slds-page-header__detail-block">
+                                <div class="slds-text-title_caps">{item.label}</div>
+                                <div class="slds-text-body_regular slds-truncate" title={item.value}>{item.value}</div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+                <div class="slds-page-header__col-meta admin-header-badges">
+                    <span class={pagePlanClass}>{pagePlan}</span>
+                    <span class={pageStatusClass}>{pageStatus}</span>
+                </div>
+            </div>
         </div>
-        <lightning-tabset variant="scoped" active-tab-value={activeTab}>
-            <lightning-tab label="Dashboard" value="dashboard">
-                <c-cert-game-admin-dashboard></c-cert-game-admin-dashboard>
-            </lightning-tab>
-            <lightning-tab label="Leaderboard" value="leaderboard">
-                <c-cert-game-leaderboard></c-cert-game-leaderboard>
-            </lightning-tab>
-            <lightning-tab label="Review Drafts" value="review">
-                <c-question-review-console></c-question-review-console>
-            </lightning-tab>
-            <lightning-tab label="Question Bank" value="bank">
-                <c-question-bank-manager></c-question-bank-manager>
-            </lightning-tab>
-            <lightning-tab label="Generation Jobs" value="gen">
-                <c-generation-job-console></c-generation-job-console>
-            </lightning-tab>
-            <lightning-tab label="Tournaments" value="tournaments">
-                <c-tournament-builder></c-tournament-builder>
-            </lightning-tab>
-        </lightning-tabset>
-    </lightning-card>
+
+        <template if:true={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error slds-m-top_medium" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <h2>{error}</h2>
+            </div>
+        </template>
+
+        <div class="slds-tabs_default slds-m-top_medium admin-tabs">
+            <ul class="slds-tabs_default__nav" role="tablist">
+                <template for:each={tabs} for:item="tab">
+                    <li key={tab.key} class={tab.itemClass} title={tab.label} role="presentation">
+                        <a
+                            class="slds-tabs_default__link"
+                            href="#"
+                            role="tab"
+                            tabindex={tab.tabIndex}
+                            aria-selected={tab.ariaSelected}
+                            data-tab={tab.key}
+                            onclick={handleTabClick}
+                        >
+                            <span class="tab-label-wrap">
+                                <svg class="slds-icon slds-icon_x-small slds-icon-text-default tab-icon" aria-hidden="true">
+                                    <use xlink:href={tab.iconHref}></use>
+                                </svg>
+                                <span class="tab-copy">{tab.label}</span>
+                                <template if:true={tab.countLabel}>
+                                    <span class={tab.badgeClass}>{tab.countLabel}</span>
+                                </template>
+                                <template if:true={tab.attentionCount}>
+                                    <span class="slds-notification-badge">{tab.attentionCount}</span>
+                                </template>
+                            </span>
+                        </a>
+                    </li>
+                </template>
+            </ul>
+
+            <div class="slds-tabs_default__content slds-show admin-tab-body" role="tabpanel">
+                <div class={dashboardTabClass}>
+                    <c-cert-game-admin-dashboard tenant-id={tenantId} onhealthaction={handleHealthAction} onnavigate={handleDashboardNavigate}></c-cert-game-admin-dashboard>
+                </div>
+                <div class={leaderboardTabClass}>
+                    <c-cert-game-leaderboard></c-cert-game-leaderboard>
+                </div>
+                <div class={reviewTabClass}>
+                    <c-question-review-console></c-question-review-console>
+                </div>
+                <div class={bankTabClass}>
+                    <c-question-bank-manager focus-label={questionBankFocus}></c-question-bank-manager>
+                </div>
+                <div class={generationTabClass}>
+                    <c-generation-job-console></c-generation-job-console>
+                </div>
+                <div class={tournamentsTabClass}>
+                    <c-tournament-builder></c-tournament-builder>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

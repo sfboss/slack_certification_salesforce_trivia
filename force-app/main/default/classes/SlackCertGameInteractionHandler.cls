@@ -56,6 +56,10 @@ public with sharing class SlackCertGameInteractionHandler {
             String triggerId = (String) payload.get('trigger_id');
             return CertGameStudyPlanService.openPlanModal(teamId, userId, triggerId);
         }
+        if (domain == 'help' && verb == 'show') {
+            String triggerId = (String) payload.get('trigger_id');
+            return CertGameSlackRenderService.helpCommandsModal(triggerId);
+        }
         if (domain == 'home' && verb == 'doctor') {
             // Post the doctor report straight to the user's DM so they see the full card
             // (block_actions has no response_url for App Home buttons).
@@ -66,6 +70,14 @@ public with sharing class SlackCertGameInteractionHandler {
         }
         if (domain == 'home' && verb == 'games') {
             return postCardDm(userId, 'Cert Game — available games', CertGameExamCatalogService.renderForSlack(teamId));
+        }
+        if (domain == 'home' && verb == 'leaderboard') {
+            return postCardDm(userId, 'Cert Game leaderboard',
+                CertGameLeaderboardService.renderLeaderboard(teamId, null, new List<String>{'leaderboard'}));
+        }
+        if (domain == 'home' && verb == 'stats') {
+            return postCardDm(userId, 'Cert Game stats',
+                CertGameLeaderboardService.renderStats(teamId, userId));
         }
         if (domain == 'tournament' && verb == 'join') {
             String tournamentId = parts.size() > 2 ? parts[2] : null;

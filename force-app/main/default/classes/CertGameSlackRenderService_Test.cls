@@ -20,7 +20,8 @@ private class CertGameSlackRenderService_Test {
         };
         String s = CertGameSlackRenderService.questionBlocks(roundId, 'Q?', choices, 30);
         System.assert(s.contains('game:answer:' + roundId + ':c1'));
-        System.assert(s.contains('Time remaining'));
+        System.assert(s.contains('hourglass_flowing_sand'));
+        System.assert(s.contains('30s'));
     }
 
     @IsTest static void resultBlocksCorrectAndWrong() {

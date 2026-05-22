@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Direct_Statement__c</fullName>
+    <description>A standalone factual statement about this choice (true for correct, false for incorrect). Used for analytics and flashcards.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Standalone fact about this option (e.g. &quot;Role hierarchy opens upward access&quot;).</inlineHelpText>
+    <label>Direct Statement</label>
+    <length>4000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

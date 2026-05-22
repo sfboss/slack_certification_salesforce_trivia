@@ -1,0 +1,96 @@
+.admin-home {
+    background: linear-gradient(180deg, #f4f6f9 0%, #ffffff 30%);
+    min-height: 100%;
+}
+
+.admin-page-header {
+    position: relative;
+    border: 1px solid #d8dde6;
+    border-radius: 0.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, #f7f9fb 100%);
+    box-shadow: 0 2px 10px rgba(1, 118, 211, 0.08);
+}
+
+.admin-spinner-shell {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.admin-header-icon {
+    background: linear-gradient(135deg, #0176d3 0%, #1b96ff 100%);
+}
+
+.admin-subtitle {
+    font-size: 0.875rem;
+    color: #3e3e3c;
+}
+
+.admin-context-line {
+    margin-top: 0.125rem;
+}
+
+.admin-detail-row {
+    margin-top: 1rem;
+}
+
+.admin-actions {
+    margin-top: 0.25rem;
+}
+
+.admin-header-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.admin-tabs {
+    border-radius: 0.5rem;
+    background: #ffffff;
+    border: 1px solid #d8dde6;
+    box-shadow: 0 1px 6px rgba(24, 24, 24, 0.06);
+}
+
+.admin-tab-body {
+    padding: 1rem;
+}
+
+.tab-label-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tab-copy {
+    font-weight: 600;
+}
+
+.tab-badge {
+    line-height: 1.1;
+}
+
+.tab-icon {
+    color: #0176d3;
+}
+
+.admin-tab-panel {
+    width: 100%;
+}
+
+@media (max-width: 48rem) {
+    .admin-header-badges {
+        margin-top: 0.75rem;
+        justify-content: flex-start;
+    }
+
+    .admin-actions {
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .admin-actions .slds-button-group {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+}

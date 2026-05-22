@@ -110,6 +110,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>CertGameLeaderboardReader</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>CertGameLeaderboardService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -131,6 +135,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>CertGamePlayerDashboardController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>CertGamePlayerInsightsService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -357,6 +365,22 @@
         <apexClass>StripeWebhookHandler_Test</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>WebApiRestResource</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>WebAuthService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>WebPlayService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>WebSessionToken</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <custom>false</custom>
     <fieldPermissions>
         <editable>false</editable>
@@ -526,6 +550,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>App_Setting__mdt.Stripe_Named_Credential__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>App_Setting__mdt.Web_Google_Client_Id__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>App_Setting__mdt.Web_Session_Secret__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -840,7 +874,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Player_Answer__c.Misconception_Tag__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Player_Answer__c.Points_Awarded__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Answer__c.Question_Difficulty__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Answer__c.Question_Domain__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Answer__c.Question_Keywords__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Answer__c.Question_Tags__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -855,12 +914,47 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Player_Answer__c.Selected_Choice_Text__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Answer__c.Selected_Choice__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Player_Answer__c.Trivia_Question__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Player_Answer__c.Unique_Key__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Topic_Stat__c.Accuracy_Pct__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Topic_Stat__c.Last_Seen_At__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Topic_Stat__c.Times_Correct__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Topic_Stat__c.Times_Incorrect__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player_Topic_Stat__c.Times_Seen__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -876,6 +970,26 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Player__c.Display_Name__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player__c.Google_Email__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player__c.Google_Name__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player__c.Google_Picture_URL__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player__c.Google_Sub__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -931,6 +1045,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Player__c.Total_Points__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Player__c.Web_Last_Login_At__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1315,6 +1434,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Trivia_Answer_Choice__c.Direct_Statement__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Trivia_Answer_Choice__c.Explanation__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1325,7 +1449,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Trivia_Answer_Choice__c.Misconception_Tag__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Trivia_Answer_Choice__c.Sort_Order__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Trivia_Answer_Choice__c.Why_Incorrect__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1360,12 +1494,32 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Trivia_Question__c.Glossary_Terms__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Trivia_Question__c.Hash__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Trivia_Question__c.Keywords__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Trivia_Question__c.Last_Verified_Date__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Trivia_Question__c.Named_Entities__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Trivia_Question__c.Primary_Reference_URL__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1401,6 +1555,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Trivia_Question__c.Status__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Trivia_Question__c.Tags__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1561,6 +1720,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>true</modifyAllRecords>
+        <object>Player_Topic_Stat__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
         <object>Player__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
@@ -1678,6 +1846,10 @@
     </pageAccesses>
     <pageAccesses>
         <apexPage>BandwidthExceeded</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>CertGameWeb</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <pageAccesses>

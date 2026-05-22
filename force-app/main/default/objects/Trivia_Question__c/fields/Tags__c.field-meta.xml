@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tags__c</fullName>
+    <description>Semicolon-separated badges displayed on question cards and rolled up per-user (e.g. &quot;data-security;sharing;classic-vs-lightning&quot;).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Semicolon-separated tags shown as badges and tracked per user for analytics.</inlineHelpText>
+    <label>Tags</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

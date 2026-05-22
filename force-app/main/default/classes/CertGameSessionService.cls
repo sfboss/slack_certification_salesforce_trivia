@@ -86,6 +86,8 @@ public without sharing class CertGameSessionService {
         }
         if (picked == null) return CertGameSlackRenderService.text(CertGameStrings.GENERIC_ERROR, true);
 
+        Trivia_Question__c qSnap = reader.questionById(round.Trivia_Question__c);
+
         Integer timerSec = round.Game_Session__r.Timer_Seconds__c == null
                               ? DEFAULT_TIMER_SEC : round.Game_Session__r.Timer_Seconds__c.intValue();
         Integer elapsedSec = elapsedSeconds(round);
@@ -106,12 +108,19 @@ public without sharing class CertGameSessionService {
             Game_Session__c = round.Game_Session__c,
             Player__c = player.Id,
             Trivia_Question__c = round.Trivia_Question__c,
+            Selected_Choice__c = picked.Id,
+            Selected_Choice_Text__c = clip255(picked.Choice_Text__c),
             Selected_Choice_Labels__c = picked.Choice_Label__c,
             Is_Correct__c = picked.Is_Correct__c,
             Points_Awarded__c = o.pointsAwarded,
             Answered_At__c = System.now(),
             Response_Time_Ms__c = elapsedSec * 1000,
-            Unique_Key__c = uniqueKey
+            Unique_Key__c = uniqueKey,
+            Question_Domain__c = (qSnap != null && qSnap.Exam_Domain__r != null) ? clip255(qSnap.Exam_Domain__r.Name) : null,
+            Question_Difficulty__c = qSnap == null ? null : qSnap.Difficulty__c,
+            Question_Keywords__c = qSnap == null ? null : qSnap.Keywords__c,
+            Question_Tags__c = qSnap == null ? null : qSnap.Tags__c,
+            Misconception_Tag__c = (picked.Is_Correct__c == false) ? picked.Misconception_Tag__c : null
         );
         try {
             Database.UpsertResult ur = Database.upsert(pa, Player_Answer__c.Unique_Key__c, false, AccessLevel.SYSTEM_MODE);
@@ -141,6 +150,12 @@ public without sharing class CertGameSessionService {
             Points__c = pa.Points_Awarded__c
         ));
 
+        try {
+            CertGamePlayerInsightsService.recordAnswerInsights(player.Id, qSnap, picked, picked.Is_Correct__c);
+        } catch (Exception insightsEx) {
+            AppLogger.warn('CertGameSessionService', 'recordAnswerFromSlack.insights', insightsEx.getMessage());
+        }
+
         List<Map<String, Object>> cites = new List<Map<String, Object>>();
         for (Question_Citation__c c : reader.citationsForQuestion(round.Trivia_Question__c)) {
             cites.add(new Map<String, Object>{ 'id' => c.Id, 'title' => c.Title__c, 'url' => c.URL__c });
@@ -158,8 +173,9 @@ public without sharing class CertGameSessionService {
             if (row.Is_Correct__c) correctCnt++;
         }
 
-        Trivia_Question__c qForExp = reader.questionById(round.Trivia_Question__c);
+        Trivia_Question__c qForExp = qSnap == null ? reader.questionById(round.Trivia_Question__c) : qSnap;
         String explanation = qForExp == null ? null : qForExp.Explanation__c;
+        explanation = enrichExplanation(explanation, picked, correct, qForExp);
 
         // Result blocks
         Map<String, Object> resultEnv = (Map<String, Object>) JSON.deserializeUntyped(
@@ -282,6 +298,50 @@ public without sharing class CertGameSessionService {
         return q == null ? 'Medium' : q.Difficulty__c;
     }
 
+    private static String clip255(String s) {
+        if (s == null) return null;
+        return s.length() > 255 ? s.substring(0, 255) : s;
+    }
+
+    private static String enrichExplanation(String base, Trivia_Answer_Choice__c picked,
+            Trivia_Answer_Choice__c correctChoice, Trivia_Question__c q) {
+        List<String> parts = new List<String>();
+        if (String.isNotBlank(base)) parts.add(base);
+        if (picked != null && picked.Is_Correct__c == false && String.isNotBlank(picked.Why_Incorrect__c)) {
+            parts.add('Why your pick was wrong: ' + picked.Why_Incorrect__c);
+        }
+        if (correctChoice != null && String.isNotBlank(correctChoice.Direct_Statement__c)) {
+            parts.add('Key idea: ' + correctChoice.Direct_Statement__c);
+        }
+        if (q != null && String.isNotBlank(q.Glossary_Terms__c)) {
+            String gloss = formatGlossary(q.Glossary_Terms__c);
+            if (String.isNotBlank(gloss)) parts.add('Glossary: ' + gloss);
+        }
+        if (q != null && String.isNotBlank(q.Primary_Reference_URL__c)) {
+            parts.add('Reference: ' + q.Primary_Reference_URL__c);
+        }
+        return parts.isEmpty() ? null : String.join(parts, '\n\n');
+    }
+
+    private static String formatGlossary(String jsonStr) {
+        try {
+            Object parsed = JSON.deserializeUntyped(jsonStr);
+            if (!(parsed instanceof List<Object>)) return null;
+            List<String> bits = new List<String>();
+            for (Object o : (List<Object>) parsed) {
+                if (o instanceof Map<String, Object>) {
+                    Map<String, Object> m = (Map<String, Object>) o;
+                    String term = (String) m.get('term');
+                    String def = (String) m.get('definition');
+                    if (String.isNotBlank(term) && String.isNotBlank(def)) bits.add(term + ' — ' + def);
+                }
+            }
+            return bits.isEmpty() ? null : String.join(bits, '; ');
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     // Guest-user reads must run in `without sharing`; WITH SYSTEM_MODE bypasses
     // CRUD/FLS but not record sharing.
     private without sharing class GameReader {
@@ -297,14 +357,18 @@ public without sharing class CertGameSessionService {
         }
         public Trivia_Question__c questionById(Id questionId) {
             List<Trivia_Question__c> qs = [
-                SELECT Id, Question_Text__c, Difficulty__c, Explanation__c FROM Trivia_Question__c
+                SELECT Id, Question_Text__c, Difficulty__c, Explanation__c,
+                       Keywords__c, Tags__c, Named_Entities__c, Glossary_Terms__c,
+                       Primary_Reference_URL__c, Exam_Domain__c, Exam_Domain__r.Name
+                FROM Trivia_Question__c
                 WHERE Id = :questionId LIMIT 1
             ];
             return qs.isEmpty() ? null : qs[0];
         }
         public List<Trivia_Answer_Choice__c> choicesForQuestion(Id questionId) {
             return [
-                SELECT Id, Is_Correct__c, Choice_Text__c, Choice_Label__c, Trivia_Question__c
+                SELECT Id, Is_Correct__c, Choice_Text__c, Choice_Label__c, Trivia_Question__c,
+                       Explanation__c, Why_Incorrect__c, Direct_Statement__c, Misconception_Tag__c
                 FROM Trivia_Answer_Choice__c
                 WHERE Trivia_Question__c = :questionId ORDER BY Choice_Label__c
             ];

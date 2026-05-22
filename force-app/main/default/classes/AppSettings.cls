@@ -14,7 +14,8 @@ public with sharing class AppSettings {
                    Stripe_Named_Credential__c, OpenAI_Named_Credential__c,
                    Feature_Flag_Generation__c, Feature_Flag_Tournaments__c,
                    Feature_Flag_Billing__c, Feature_Flag_Nudges__c,
-                   Slack_Timestamp_Skew_Seconds__c
+                   Slack_Timestamp_Skew_Seconds__c,
+                   Web_Google_Client_Id__c, Web_Session_Secret__c
             FROM App_Setting__mdt
             WHERE DeveloperName = 'Default'
             LIMIT 1

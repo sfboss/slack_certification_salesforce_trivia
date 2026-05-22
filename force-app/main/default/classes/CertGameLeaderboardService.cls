@@ -14,21 +14,10 @@ public with sharing class CertGameLeaderboardService {
                        : scope == 'month' ? System.now().addDays(-30)
                        : System.now().addDays(-7);
 
-        Map<Id, Decimal> totals = new Map<Id, Decimal>();
-        String soql = 'SELECT Player__c, Points_Awarded__c FROM Player_Answer__c '
-                    + 'WHERE Player__r.Tenant__c = :tId';
         Id tId = tenant.Id;
-        if (since != null) soql += ' AND Answered_At__c >= :since';
-        soql += ' WITH SYSTEM_MODE LIMIT 10000';
-        for (Player_Answer__c pa : Database.query(soql)) {
-            if (pa.Points_Awarded__c == null) continue;
-            Decimal cur = totals.containsKey(pa.Player__c) ? totals.get(pa.Player__c) : 0;
-            totals.put(pa.Player__c, cur + pa.Points_Awarded__c);
-        }
+        Map<Id, Decimal> totals = CertGameLeaderboardReader.tallyPoints(tId, since);
 
-        Map<Id, Player__c> pmap = new Map<Id, Player__c>([
-            SELECT Id, Display_Name__c FROM Player__c WHERE Id IN :totals.keySet() WITH SYSTEM_MODE
-        ]);
+        Map<Id, Player__c> pmap = CertGameLeaderboardReader.playersByIds(totals.keySet());
 
         List<Map<String, Object>> rows = new List<Map<String, Object>>();
         for (Id pid : totals.keySet()) {
@@ -57,14 +46,8 @@ public with sharing class CertGameLeaderboardService {
         Player__c p = CertGameTenantService.findPlayer(tenant.Id, slackUserId);
         if (p == null) return CertGameSlackRenderService.text(CertGameStrings.NO_STATS, true);
 
-        AggregateResult[] ars = [
-            SELECT COUNT(Id) total, SUM(Points_Awarded__c) pts
-            FROM Player_Answer__c WHERE Player__c = :p.Id WITH SYSTEM_MODE
-        ];
-        AggregateResult[] arsCorrect = [
-            SELECT COUNT(Id) c FROM Player_Answer__c
-            WHERE Player__c = :p.Id AND Is_Correct__c = true WITH SYSTEM_MODE
-        ];
+        AggregateResult[] ars = CertGameLeaderboardReader.statsTotals(p.Id);
+        AggregateResult[] arsCorrect = CertGameLeaderboardReader.statsCorrect(p.Id);
         Integer total = ars.isEmpty() ? 0 : (Integer) ars[0].get('total');
         Decimal pts = ars.isEmpty() ? 0 : (Decimal)(ars[0].get('pts') == null ? 0 : ars[0].get('pts'));
         Integer correctCnt = arsCorrect.isEmpty() ? 0 : (Integer)(arsCorrect[0].get('c') == null ? 0 : arsCorrect[0].get('c'));

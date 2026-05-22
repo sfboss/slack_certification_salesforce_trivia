@@ -13,6 +13,7 @@ public with sharing class CertGameAdminDashboardController {
         @AuraEnabled public KpiDto kpis;
         @AuraEnabled public List<TopExamDto> topExams;
         @AuraEnabled public QuestionHealthDto questionHealth;
+        @AuraEnabled public List<ActivityPointDto> activity30d;
         @AuraEnabled public List<RecentLicenseDto> recentLicense;
         @AuraEnabled public List<RecentErrorDto> recentErrors;
         @AuraEnabled public UsageDto usage;
@@ -100,6 +101,12 @@ public with sharing class CertGameAdminDashboardController {
         @AuraEnabled public Decimal costUsd;
     }
 
+    public class ActivityPointDto {
+        @AuraEnabled public Date day;
+        @AuraEnabled public Integer gamesStarted;
+        @AuraEnabled public Integer answers;
+    }
+
     private static final Map<String, Decimal> PLAN_PRICE_USD = new Map<String, Decimal>{
         'Free' => 0,
         'Pro' => 99,
@@ -113,6 +120,7 @@ public with sharing class CertGameAdminDashboardController {
         out.questionHealth = new QuestionHealthDto();
         out.usage = new UsageDto();
         out.topExams = new List<TopExamDto>();
+        out.activity30d = new List<ActivityPointDto>();
         out.recentLicense = new List<RecentLicenseDto>();
         out.recentErrors = new List<RecentErrorDto>();
         out.tenants = new List<TenantSummaryDto>();
@@ -170,6 +178,47 @@ public with sharing class CertGameAdminDashboardController {
             SELECT COUNT() FROM Trivia_Question__c
             WHERE Quality_Score__c != null AND Quality_Score__c < 0.5 WITH SYSTEM_MODE
         ];
+        out.kpis.publishedQuestions = out.questionHealth.published;
+        out.kpis.draftQuestions = out.questionHealth.draft;
+
+        // -------- Activity (30d) --------
+        Map<Date, ActivityPointDto> activityByDay = buildEmptyActivitySeries(Date.today().addDays(-29), 30);
+        List<AggregateResult> gameActivity = tenantId == null
+            ? [SELECT DAY_ONLY(Started_At__c) day, COUNT(Id) countValue
+               FROM Game_Session__c
+               WHERE Started_At__c >= :monthAgo
+               WITH SYSTEM_MODE
+               GROUP BY DAY_ONLY(Started_At__c)]
+            : [SELECT DAY_ONLY(Started_At__c) day, COUNT(Id) countValue
+               FROM Game_Session__c
+               WHERE Started_At__c >= :monthAgo AND Tenant__c = :tenantId
+               WITH SYSTEM_MODE
+               GROUP BY DAY_ONLY(Started_At__c)];
+        for (AggregateResult ar : gameActivity) {
+            Date day = (Date) ar.get('day');
+            if (activityByDay.containsKey(day)) {
+                activityByDay.get(day).gamesStarted = (Integer) ar.get('countValue');
+            }
+        }
+
+        List<AggregateResult> answerActivity = tenantId == null
+            ? [SELECT DAY_ONLY(Answered_At__c) day, COUNT(Id) countValue
+               FROM Player_Answer__c
+               WHERE Answered_At__c >= :monthAgo
+               WITH SYSTEM_MODE
+               GROUP BY DAY_ONLY(Answered_At__c)]
+            : [SELECT DAY_ONLY(Answered_At__c) day, COUNT(Id) countValue
+               FROM Player_Answer__c
+               WHERE Answered_At__c >= :monthAgo AND Game_Session__r.Tenant__c = :tenantId
+               WITH SYSTEM_MODE
+               GROUP BY DAY_ONLY(Answered_At__c)];
+        for (AggregateResult ar : answerActivity) {
+            Date day = (Date) ar.get('day');
+            if (activityByDay.containsKey(day)) {
+                activityByDay.get(day).answers = (Integer) ar.get('countValue');
+            }
+        }
+        out.activity30d.addAll(activityByDay.values());
 
         // -------- Top exams (7d) --------
         Map<Id, TopExamDto> exMap = new Map<Id, TopExamDto>();
@@ -373,6 +422,19 @@ public with sharing class CertGameAdminDashboardController {
         Integer y = n.year();
         Integer m = n.month();
         return y + '-' + (m < 10 ? '0' + m : String.valueOf(m));
+    }
+
+    private static Map<Date, ActivityPointDto> buildEmptyActivitySeries(Date startDate, Integer days) {
+        Map<Date, ActivityPointDto> series = new Map<Date, ActivityPointDto>();
+        for (Integer offset = 0; offset < days; offset++) {
+            Date day = startDate.addDays(offset);
+            ActivityPointDto point = new ActivityPointDto();
+            point.day = day;
+            point.gamesStarted = 0;
+            point.answers = 0;
+            series.put(day, point);
+        }
+        return series;
     }
 
     private static Integer intOf(Decimal d) { return d == null ? 0 : d.intValue(); }

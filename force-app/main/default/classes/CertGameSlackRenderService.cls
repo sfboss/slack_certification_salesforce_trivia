@@ -7,57 +7,121 @@ public with sharing class CertGameSlackRenderService {
 
     public static String help() {
         List<Object> blocks = new List<Object>();
-        blocks.add(new Map<String, Object>{
-            'type' => 'header',
-            'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Certification Trivia', 'emoji' => true }
-        });
-        blocks.add(section('Study smarter with quick, scored quizzes right inside Slack.'));
-        blocks.add(new Map<String, Object>{ 'type' => 'divider' });
-        blocks.add(section(
-            '*Commands*\n' +
-            '`/certgame play` — start a quick 5-question game (optionally `play <ExamCode>`)\n' +
-            '`/certgame challenge @user [ExamCode]` — head-to-head duel (5 questions)\n' +
-            '`/certgame games` — list available exams + question counts\n' +
-            '`/certgame leaderboard` — show channel leaderboard\n' +
-            '`/certgame stats` — your stats in this workspace\n' +
-            '`/certgame plan` — manage study plan\n' +
-            '`/certgame doctor` — run setup + health checks\n' +
-            '`/certgame notify-test` — DM yourself a self-test message\n' +
-            '`/certgame billing` — manage workspace plan (admins)\n' +
-            '`/certgame help` — this message'
-        ));
+        blocks.add(header(':mortar_board:  Certification Trivia'));
+        blocks.add(context('Salesforce certs, scored. Fast rounds. No leaving Slack.'));
         blocks.add(new Map<String, Object>{
             'type' => 'actions',
             'elements' => new List<Object>{
                 new Map<String, Object>{
                     'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Open Study Plan', 'emoji' => true },
-                    'action_id' => 'plan:open',
-                    'style' => 'primary'
+                    'style' => 'primary',
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':zap:  Play now', 'emoji' => true },
+                    'action_id' => 'game:newgame'
                 },
                 new Map<String, Object>{
                     'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Run Doctor', 'emoji' => true },
-                    'action_id' => 'home:doctor:run'
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':books:  Browse exams', 'emoji' => true },
+                    'action_id' => 'home:games:run'
                 },
                 new Map<String, Object>{
                     'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Test notifications', 'emoji' => true },
-                    'action_id' => 'home:notify:run'
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':dart:  Study plan', 'emoji' => true },
+                    'action_id' => 'plan:open'
                 }
             }
         });
+        blocks.add(divider());
         blocks.add(new Map<String, Object>{
-            'type' => 'context',
+            'type' => 'rich_text',
             'elements' => new List<Object>{
-                new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => 'Tip: try `/certgame play` to start a 5-question round.' }
+                new Map<String, Object>{
+                    'type' => 'rich_text_quote',
+                    'elements' => new List<Object>{
+                        new Map<String, Object>{ 'type' => 'text', 'text' => 'How it works: ', 'style' => new Map<String, Object>{ 'bold' => true } },
+                        new Map<String, Object>{ 'type' => 'text', 'text' => '5-question rounds drawn from published banks. ' },
+                        new Map<String, Object>{ 'type' => 'text', 'text' => 'Score = base (by difficulty) + speed bonus + streak bonus. ' },
+                        new Map<String, Object>{ 'type' => 'text', 'text' => 'Wrong answers reset your streak.' }
+                    }
+                }
             }
         });
+        blocks.add(divider());
+        blocks.add(new Map<String, Object>{
+            'type' => 'actions',
+            'elements' => new List<Object>{
+                new Map<String, Object>{
+                    'type' => 'button',
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Show all commands', 'emoji' => true },
+                    'action_id' => 'help:show:commands'
+                }
+            }
+        });
+        blocks.add(context(':gear: v0.9  ·  <https://github.com/sfboss/slack_certification_salesforce_trivia|:question:  Docs>'));
         return JSON.serialize(new Map<String, Object>{
             'response_type' => 'ephemeral',
             'text' => CertGameStrings.HELP_TEXT,
             'blocks' => blocks
         });
+    }
+
+    /**
+     * Opens the full command reference as a modal via views.open. Triggered from
+     * the help card's "Show all commands" button (action_id `help:show:commands`).
+     * Returns empty string — the modal is delivered out-of-band via the Slack API.
+     */
+    public static String helpCommandsModal(String triggerId) {
+        if (String.isBlank(triggerId)) return '';
+        Map<String, Object> view = new Map<String, Object>{
+            'type' => 'modal',
+            'callback_id' => 'help:commands',
+            'title' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'CertGame Commands', 'emoji' => true },
+            'close' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Close', 'emoji' => true },
+            'blocks' => buildCommandRefBlocks()
+        };
+        SlackApiClient.openView(triggerId, view);
+        return '';
+    }
+
+    private static List<Object> buildCommandRefBlocks() {
+        List<Object> blocks = new List<Object>();
+        addCommandGroup(blocks, ':zap:  Play', new List<List<String>>{
+            new List<String>{ '/certgame play [CODE]', 'Start a 5-question solo round. Omit `CODE` to auto-pick.' },
+            new List<String>{ '/certgame challenge @user [CODE]', 'Head-to-head duel in this channel. Alias: `/certgame duel`.' }
+        });
+        blocks.add(divider());
+        addCommandGroup(blocks, ':bar_chart:  Stats & progress', new List<List<String>>{
+            new List<String>{ '/certgame stats', 'Your accuracy, streak, and lifetime points.' },
+            new List<String>{ '/certgame leaderboard [CODE]', 'Top scorers, optionally scoped to a cert.' },
+            new List<String>{ '/certgame games', 'List configured exams + question counts.' },
+            new List<String>{ '/certgame plan', 'Open the study plan modal.' }
+        });
+        blocks.add(divider());
+        addCommandGroup(blocks, ':gear:  Admin', new List<List<String>>{
+            new List<String>{ '/certgame billing', 'Manage workspace plan (admins only).' }
+        });
+        blocks.add(divider());
+        addCommandGroup(blocks, ':wrench:  Diagnostics', new List<List<String>>{
+            new List<String>{ '/certgame doctor', 'Run setup + health checks.' },
+            new List<String>{ '/certgame notify-test', 'DM yourself a self-test card.' },
+            new List<String>{ '/certgame debug', 'Last hour of `App_Log__c` entries.' }
+        });
+        return blocks;
+    }
+
+    private static void addCommandGroup(List<Object> blocks, String title, List<List<String>> entries) {
+        blocks.add(header(title));
+        for (List<String> e : entries) {
+            blocks.add(new Map<String, Object>{
+                'type' => 'rich_text',
+                'elements' => new List<Object>{
+                    new Map<String, Object>{
+                        'type' => 'rich_text_preformatted',
+                        'elements' => new List<Object>{ new Map<String, Object>{ 'type' => 'text', 'text' => e[0] } }
+                    }
+                }
+            });
+            blocks.add(context(e[1]));
+        }
     }
 
     public static String text(String message, Boolean ephemeral) {
@@ -133,42 +197,63 @@ public with sharing class CertGameSlackRenderService {
         String headerTxt = (qNum != null && totalQ != null)
             ? 'Question ' + qNum + ' of ' + totalQ
             : 'Question';
-        blocks.add(header(':brain: ' + headerTxt));
+        blocks.add(header(':brain:  ' + headerTxt));
 
-        Map<String, Object> qSection = new Map<String, Object>{
-            'type' => 'section',
-            'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*' + questionText + '*' }
-        };
-        List<Object> fields = new List<Object>();
-        if (qNum != null && totalQ != null) {
-            fields.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*Progress*\n' + qNum + ' / ' + totalQ });
+        // Metadata strip: difficulty pill · timer · progress dots
+        List<Object> metaEls = new List<Object>();
+        if (String.isNotBlank(difficulty)) {
+            metaEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '`' + difficulty + '`' });
         }
         if (secondsRemaining != null) {
-            fields.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*Timer*\n:hourglass_flowing_sand: ' + secondsRemaining + 's' });
+            if (!metaEls.isEmpty()) metaEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '•' });
+            metaEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => ':hourglass_flowing_sand: ' + secondsRemaining + 's' });
         }
-        if (String.isNotBlank(difficulty)) {
-            fields.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*Difficulty*\n' + difficulty });
+        if (qNum != null && totalQ != null) {
+            if (!metaEls.isEmpty()) metaEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '•' });
+            metaEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => progressDots(qNum, totalQ) });
         }
-        if (!fields.isEmpty()) qSection.put('fields', fields);
-        blocks.add(qSection);
+        if (!metaEls.isEmpty()) {
+            blocks.add(new Map<String, Object>{ 'type' => 'context', 'elements' => metaEls });
+        }
 
         blocks.add(divider());
-        List<Object> els = new List<Object>();
+
+        // Question stem
+        blocks.add(new Map<String, Object>{
+            'type' => 'section',
+            'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*' + questionText + '*' }
+        });
+
+        // Each choice gets its own section row with a "Select X" accessory button.
         for (Map<String, Object> c : choices) {
-            els.add(new Map<String, Object>{
-                'type' => 'button',
-                'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => (String) c.get('label') + '. ' + truncate((String) c.get('text'), 70), 'emoji' => true },
-                'action_id' => 'game:answer:' + roundId + ':' + c.get('id'),
-                'value' => (String) c.get('id')
+            String label = (String) c.get('label');
+            String text = truncate((String) c.get('text'), 140);
+            blocks.add(new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*' + label + '.*  ' + text },
+                'accessory' => new Map<String, Object>{
+                    'type' => 'button',
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Select ' + label, 'emoji' => true },
+                    'action_id' => 'game:answer:' + roundId + ':' + c.get('id'),
+                    'value' => (String) c.get('id')
+                }
             });
         }
-        blocks.add(new Map<String, Object>{ 'type' => 'actions', 'elements' => els });
+
+        blocks.add(divider());
         blocks.add(context(':zap: Lock in your answer — partial credit for speed.'));
         return JSON.serialize(new Map<String, Object>{
             'response_type' => 'in_channel',
             'text' => 'Question ' + (qNum == null ? '' : (qNum + ' of ' + totalQ)),
             'blocks' => blocks
         });
+    }
+
+    private static String progressDots(Integer cur, Integer total) {
+        if (cur == null || total == null || total <= 0) return '';
+        String s = '';
+        for (Integer i = 1; i <= total; i++) s += (i <= cur ? '●' : '○');
+        return s;
     }
 
     public static String resultBlocks(Boolean correct, String correctChoiceText, Integer pointsAwarded, List<Map<String, Object>> citations) {
@@ -179,41 +264,53 @@ public with sharing class CertGameSlackRenderService {
             List<Map<String, Object>> citations, String explanation, Integer runningPoints,
             Integer correctCount, Integer answeredCount) {
         List<Object> blocks = new List<Object>();
-        blocks.add(header(correct ? ':white_check_mark: Correct!' : ':x: Not quite'));
+        blocks.add(header(correct ? ':white_check_mark:  Correct!' : ':x:  Not quite'));
 
-        Map<String, Object> body = new Map<String, Object>{
-            'type' => 'section',
-            'text' => new Map<String, Object>{
-                'type' => 'mrkdwn',
-                'text' => correct
-                    ? '*+' + pointsAwarded + ' points* — well played.'
-                    : 'Correct answer: *' + (correctChoiceText == null ? '' : correctChoiceText) + '*'
+        // Graded-review body: rich_text_quote provides a left vertical bar so the
+        // result reads like a scored exam item rather than a chat reply.
+        List<Object> quoteEls = new List<Object>();
+        if (correct) {
+            quoteEls.add(new Map<String, Object>{ 'type' => 'text', 'text' => '+' + (pointsAwarded == null ? 0 : pointsAwarded) + ' points', 'style' => new Map<String, Object>{ 'bold' => true } });
+            quoteEls.add(new Map<String, Object>{ 'type' => 'text', 'text' => ' — well played.' });
+        } else {
+            quoteEls.add(new Map<String, Object>{ 'type' => 'text', 'text' => 'Correct answer: ', 'style' => new Map<String, Object>{ 'bold' => true } });
+            quoteEls.add(new Map<String, Object>{ 'type' => 'text', 'text' => correctChoiceText == null ? '' : correctChoiceText });
+        }
+        if (String.isNotBlank(explanation)) {
+            quoteEls.add(new Map<String, Object>{ 'type' => 'text', 'text' => '\n\n' });
+            quoteEls.add(new Map<String, Object>{ 'type' => 'text', 'text' => truncate(explanation, 800) });
+        }
+        blocks.add(new Map<String, Object>{
+            'type' => 'rich_text',
+            'elements' => new List<Object>{
+                new Map<String, Object>{ 'type' => 'rich_text_quote', 'elements' => quoteEls }
             }
-        };
-        List<Object> fields = new List<Object>();
-        if (runningPoints != null) fields.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*Score*\n' + runningPoints + ' pts' });
+        });
+
+        // Compact score strip — one line, dot-separated, no headers stealing weight.
+        List<Object> scoreEls = new List<Object>();
+        if (runningPoints != null) {
+            scoreEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => ':zap:  *Score:* ' + runningPoints + ' pts' });
+        }
         if (correctCount != null && answeredCount != null && answeredCount > 0) {
             Integer pct = (correctCount * 100) / answeredCount;
-            fields.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*Accuracy*\n' + correctCount + '/' + answeredCount + ' (' + pct + '%)' });
+            if (!scoreEls.isEmpty()) scoreEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '•' });
+            scoreEls.add(new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => '*Accuracy:* ' + correctCount + '/' + answeredCount + ' (' + pct + '%)' });
         }
-        if (!fields.isEmpty()) body.put('fields', fields);
-        blocks.add(body);
+        if (!scoreEls.isEmpty()) {
+            blocks.add(new Map<String, Object>{ 'type' => 'context', 'elements' => scoreEls });
+        }
 
-        if (String.isNotBlank(explanation)) {
-            String exp = truncate(explanation, 800);
-            blocks.add(new Map<String, Object>{
-                'type' => 'context',
-                'elements' => new List<Object>{
-                    new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => ':bulb: ' + exp }
-                }
-            });
-        }
+        // Sources as a single context line — footnote weight, not a heading.
         if (citations != null && !citations.isEmpty()) {
-            String txt = '*Sources*';
+            String txt = ':books:  ';
+            Boolean first = true;
             for (Map<String, Object> c : citations) {
-                txt += '\n• <' + c.get('url') + '|' + c.get('title') + '>';
+                if (!first) txt += ' · ';
+                txt += '<' + c.get('url') + '|' + c.get('title') + '>';
+                first = false;
             }
-            blocks.add(section(txt));
+            blocks.add(context(txt));
         }
         return JSON.serialize(new Map<String, Object>{
             'response_type' => 'in_channel',
@@ -358,12 +455,31 @@ public with sharing class CertGameSlackRenderService {
                 String code = String.isBlank(s.code) ? '(no code)' : s.code;
                 String status = s.active == true ? ':white_check_mark: active' : ':grey_exclamation: inactive';
                 String counts = s.published + ' published / ' + s.reviewed + ' reviewed / ' + s.draft + ' draft';
-                String cta = s.published > 0 && s.active == true
-                    ? '\n_Run `/certgame play ' + code + '` to play this exam._'
+                Boolean playable = s.published > 0 && s.active == true && !String.isBlank(s.code);
+                String cta = playable
+                    ? '\n_Click *Play* or run `/certgame play ' + code + '`._'
                     : (s.published == 0
                         ? '\n_No published questions yet — ask an admin to publish drafts._'
-                        : '\n_Exam is inactive — admin can re-activate it in Salesforce._');
-                blocks.add(section('*' + code + '* — ' + s.name + '\n' + status + ' · ' + counts + cta));
+                        : (s.active != true
+                            ? '\n_Exam is inactive — admin can re-activate it in Salesforce._'
+                            : '\n_Missing certification code — admin must set one to enable play._'));
+                Map<String, Object> sec = new Map<String, Object>{
+                    'type' => 'section',
+                    'text' => new Map<String, Object>{
+                        'type' => 'mrkdwn',
+                        'text' => '*' + code + '* — ' + s.name + '\n' + status + ' · ' + counts + cta
+                    }
+                };
+                if (playable) {
+                    sec.put('accessory', new Map<String, Object>{
+                        'type' => 'button',
+                        'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':game_die: Play', 'emoji' => true },
+                        'action_id' => 'game:newgame:' + code,
+                        'value' => code,
+                        'style' => 'primary'
+                    });
+                }
+                blocks.add(sec);
             }
         }
         blocks.add(context('Need to add an exam? Admins: import a JSON question pack from the Cert Game Admin Home tab.'));
