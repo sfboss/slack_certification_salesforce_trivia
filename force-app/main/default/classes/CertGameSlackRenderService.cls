@@ -320,6 +320,10 @@ public with sharing class CertGameSlackRenderService {
     }
 
     public static String gameOverBlocks(Integer totalPoints, Integer correctCount, Integer totalQ, String examCode) {
+        return gameOverBlocks(totalPoints, correctCount, totalQ, examCode, null, null);
+    }
+
+    public static String gameOverBlocks(Integer totalPoints, Integer correctCount, Integer totalQ, String examCode, Id playerId, Id examId) {
         List<Object> blocks = new List<Object>();
         blocks.add(header(':checkered_flag: Game Over'));
         Integer pct = totalQ == null || totalQ == 0 ? 0 : (correctCount * 100) / totalQ;
@@ -335,26 +339,38 @@ public with sharing class CertGameSlackRenderService {
         blocks.add(body);
         blocks.add(divider());
         String newGameId = 'game:newgame' + (String.isBlank(examCode) ? '' : (':' + examCode));
+        List<Object> actionEls = new List<Object>{
+            new Map<String, Object>{
+                'type' => 'button',
+                'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':game_die: Play again', 'emoji' => true },
+                'action_id' => newGameId,
+                'style' => 'primary'
+            },
+            new Map<String, Object>{
+                'type' => 'button',
+                'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Leaderboard', 'emoji' => true },
+                'action_id' => 'home:leaderboard:run'
+            },
+            new Map<String, Object>{
+                'type' => 'button',
+                'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'List games', 'emoji' => true },
+                'action_id' => 'home:games:run'
+            }
+        };
+        if (playerId != null) {
+            String reportUrl = CertGameReadinessReportController.mintReportUrl(playerId, examId);
+            if (String.isNotBlank(reportUrl)) {
+                actionEls.add(new Map<String, Object>{
+                    'type' => 'button',
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':bar_chart: View full report', 'emoji' => true },
+                    'action_id' => 'report:view',
+                    'url' => reportUrl
+                });
+            }
+        }
         blocks.add(new Map<String, Object>{
             'type' => 'actions',
-            'elements' => new List<Object>{
-                new Map<String, Object>{
-                    'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':game_die: Play again', 'emoji' => true },
-                    'action_id' => newGameId,
-                    'style' => 'primary'
-                },
-                new Map<String, Object>{
-                    'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Leaderboard', 'emoji' => true },
-                    'action_id' => 'home:leaderboard:run'
-                },
-                new Map<String, Object>{
-                    'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'List games', 'emoji' => true },
-                    'action_id' => 'home:games:run'
-                }
-            }
+            'elements' => actionEls
         });
         return JSON.serialize(new Map<String, Object>{
             'response_type' => 'in_channel',

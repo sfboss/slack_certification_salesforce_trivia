@@ -52,7 +52,7 @@
     </values>
     <values>
         <field>Slack_Bot_Token__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">xoxb-1509154061287-11141634831254-UjUaTAi619Ltfp9e3pgdCWza</value>
     </values>
     <values>
         <field>Slack_Signing_Secret_Named_Credential__c</field>
@@ -60,7 +60,7 @@
     </values>
     <values>
         <field>Slack_Signing_Secret__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">94fdc2dd39e93280caedc825483c9b8f</value>
     </values>
     <values>
         <field>Slack_Timestamp_Skew_Seconds__c</field>
@@ -68,7 +68,7 @@
     </values>
     <values>
         <field>Slack_Verification_Token__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">kNrZKYvNP23ZthaI0PS7YdBO</value>
     </values>
     <values>
         <field>Stripe_Named_Credential__c</field>
@@ -76,10 +76,10 @@
     </values>
     <values>
         <field>Web_Google_Client_Id__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">996785802571-uiqssvghelteip5skm0f6kmcur270ih0.apps.googleusercontent.com</value>
     </values>
     <values>
         <field>Web_Session_Secret__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">f8659cbba8701779f9447dcc66536f750eb4965a95945f4c010bc9f514f6b195</value>
     </values>
 </CustomMetadata>

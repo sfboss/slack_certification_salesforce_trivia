@@ -17,9 +17,24 @@
                 <label>Draft</label>
             </value>
             <value>
+                <fullName>Needs Review</fullName>
+                <default>false</default>
+                <label>Needs Review</label>
+            </value>
+            <value>
+                <fullName>Needs Revision</fullName>
+                <default>false</default>
+                <label>Needs Revision</label>
+            </value>
+            <value>
                 <fullName>Reviewed</fullName>
                 <default>false</default>
                 <label>Reviewed</label>
+            </value>
+            <value>
+                <fullName>Fact Verified</fullName>
+                <default>false</default>
+                <label>Fact Verified</label>
             </value>
             <value>
                 <fullName>Published</fullName>

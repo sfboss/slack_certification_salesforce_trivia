@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{user_name}} · Cert Prep Report · {{report_date}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="{{chartjs_src}}"></script>
+<style>
+  :root {
+    --ink: #1a1714;
+    --paper: #f5f1e8;
+    --paper-2: #ebe4d3;
+    --rule: #2c2825;
+    --rule-soft: #c9bfa8;
+    --accent: #a83232;
+    --accent-2: #2c5530;
+    --amber: #b8860b;
+    --muted: #6b6258;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .report { max-width: 900px; margin: 0 auto; padding: 48px 56px 80px; }
+  .masthead { border-bottom: 3px double var(--rule); padding-bottom: 20px; margin-bottom: 36px; }
+  .masthead-top { display: flex; justify-content: space-between; align-items: baseline; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); margin-bottom: 24px; }
+  .masthead-title { font-family: 'Fraunces', serif; font-weight: 300; font-size: 64px; line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .masthead-title em { font-style: italic; font-weight: 400; }
+  .masthead-sub { font-family: 'Fraunces', serif; font-size: 18px; font-style: italic; color: var(--muted); margin-bottom: 18px; max-width: 600px; line-height: 1.4; }
+  .masthead-meta { display: flex; gap: 32px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; padding-top: 14px; border-top: 1px solid var(--rule); }
+  .masthead-meta span strong { display: block; font-size: 13px; color: var(--ink); letter-spacing: 0.05em; margin-top: 2px; font-weight: 500; }
+  .masthead-meta span small { color: var(--muted); }
+  .section { margin-top: 48px; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .section-label::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+  .section-title { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 400; line-height: 1.15; letter-spacing: -0.015em; margin-bottom: 24px; max-width: 700px; }
+  .section-title em { font-style: italic; }
+  .topline { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 32px 0; }
+  .topline > div { padding: 18px 20px; border-right: 1px solid var(--rule-soft); }
+  .topline > div:last-child { border-right: none; }
+  .topline .label { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 8px; }
+  .topline .figure { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
+  .topline .figure em { font-style: italic; }
+  .topline .delta { font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-top: 6px; }
+  .delta.up { color: var(--accent-2); }
+  .delta.down { color: var(--accent); }
+  .delta.flat { color: var(--muted); }
+  .topline .verdict { font-family: 'Fraunces', serif; font-style: italic; font-size: 16px; color: var(--ink); line-height: 1.35; }
+  .prose { font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.62; max-width: 660px; color: var(--ink); }
+  .prose p { margin-bottom: 16px; }
+  .prose .lede::first-letter { font-family: 'Fraunces', serif; font-size: 64px; font-weight: 300; float: left; line-height: 0.85; margin: 6px 8px -2px 0; color: var(--accent); }
+  .prose strong { font-weight: 500; }
+  .prose em { font-style: italic; color: var(--accent); }
+  .prose code { font-family: 'JetBrains Mono', monospace; font-size: 14px; background: var(--paper-2); padding: 1px 5px; border-radius: 2px; }
+  .prose blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 20px 0; font-style: italic; color: var(--muted); }
+  .chart-card { background: var(--paper); border: 1px solid var(--rule); padding: 24px; margin: 24px 0; }
+  .chart-card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-soft); }
+  .chart-card-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 400; letter-spacing: -0.01em; }
+  .chart-card-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+  .chart-wrap { position: relative; height: 280px; }
+  .chart-wrap.tall { height: 340px; }
+  .domain-grid { display: grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--rule); margin: 20px 0; }
+  .domain-row { display: grid; grid-template-columns: 200px 1fr 80px 80px 60px; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule-soft); align-items: center; }
+  .domain-row.header { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); padding: 8px 0; border-bottom: 1px solid var(--rule); }
+  .domain-name { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 400; }
+  .domain-name small { display: block; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 2px; font-weight: 400; }
+  .domain-bar { height: 22px; background: var(--paper-2); position: relative; overflow: hidden; }
+  .domain-bar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
+  .domain-bar-fill.weak { background: var(--accent); }
+  .domain-bar-fill.mid { background: var(--amber); }
+  .domain-bar-fill.strong { background: var(--accent-2); }
+  .domain-bar-target { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--accent); opacity: 0.7; }
+  .domain-bar-target::after { content: "PASS"; position: absolute; top: -10px; left: -14px; font-family: 'JetBrains Mono', monospace; font-size: 7px; letter-spacing: 0.08em; color: var(--accent); }
+  .domain-pct { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 500; text-align: right; }
+  .domain-trend { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: right; }
+  .domain-status { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; text-align: right; font-weight: 500; }
+  .status-weak { color: var(--accent); }
+  .status-mid { color: var(--amber); }
+  .status-strong { color: var(--accent-2); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 24px 0; }
+  .weak-q { border: 1px solid var(--rule); padding: 18px 20px; margin-bottom: 12px; background: var(--paper); position: relative; }
+  .weak-q-meta { display: flex; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 8px; }
+  .weak-q-meta .miss { color: var(--accent); font-weight: 700; }
+  .weak-q-text { font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.45; color: var(--ink); margin-bottom: 10px; }
+  .weak-q-answers { display: flex; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .weak-q-answers .picked { color: var(--accent); }
+  .weak-q-answers .picked::before { content: "✗ you: "; font-size: 9px; letter-spacing: 0.1em; }
+  .weak-q-answers .correct { color: var(--accent-2); }
+  .weak-q-answers .correct::before { content: "✓ correct: "; font-size: 9px; letter-spacing: 0.1em; }
+  .streak { display: grid; grid-template-columns: 30px repeat(13, 1fr); gap: 3px; font-family: 'JetBrains Mono', monospace; font-size: 9px; margin: 12px 0; }
+  .streak-day-label { color: var(--muted); text-align: right; padding-right: 4px; line-height: 14px; }
+  .streak-cell { aspect-ratio: 1; background: var(--paper-2); border-radius: 2px; }
+  .streak-cell.l1 { background: #d8d2c0; }
+  .streak-cell.l2 { background: #b09a72; }
+  .streak-cell.l3 { background: #7a6843; }
+  .streak-cell.l4 { background: var(--ink); }
+  .streak-legend { display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 8px; justify-content: flex-end; }
+  .streak-legend-cell { width: 10px; height: 10px; border-radius: 2px; }
+  .verdict-box { border: 2px solid var(--ink); padding: 28px 32px; margin: 32px 0; position: relative; background: var(--paper); }
+  .verdict-box::before { content: "VERDICT"; position: absolute; top: -9px; left: 24px; background: var(--paper); padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; }
+  .verdict-readiness { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+  .verdict-readiness-num { font-family: 'Fraunces', serif; font-size: 88px; font-weight: 300; line-height: 0.85; letter-spacing: -0.04em; }
+  .verdict-readiness-num em { font-style: italic; color: var(--accent); }
+  .verdict-readiness-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); }
+  .verdict-readiness-label strong { display: block; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 400; text-transform: none; letter-spacing: -0.01em; color: var(--ink); font-style: italic; margin-top: 4px; }
+  .verdict-body { font-family: 'Fraunces', serif; font-size: 16px; line-height: 1.55; max-width: 620px; }
+  .rec-list { counter-reset: rec; margin: 24px 0; }
+  .rec-item { display: grid; grid-template-columns: 50px 1fr; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--rule-soft); }
+  .rec-num { font-family: 'Fraunces', serif; font-size: 48px; font-weight: 300; line-height: 0.85; color: var(--accent); font-style: italic; }
+  .rec-content h4 { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 500; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .rec-content p { font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.55; color: var(--muted); }
+  .rec-content .rec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.15em; padding: 3px 8px; background: var(--paper-2); margin-right: 6px; margin-top: 8px; }
+  .colophon { margin-top: 64px; padding-top: 24px; border-top: 3px double var(--rule); display: flex; justify-content: space-between; align-items: flex-end; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+  .colophon-mark { font-family: 'Fraunces', serif; font-size: 24px; font-style: italic; text-transform: none; letter-spacing: -0.01em; color: var(--ink); }
+  @media print { body { background: white; } .report { padding: 24px 32px; } }
+  @media (max-width: 720px) {
+    .report { padding: 24px 20px; }
+    .masthead-title { font-size: 40px; }
+    .topline { grid-template-columns: 1fr 1fr; }
+    .topline > div { border-right: none; border-bottom: 1px solid var(--rule-soft); }
+    .two-col { grid-template-columns: 1fr; }
+    .domain-row { grid-template-columns: 1fr 60px 50px; gap: 8px; font-size: 12px; }
+    .domain-row .domain-bar, .domain-row .domain-trend { display: none; }
+    .domain-row.header > *:nth-child(2), .domain-row.header > *:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <header class="masthead">
+    <div class="masthead-top">
+      <span>Boss Consulting · Cert Prep Analytics</span>
+      <span>Issue No. {{report_number}} · {{report_date}}</span>
+    </div>
+    <h1 class="masthead-title">The <em>Readiness</em> Report</h1>
+    <p class="masthead-sub">A diagnostic dossier prepared exclusively for {{user_name}}, in pursuit of the {{cert_name}} certification.</p>
+    <div class="masthead-meta">
+      <span><small>Candidate</small><strong>{{user_name}}</strong></span>
+      <span><small>Target Exam</small><strong>{{cert_name}}</strong></span>
+      <span><small>Exam Date</small><strong>{{exam_date}}</strong></span>
+      <span><small>Days Remaining</small><strong>{{days_until_exam}}</strong></span>
+    </div>
+  </header>
+
+  <div class="topline">
+    <div>
+      <div class="label">The headline</div>
+      <div class="verdict">&ldquo;{{headline_verdict}}&rdquo;</div>
+    </div>
+    <div>
+      <div class="label">Overall Accuracy</div>
+      <div class="figure">{{overall_accuracy}}<em>%</em></div>
+      <div class="delta {{accuracy_delta_class}}">{{accuracy_delta_arrow}} {{accuracy_delta}} pts vs last week</div>
+    </div>
+    <div>
+      <div class="label">Questions Answered</div>
+      <div class="figure">{{total_questions}}</div>
+      <div class="delta flat">across {{total_sessions}} sessions</div>
+    </div>
+    <div>
+      <div class="label">Study Streak</div>
+      <div class="figure">{{streak_days}}</div>
+      <div class="delta up">days · longest: {{longest_streak}}</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-label">Section I · The Diagnosis</div>
+    <h2 class="section-title">An honest look at where <em>you actually stand</em>.</h2>
+    <div class="prose">
+      <p class="lede">{{summary_paragraph_1}}</p>
+      <p>{{summary_paragraph_2}}</p>
+      <blockquote>&ldquo;{{summary_pullquote}}&rdquo;</blockquote>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">Section II · The Trajectory</div>
+    <h2 class="section-title">Accuracy over the past <em>thirty days</em>.</h2>
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-title">Rolling 7-day accuracy</div>
+        <div class="chart-card-sub">Daily · % correct</div>
+      </div>
+      <div class="chart-wrap tall">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">Section III · The Map</div>
+    <h2 class="section-title">Performance by <em>exam domain</em>, ranked.</h2>
+    <p class="prose" style="margin-bottom: 24px;">Each row shows your accuracy against the certification's passing threshold of <strong>{{pass_threshold}}%</strong>. Domains in red are below threshold and require attention before exam day.</p>
+
+    <div class="domain-grid">
+      <div class="domain-row header">
+        <div>Domain</div>
+        <div>Performance vs. pass line</div>
+        <div style="text-align: right;">Accuracy</div>
+        <div style="text-align: right;">Trend</div>
+        <div style="text-align: right;">Status</div>
+      </div>
+      {{domain_rows_html}}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <div class="section-label">Section IV-A</div>
+        <h3 style="font-family: 'Fraunces', serif; font-size: 24px; font-weight: 400; line-height: 1.15; margin-bottom: 16px;">Accuracy by <em>difficulty</em>.</h3>
+        <div class="chart-card">
+          <div class="chart-wrap" style="height: 220px;">
+            <canvas id="difficultyChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Section IV-B</div>
+        <h3 style="font-family: 'Fraunces', serif; font-size: 24px; font-weight: 400; line-height: 1.15; margin-bottom: 16px;">Study cadence, <em>last 13 weeks</em>.</h3>
+        <div class="chart-card" style="padding: 18px 20px;">
+          <div class="streak" id="streak"></div>
+          <div class="streak-legend">
+            <span>Less</span>
+            <div class="streak-legend-cell"></div>
+            <div class="streak-legend-cell l1"></div>
+            <div class="streak-legend-cell l2"></div>
+            <div class="streak-legend-cell l3"></div>
+            <div class="streak-legend-cell l4"></div>
+            <span>More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">Section V · The Wounds</div>
+    <h2 class="section-title">Questions you got wrong <em>more than once</em>.</h2>
+    <p class="prose" style="margin-bottom: 24px;">These appear in your incorrect set on multiple attempts. They deserve a second pass through the reference material before you sit the exam.</p>
+    {{weak_q_html}}
+  </section>
+
+  <section class="section">
+    <div class="section-label">Section VI · The Clock</div>
+    <h2 class="section-title">How you spend your <em>{{exam_minutes}} minutes</em>.</h2>
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-title">Time per question vs. accuracy</div>
+        <div class="chart-card-sub">Each dot · one question · last 30 days</div>
+      </div>
+      <div class="chart-wrap tall">
+        <canvas id="timingChart"></canvas>
+      </div>
+    </div>
+    <div class="prose" style="margin-top: 20px;">
+      <p>Median time per question: <strong>{{median_time}}s</strong>. The exam allots roughly <strong>{{exam_seconds_per_q}} seconds</strong> per question. {{timing_commentary}}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="verdict-box">
+      <div class="verdict-readiness">
+        <div class="verdict-readiness-num">{{readiness_score}}<em>/100</em></div>
+        <div class="verdict-readiness-label">Exam readiness<strong>{{readiness_label}}</strong></div>
+      </div>
+      <div class="verdict-body">{{verdict_paragraph}}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">Section VII · The Prescription</div>
+    <h2 class="section-title">Three things to do <em>this week</em>.</h2>
+    <div class="rec-list">
+      {{recommendations_html}}
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Generated on {{report_date}} · Boss Consulting Cert Prep · v0.4.2</span>
+    <span class="colophon-mark">&mdash; bc &mdash;</span>
+    <span>Next report: {{next_report_date}}</span>
+  </footer>
+
+</div>
+
+<script>
+  const C = { ink:'#1a1714', paper:'#f5f1e8', paper2:'#ebe4d3', rule:'#2c2825', ruleSoft:'#c9bfa8',
+              accent:'#a83232', accent2:'#2c5530', amber:'#b8860b', muted:'#6b6258' };
+  const REPORT = {
+    trendLabels: {{trend_labels_json}},
+    trendData:   {{trend_data_json}},
+    passThreshold: {{pass_threshold}},
+    difficultyLabels: {{difficulty_labels_json}},
+    difficultyData:   {{difficulty_data_json}},
+    correctPoints: {{timing_correct_json}},
+    wrongPoints:   {{timing_wrong_json}},
+    streakSeed:    {{streak_seed_json}}
+  };
+
+  if (window.Chart) {
+    Chart.defaults.font.family = "'JetBrains Mono', monospace";
+    Chart.defaults.font.size = 10;
+    Chart.defaults.color = C.muted;
+
+    new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: {
+        labels: REPORT.trendLabels,
+        datasets: [
+          { label: '7-day accuracy', data: REPORT.trendData,
+            borderColor: C.ink, backgroundColor: 'rgba(26,23,20,0.06)',
+            borderWidth: 2, fill: true, tension: 0.32, pointRadius: 0,
+            pointHoverRadius: 4, pointHoverBackgroundColor: C.accent,
+            pointHoverBorderColor: C.paper, pointHoverBorderWidth: 2 },
+          { label: 'Pass threshold', data: REPORT.trendLabels.map(() => REPORT.passThreshold),
+            borderColor: C.accent, borderWidth: 1, borderDash: [4,4], fill: false, pointRadius: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false },
+          tooltip: { backgroundColor: C.ink, padding: 10, displayColors: false,
+            callbacks: { label: ctx => ctx.parsed.y + '%' } } },
+        scales: {
+          y: { min: 0, max: 100, grid: { color: C.ruleSoft, drawBorder: false },
+               ticks: { stepSize: 20, callback: v => v + '%' }, border: { display: false } },
+          x: { grid: { display: false }, ticks: { autoSkip: true, maxTicksLimit: 6, maxRotation: 0 },
+               border: { color: C.rule } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('difficultyChart'), {
+      type: 'bar',
+      data: { labels: REPORT.difficultyLabels,
+              datasets: [{ data: REPORT.difficultyData,
+                           backgroundColor: [C.accent2, C.amber, C.accent], borderWidth: 0, barThickness: 32 }] },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          x: { min: 0, max: 100, grid: { color: C.ruleSoft, drawBorder: false },
+               ticks: { callback: v => v + '%' }, border: { display: false } },
+          y: { grid: { display: false },
+               ticks: { font: { family: "'Fraunces', serif", size: 14 }, color: C.ink },
+               border: { color: C.rule } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('timingChart'), {
+      type: 'scatter',
+      data: {
+        datasets: [
+          { label: 'Correct', data: REPORT.correctPoints,
+            backgroundColor: 'rgba(44,85,48,0.55)', pointRadius: 4 },
+          { label: 'Wrong', data: REPORT.wrongPoints,
+            backgroundColor: 'rgba(168,50,50,0.7)', pointRadius: 5 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end',
+          labels: { boxWidth: 8, boxHeight: 8, padding: 16 } }, tooltip: { enabled: false } },
+        scales: {
+          x: { title: { display: true, text: 'SECONDS PER QUESTION', color: C.muted, padding: 10 },
+               min: 0, max: 200, grid: { color: C.ruleSoft }, border: { color: C.rule } },
+          y: { min: -0.5, max: 1.5,
+               ticks: { stepSize: 1, callback: v => v === 1 ? 'CORRECT' : v === 0 ? 'WRONG' : '' },
+               grid: { color: C.ruleSoft }, border: { color: C.rule } }
+        }
+      }
+    });
+  }
+
+  (function buildStreak(){
+    const el = document.getElementById('streak');
+    if (!el) return;
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const seed = REPORT.streakSeed || [];
+    for (let row = 0; row < 7; row++) {
+      el.insertAdjacentHTML('beforeend',
+        '<div class="streak-day-label">' + (row % 2 === 0 ? days[row] : '') + '</div>');
+      for (let col = 0; col < 13; col++) {
+        const lvl = seed[row * 13 + col] || 0;
+        el.insertAdjacentHTML('beforeend',
+          '<div class="streak-cell ' + (lvl > 0 ? 'l' + lvl : '') + '"></div>');
+      }
+    }
+  })();
+</script>
+</body>
+</html>

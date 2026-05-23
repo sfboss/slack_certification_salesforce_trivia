@@ -1,60 +1,204 @@
 <template>
-    <lightning-card title="Question Review Console" icon-name="standard:question_feed">
-        <div class="slds-p-horizontal_medium">
-            <lightning-combobox label="Status filter" value={status}
-                options={statusOptions} onchange={handleStatusChange}></lightning-combobox>
-        </div>
-        <template if:true={loading}>
-            <lightning-spinner alternative-text="Loading"></lightning-spinner>
-        </template>
-        <template if:true={hasQuestions}>
-            <div class="slds-p-around_medium">
-                <template for:each={questions} for:item="q">
-                    <article key={q.id} class="slds-card slds-m-bottom_medium slds-p-around_medium">
-                        <header class="slds-text-heading_small">
-                            <strong>{q.externalId}</strong> &mdash; {q.examName} / {q.domainName}
-                            <span class="slds-badge slds-m-left_small">{q.difficulty}</span>
-                            <span class="slds-badge slds-m-left_x-small">{q.questionType}</span>
-                            <span class="slds-badge slds-m-left_x-small">{q.status}</span>
-                        </header>
-                        <template if:true={q.scenarioText}>
-                            <p class="slds-text-color_weak slds-m-top_x-small">{q.scenarioText}</p>
-                        </template>
-                        <p class="slds-m-top_x-small"><strong>Q:</strong> {q.questionText}</p>
-                        <ul class="slds-m-top_x-small">
-                            <template for:each={q.choices} for:item="c">
-                                <li key={c.id}>
-                                    <strong>{c.label}.</strong> {c.text}
-                                    <template if:true={c.isCorrect}>
-                                        <span class="slds-badge slds-theme_success slds-m-left_x-small">Correct</span>
-                                    </template>
-                                </li>
-                            </template>
-                        </ul>
-                        <template if:true={q.citations.length}>
-                            <p class="slds-m-top_x-small slds-text-title">Citations:</p>
-                            <ul>
-                                <template for:each={q.citations} for:item="ct">
-                                    <li key={ct.id}>
-                                        <a href={ct.url} target="_blank">{ct.title}</a>
-                                        <span class="slds-text-color_weak"> &mdash; {ct.sourceType}</span>
-                                    </li>
-                                </template>
-                            </ul>
-                        </template>
-                        <footer class="slds-m-top_small">
-                            <template if:true={nextStatusValue}>
-                                <lightning-button label={nextStatusLabel}
-                                    data-id={q.id} data-next={nextStatusValue}
-                                    onclick={handleSetStatus} variant="brand"></lightning-button>
-                            </template>
-                        </footer>
-                    </article>
-                </template>
+    <div class="qrc-root">
+        <lightning-card title="Question Review Console" icon-name="standard:question_feed">
+            <!-- Top bar -->
+            <div class="slds-grid slds-grid_vertical-align-end slds-wrap slds-p-horizontal_medium slds-gutters_x-small">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-combobox label="Status filter" value={status}
+                        options={statusOptions} onchange={handleStatusChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-combobox label="Sort by" value={sortBy}
+                        options={sortOptions} onchange={handleSortChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                    <div class="slds-text-title_caps slds-m-bottom_xx-small">Queue</div>
+                    <lightning-button-icon icon-name="utility:chevronleft" alternative-text="Previous"
+                        disabled={atStart} onclick={handlePrev}></lightning-button-icon>
+                    <span class="slds-m-horizontal_small slds-text-body_regular">{queuePosition}</span>
+                    <lightning-button-icon icon-name="utility:chevronright" alternative-text="Next"
+                        disabled={atEnd} onclick={handleNext}></lightning-button-icon>
+                    <lightning-button class="slds-m-left_small" label="Skip"
+                        icon-name="utility:redo" onclick={handleSkip}></lightning-button>
+                </div>
             </div>
-        </template>
-        <template if:false={hasQuestions}>
-            <div class="slds-p-around_medium slds-text-color_weak">No questions in this status.</div>
-        </template>
-    </lightning-card>
+
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <!-- Empty state -->
+            <template if:true={isEmpty}>
+                <div class="slds-illustration slds-illustration_small slds-p-around_xx-large slds-text-align_center">
+                    <h3 class="slds-text-heading_medium slds-m-top_medium">All caught up</h3>
+                    <p class="slds-text-color_weak slds-m-top_x-small">
+                        No questions in <strong>{status}</strong> status.
+                    </p>
+                    <p class="slds-m-top_small">
+                        <lightning-button label="Switch to Draft" onclick={handleStatusChange}
+                            data-value="Draft"></lightning-button>
+                    </p>
+                </div>
+            </template>
+
+            <!-- Single-question reviewer -->
+            <template if:true={current}>
+                <div class="slds-p-horizontal_medium slds-p-bottom_xx-large">
+
+                    <!-- Header strip -->
+                    <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
+                            <div class="slds-col slds-size_2-of-3">
+                                <p class="slds-text-title slds-text-color_weak">{current.externalId}</p>
+                                <p class="slds-text-heading_small">
+                                    {current.examName}
+                                    <template if:true={current.domainName}> &mdash; {current.domainName}</template>
+                                </p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                <span class="slds-badge slds-m-left_x-small">{current.status}</span>
+                                <span class="slds-badge slds-m-left_x-small">{current.difficulty}</span>
+                                <span class="slds-badge slds-m-left_x-small">{current.questionType}</span>
+                                <template if:true={current.factCheckPassed}>
+                                    <span class="slds-badge slds-theme_success slds-m-left_x-small">Facts Verified</span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <!-- LEFT: question -->
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-3">
+                            <lightning-textarea label="Scenario (optional)" value={current.scenarioText}
+                                data-field="scenarioText" onchange={handleField}></lightning-textarea>
+                            <lightning-textarea label="Question stem" value={current.questionText}
+                                data-field="questionText" onchange={handleField} required></lightning-textarea>
+
+                            <div class="slds-m-top_medium">
+                                <p class="slds-text-title_caps">Answer choices</p>
+                                <template for:each={currentChoices} for:item="c">
+                                    <div key={c.id} class="slds-box slds-box_x-small slds-m-top_x-small">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <div class="slds-col slds-shrink-none slds-p-right_small">
+                                                <strong>{c.label}.</strong>
+                                            </div>
+                                            <div class="slds-col">
+                                                <lightning-input type="text" variant="label-hidden"
+                                                    value={c.text} data-id={c.id}
+                                                    onchange={handleChoiceText}></lightning-input>
+                                            </div>
+                                            <div class="slds-col slds-shrink-none slds-p-left_small">
+                                                <lightning-input type="checkbox" label="Correct"
+                                                    checked={c.isCorrect} data-id={c.id}
+                                                    onchange={handleCorrectChange}></lightning-input>
+                                            </div>
+                                        </div>
+                                        <lightning-textarea variant="label-hidden" placeholder="Why this choice (rationale)..."
+                                            value={c.explanation} data-id={c.id}
+                                            onchange={handleChoiceExplanation}
+                                            class="slds-m-top_x-small"></lightning-textarea>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <lightning-textarea class="slds-m-top_medium" label="Explanation / rationale"
+                                value={current.explanation} data-field="explanation"
+                                onchange={handleField}></lightning-textarea>
+
+                            <div class="slds-m-top_medium">
+                                <p class="slds-text-title_caps">Citations</p>
+                                <template if:false={currentCitations.length}>
+                                    <p class="slds-text-color_weak slds-p-around_x-small">No citations attached.</p>
+                                </template>
+                                <template for:each={currentCitations} for:item="ct">
+                                    <div key={ct.id} class="slds-box slds-box_x-small slds-m-top_x-small">
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+                                            <div class="slds-col slds-size_2-of-3">
+                                                <a href={ct.url} target="_blank" rel="noopener">{ct.title}</a>
+                                                <div class="slds-text-color_weak slds-text-body_small">{ct.url}</div>
+                                                <div class="slds-text-body_small">{ct.sourceType}</div>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                                                <span class="slds-m-right_small">{ct.statusIcon}</span>
+                                                <lightning-button label="Verify link"
+                                                    icon-name="utility:link" data-id={ct.id}
+                                                    onclick={handleVerifyCitation}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: metadata + reviewer options -->
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <div class="slds-box slds-theme_default">
+                                <p class="slds-text-title_caps slds-m-bottom_small">Metadata</p>
+
+                                <lightning-combobox label="Difficulty" value={current.difficulty}
+                                    options={difficultyOptions} data-field="difficulty"
+                                    onchange={handleField}></lightning-combobox>
+
+                                <lightning-combobox class="slds-m-top_x-small" label="Question format"
+                                    value={current.questionType} options={qtypeOptions}
+                                    data-field="questionType" onchange={handleField}></lightning-combobox>
+
+                                <lightning-input class="slds-m-top_x-small" label="Tags (comma separated)"
+                                    value={current.tags} data-field="tags"
+                                    onchange={handleField}></lightning-input>
+
+                                <div class="slds-m-top_medium slds-text-body_small slds-text-color_weak">
+                                    <p><strong>Certification:</strong> {current.examName}</p>
+                                    <p><strong>Domain:</strong> {current.domainName}</p>
+                                    <p><strong>Created:</strong> <lightning-formatted-date-time value={current.createdDate}></lightning-formatted-date-time></p>
+                                    <p><strong>Created by:</strong> {current.createdByName}</p>
+                                    <template if:true={current.factCheckedDate}>
+                                        <p><strong>Last fact-checked:</strong>
+                                            <lightning-formatted-date-time value={current.factCheckedDate}></lightning-formatted-date-time>
+                                            <template if:true={current.factCheckedByName}> by {current.factCheckedByName}</template>
+                                        </p>
+                                    </template>
+                                    <template if:true={current.publishedDate}>
+                                        <p><strong>Published:</strong>
+                                            <lightning-formatted-date-time value={current.publishedDate}></lightning-formatted-date-time>
+                                            <template if:true={current.publishedByName}> by {current.publishedByName}</template>
+                                        </p>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <lightning-textarea class="slds-m-top_medium" label="Reviewer notes (required for Needs Revision)"
+                                value={current.reviewerNotes} data-field="reviewerNotes"
+                                onchange={handleField}></lightning-textarea>
+                        </div>
+                    </div>
+
+                    <!-- Sticky action bar -->
+                    <footer class="qrc-actionbar slds-box slds-m-top_large slds-grid slds-grid_align-spread slds-wrap">
+                        <div class="slds-col slds-grow-none">
+                            <lightning-button label={saveButtonLabel} icon-name="utility:save"
+                                onclick={handleSaveDraft} disabled={saving}></lightning-button>
+                        </div>
+                        <div class="slds-col slds-text-align_right">
+                            <lightning-button class="slds-m-left_x-small" label="Needs Revision"
+                                icon-name="utility:back" onclick={handleNeedsRevision}
+                                disabled={saving}></lightning-button>
+                            <lightning-button class="slds-m-left_x-small" label="Retire"
+                                icon-name="utility:delete" variant="destructive-text"
+                                onclick={handleRetire} disabled={saving}></lightning-button>
+                            <lightning-button class="slds-m-left_x-small" label={factsButtonLabel}
+                                icon-name="utility:check" variant={factsButtonVariant}
+                                onclick={handleToggleFacts} disabled={saving}></lightning-button>
+                            <lightning-button class="slds-m-left_x-small" label="Publish ✓✓"
+                                icon-name="utility:publish" variant="brand"
+                                onclick={handlePublish} disabled={publishDisabled}></lightning-button>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-text-align_right slds-text-body_small slds-text-color_weak slds-m-top_x-small">
+                            {publishHelp}
+                        </div>
+                    </footer>
+                </div>
+            </template>
+        </lightning-card>
+    </div>
 </template>

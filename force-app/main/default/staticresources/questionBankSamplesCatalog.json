@@ -1,0 +1,140 @@
+{
+  "samples": [
+    {
+      "key": "lwc-basics",
+      "label": "Lightning Web Components Basics",
+      "description": "3-question starter pack covering LWC file extensions, reactivity, and template binding.",
+      "pack": {
+        "exam": { "name": "Lightning Web Components Basics", "code": "CRT-LWC", "vendor": "Salesforce" },
+        "questionBank": {
+          "name": "LWC Basics Starter",
+          "version": "1.0.0",
+          "sourceType": "Manual",
+          "status": "Draft",
+          "externalId": "BANK-LWC-STARTER"
+        },
+        "questions": [
+          {
+            "externalId": "LWC-STARTER-Q1",
+            "domain": "Component Authoring",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which file extension is used for the JavaScript class of an LWC?",
+            "choices": [
+              { "label": "A", "text": ".cmp", "isCorrect": false, "explanation": "That's an Aura component file." },
+              { "label": "B", "text": ".html", "isCorrect": false, "explanation": "That's the template file." },
+              { "label": "C", "text": ".js", "isCorrect": true, "explanation": "LWC JavaScript modules use the .js extension." },
+              { "label": "D", "text": ".lwc", "isCorrect": false, "explanation": "There is no .lwc extension." }
+            ],
+            "explanation": "LWC modules export an ES6 class from a .js file.",
+            "citations": [
+              { "title": "LWC Anatomy", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_introduction", "sourceType": "Salesforce Help", "relevanceNote": "Component file structure." }
+            ]
+          },
+          {
+            "externalId": "LWC-STARTER-Q2",
+            "domain": "Reactivity",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which decorator makes a nested object property reactive in an LWC?",
+            "choices": [
+              { "label": "A", "text": "@api", "isCorrect": false, "explanation": "@api exposes a public property." },
+              { "label": "B", "text": "@wire", "isCorrect": false, "explanation": "@wire subscribes to data." },
+              { "label": "C", "text": "@track", "isCorrect": true, "explanation": "@track makes object/array properties reactive." },
+              { "label": "D", "text": "@reactive", "isCorrect": false, "explanation": "There is no @reactive decorator." }
+            ],
+            "explanation": "Use @track for nested object/array reactivity; primitives are reactive by default.",
+            "citations": [
+              { "title": "@track Decorator", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reactivity_track", "sourceType": "Salesforce Help", "relevanceNote": "Reactivity reference." }
+            ]
+          },
+          {
+            "externalId": "LWC-STARTER-Q3",
+            "domain": "Data Binding",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "How do you bind a property `name` from JS into an LWC template?",
+            "choices": [
+              { "label": "A", "text": "{{name}}", "isCorrect": false, "explanation": "Mustache syntax is used elsewhere." },
+              { "label": "B", "text": "{name}", "isCorrect": true, "explanation": "LWC uses single-brace binding." },
+              { "label": "C", "text": "[name]", "isCorrect": false, "explanation": "Brackets are not binding syntax." },
+              { "label": "D", "text": "$name$", "isCorrect": false, "explanation": "Not the LWC syntax." }
+            ],
+            "explanation": "LWC templates use single-brace expressions for property binding.",
+            "citations": [
+              { "title": "Bind Data in a Template", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_html_data_binding", "sourceType": "Salesforce Help", "relevanceNote": "Binding syntax." }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "security-fundamentals",
+      "label": "Security Fundamentals",
+      "description": "3-question starter pack covering profiles vs permission sets, FLS, and sharing rules.",
+      "pack": {
+        "exam": { "name": "Security Fundamentals", "code": "CRT-SEC", "vendor": "Salesforce" },
+        "questionBank": {
+          "name": "Security Fundamentals Starter",
+          "version": "1.0.0",
+          "sourceType": "Manual",
+          "status": "Draft",
+          "externalId": "BANK-SEC-STARTER"
+        },
+        "questions": [
+          {
+            "externalId": "SEC-STARTER-Q1",
+            "domain": "Access Control",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which tool grants users the additional permissions they need beyond their profile?",
+            "choices": [
+              { "label": "A", "text": "Sharing rule", "isCorrect": false, "explanation": "Sharing rules govern record access, not permissions." },
+              { "label": "B", "text": "Permission set", "isCorrect": true, "explanation": "Permission sets layer additive permissions on top of a profile." },
+              { "label": "C", "text": "Role hierarchy", "isCorrect": false, "explanation": "Role hierarchy controls record access via ownership, not permissions." },
+              { "label": "D", "text": "Public group", "isCorrect": false, "explanation": "Public groups are collections of users used in sharing rules." }
+            ],
+            "explanation": "Use permission sets and permission set groups for granular, additive entitlement on top of profiles.",
+            "citations": [
+              { "title": "Permission Sets", "url": "https://help.salesforce.com/s/articleView?id=sf.perm_sets_overview.htm", "sourceType": "Salesforce Help", "relevanceNote": "Permission set concept." }
+            ]
+          },
+          {
+            "externalId": "SEC-STARTER-Q2",
+            "domain": "Access Control",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which setting controls whether a user can read or edit a specific field on an object?",
+            "choices": [
+              { "label": "A", "text": "Object permissions", "isCorrect": false, "explanation": "Object permissions cover the whole object, not individual fields." },
+              { "label": "B", "text": "Sharing rule", "isCorrect": false, "explanation": "Sharing rules govern record-level access." },
+              { "label": "C", "text": "Field-Level Security", "isCorrect": true, "explanation": "FLS controls read/edit at the field level via profile or permission set." },
+              { "label": "D", "text": "Validation rule", "isCorrect": false, "explanation": "Validation rules block invalid writes; they don't gate visibility." }
+            ],
+            "explanation": "Field-Level Security (FLS) is the per-field read/edit setting in profiles and permission sets.",
+            "citations": [
+              { "title": "Field-Level Security", "url": "https://help.salesforce.com/s/articleView?id=sf.admin_fls.htm", "sourceType": "Salesforce Help", "relevanceNote": "FLS reference." }
+            ]
+          },
+          {
+            "externalId": "SEC-STARTER-Q3",
+            "domain": "Record Access",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "An OWD for Account is set to Private. Which mechanism opens up read access to a specific group of users?",
+            "choices": [
+              { "label": "A", "text": "Field-Level Security", "isCorrect": false, "explanation": "FLS controls fields, not records." },
+              { "label": "B", "text": "Sharing rule", "isCorrect": true, "explanation": "Sharing rules grant record-level access beyond OWD." },
+              { "label": "C", "text": "Permission set", "isCorrect": false, "explanation": "Permission sets grant object/field permissions, not record access." },
+              { "label": "D", "text": "Page layout", "isCorrect": false, "explanation": "Page layouts control UI, not access." }
+            ],
+            "explanation": "Sharing rules open up record-level access on top of restrictive OWDs.",
+            "citations": [
+              { "title": "Sharing Rules", "url": "https://help.salesforce.com/s/articleView?id=sf.security_sharing_rules.htm", "sourceType": "Salesforce Help", "relevanceNote": "Sharing rule reference." }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

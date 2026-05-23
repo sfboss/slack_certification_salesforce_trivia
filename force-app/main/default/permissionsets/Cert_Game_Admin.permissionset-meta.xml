@@ -1277,4 +1277,12 @@
         <tab>Cert_Game_Admin_Home</tab>
         <visibility>Visible</visibility>
     </tabSettings>
+    <tabSettings>
+        <tab>Question_Bank_Workspace</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <classAccesses>
+        <apexClass>CertGameQuestionBankController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
 </PermissionSet>

@@ -1,0 +1,11 @@
+.qrc-root {
+    position: relative;
+}
+.qrc-actionbar {
+    position: sticky;
+    bottom: 0;
+    background: var(--lwc-colorBackground, #ffffff);
+    border-top: 1px solid var(--lwc-colorBorder, #dddbda);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 2;
+}

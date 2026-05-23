@@ -1,51 +1,165 @@
 <template>
-    <lightning-card title="Leaderboard" icon-name="standard:reward">
-        <div slot="actions" class="slds-grid slds-gutters">
-            <div class="slds-col">
-                <lightning-combobox
-                    label="Exam"
-                    variant="label-hidden"
-                    placeholder="All exams"
-                    value={examId}
-                    options={examOptions}
-                    onchange={onExamChange}></lightning-combobox>
+    <lightning-card icon-name="standard:reward">
+        <h2 slot="title" class="slds-card__header-title">
+            <span class="slds-text-heading_medium">Leaderboard</span>
+            <template if:true={windowSubtitle}>
+                <span class="lb-subtitle">&nbsp;·&nbsp;{windowSubtitle}</span>
+            </template>
+        </h2>
+        <div slot="actions" class="lb-actions">
+            <lightning-button-icon icon-name="utility:download" alternative-text="Export CSV" title="Export CSV" onclick={onExportCsv} variant="border-filled"></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" title="Refresh" onclick={refresh} variant="border-filled"></lightning-button-icon>
+        </div>
+
+        <!-- KPI tiles -->
+        <template if:true={hasSummary}>
+            <div class="kpi-grid slds-p-horizontal_medium slds-p-bottom_small">
+                <template for:each={kpiTiles} for:item="t">
+                    <div key={t.key} class={t.tone} data-tone={t.tone}>
+                        <div class="kpi-tile">
+                            <div class="kpi-tile-icon">
+                                <lightning-icon icon-name={t.icon} size="small" variant="inverse"></lightning-icon>
+                            </div>
+                            <div class="kpi-tile-body">
+                                <div class="kpi-tile-value">{t.value}</div>
+                                <div class="kpi-tile-label">{t.label}</div>
+                                <div class="kpi-tile-sub">{t.sub}</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
-            <div class="slds-col">
-                <lightning-button label="Refresh" icon-name="utility:refresh" onclick={refresh}></lightning-button>
+        </template>
+
+        <!-- Filters -->
+        <div class="slds-grid slds-gutters_x-small slds-wrap slds-p-horizontal_medium slds-p-bottom_small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                <lightning-combobox label="Exam" value={examId} options={examOptions} onchange={onExamChange} placeholder="All exams"></lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                <lightning-combobox label="Time window" value={windowKey} options={windowOptions} onchange={onWindowChange}></lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                <lightning-combobox label="Show" value={rowLimit} options={limitOptions} onchange={onLimitChange}></lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
+                <lightning-input type="search" label="Search player" value={searchTerm} onchange={onSearch} placeholder="Filter by name…"></lightning-input>
             </div>
         </div>
+
+        <!-- Loading -->
         <template if:true={loading}>
-            <div class="slds-p-around_medium"><lightning-spinner alternative-text="Loading"></lightning-spinner></div>
+            <div class="slds-p-around_large slds-align_absolute-center">
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
         </template>
+
+        <!-- Podium -->
+        <template if:true={hasPodium}>
+            <div class="podium slds-p-horizontal_medium slds-p-bottom_medium">
+                <template for:each={podium} for:item="p">
+                    <div key={p.playerId} class={p.podiumClass} data-id={p.playerId} onclick={onRowClick} role="button">
+                        <div class="podium-medal">{p.emoji}</div>
+                        <div class="podium-avatar">
+                            <template if:true={p.avatarUrl}>
+                                <img src={p.avatarUrl} alt={p.displayName}/>
+                            </template>
+                            <template if:false={p.avatarUrl}>
+                                <div class="avatar-initials">{p.initials}</div>
+                            </template>
+                        </div>
+                        <div class="podium-name" title={p.displayName}>{p.displayName}</div>
+                        <div class="podium-points">{p.points} pts</div>
+                        <div class="podium-meta">
+                            <span title="Accuracy">🎯 {p.accuracyStr}</span>
+                            <span title="Current streak">🔥 {p.currentStreak}d</span>
+                            <template if:true={p.achievementCount}>
+                                <span title="Achievements">🏆 {p.achievementCount}</span>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Table -->
         <template if:true={hasRows}>
-            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-                <thead><tr>
-                    <th class="slds-text-align_right">#</th>
-                    <th>Player</th>
-                    <th class="slds-text-align_right">Points</th>
-                    <th class="slds-text-align_right">Games</th>
-                    <th class="slds-text-align_right">Accuracy</th>
-                    <th class="slds-text-align_right">Streak</th>
-                </tr></thead>
-                <tbody>
-                    <template for:each={data.rows} for:item="r">
-                        <tr key={r.playerId}>
-                            <td class="slds-text-align_right">{r.rank}</td>
-                            <td>{r.displayName}</td>
-                            <td class="slds-text-align_right">{r.points}</td>
-                            <td class="slds-text-align_right">{r.games}</td>
-                            <td class="slds-text-align_right">{r.accuracy}%</td>
-                            <td class="slds-text-align_right">{r.currentStreak}d</td>
+            <div class="lb-table-wrap">
+                <div class="lb-table-toolbar">
+                    <span class="lb-count">{totalRowsLabel}</span>
+                    <span class="lb-generated">{generatedAtLabel}</span>
+                </div>
+                <table class="lb-table">
+                    <thead>
+                        <tr>
+                            <th class="th-rank" data-col="rank" onclick={onSort}>{rankSortLabel}</th>
+                            <th data-col="displayName" onclick={onSort}>{nameSortLabel}</th>
+                            <th class="th-num" data-col="points" onclick={onSort}>{pointsSortLabel}</th>
+                            <th class="th-num" data-col="games" onclick={onSort}>{gamesSortLabel}</th>
+                            <th class="th-acc" data-col="accuracy" onclick={onSort}>{accuracySortLabel}</th>
+                            <th class="th-num" data-col="currentStreak" onclick={onSort}>{streakSortLabel}</th>
+                            <th class="th-num" data-col="longestStreak" onclick={onSort}>{longestSortLabel}</th>
+                            <th class="th-num" data-col="achievementCount" onclick={onSort}>{achievementsSortLabel}</th>
+                            <th data-col="lastPlayedAt" onclick={onSort}>{lastPlayedSortLabel}</th>
                         </tr>
-                    </template>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <template for:each={rows} for:item="r">
+                            <tr key={r.playerId} class={r.rowClass} data-id={r.playerId} onclick={onRowClick}>
+                                <td class="td-rank">
+                                    <span class={r.medalBadgeClass}>
+                                        <template if:true={r.medalIcon}>{r.medalIcon}</template>
+                                        <template if:false={r.medalIcon}>{r.displayRank}</template>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="player-cell">
+                                        <div class="avatar-sm">
+                                            <template if:true={r.avatarUrl}>
+                                                <img src={r.avatarUrl} alt={r.displayName}/>
+                                            </template>
+                                            <template if:false={r.avatarUrl}>
+                                                <div class="avatar-initials sm">{r.initials}</div>
+                                            </template>
+                                        </div>
+                                        <div class="player-name">{r.displayName}</div>
+                                    </div>
+                                </td>
+                                <td class="td-num td-points">{r.points}</td>
+                                <td class="td-num">{r.games}</td>
+                                <td class="td-acc">
+                                    <div class="acc-cell">
+                                        <div class="acc-track"><div class={r.accuracyBarClass} style={r.accuracyStyle}></div></div>
+                                        <div class="acc-label">{r.accuracyStr}</div>
+                                    </div>
+                                </td>
+                                <td class="td-num">
+                                    <template if:true={r.streakIcon}><span class="streak-fire">{r.streakIcon}</span></template>
+                                    {r.currentStreak}d
+                                </td>
+                                <td class="td-num td-muted">{r.longestStreak}d</td>
+                                <td class="td-num td-muted">{r.achievementsLabel}</td>
+                                <td class="td-muted">{r.lastPlayedStr}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
         </template>
+
+        <!-- Empty -->
         <template if:false={hasRows}>
             <template if:false={loading}>
-                <p class="slds-p-around_medium slds-text-color_weak">No leaderboard data yet.</p>
+                <div class="slds-illustration slds-illustration_small slds-p-around_large slds-align_absolute-center">
+                    <div class="slds-text-align_center">
+                        <lightning-icon icon-name="utility:ranking" size="large" variant="inverse"></lightning-icon>
+                        <p class="slds-text-heading_small slds-p-top_small">No leaderboard data yet</p>
+                        <p class="slds-text-color_weak">Play some games or adjust the filters above.</p>
+                    </div>
+                </div>
             </template>
         </template>
+
         <template if:true={error}>
             <div class="slds-p-around_medium slds-text-color_error">{error}</div>
         </template>

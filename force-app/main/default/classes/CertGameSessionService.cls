@@ -231,7 +231,7 @@ public without sharing class CertGameSessionService {
                 examCode = ex.Certification_Code__c;
             }
             Map<String, Object> gameOverEnv = (Map<String, Object>) JSON.deserializeUntyped(
-                CertGameSlackRenderService.gameOverBlocks(runningPts, correctCnt, totalQ, examCode)
+                CertGameSlackRenderService.gameOverBlocks(runningPts, correctCnt, totalQ, examCode, player.Id, sess.Certification_Exam__c)
             );
             combined.addAll((List<Object>) gameOverEnv.get('blocks'));
         }
