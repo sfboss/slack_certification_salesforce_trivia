@@ -17,7 +17,7 @@ inputs:
     default: ${{ github.workflow }}
   extra_fields:
     description: |
-      Optional JSON array of additional Block Kit field rows, each `{ "label": "...", "value": "..." }`.
+      Optional JSON array sof additional Block Kit field rows, each `{ "label": "...", "value": "..." }`.
       Rendered as 2-column mrkdwn fields after the standard metadata.
     required: false
     default: "[]"
