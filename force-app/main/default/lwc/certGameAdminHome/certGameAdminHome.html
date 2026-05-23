@@ -15,11 +15,7 @@
                 <div class="slds-col slds-grow slds-p-right_medium">
                     <div class="slds-media slds-no-space slds-grow">
                         <div class="slds-media__figure">
-                            <span class="slds-icon_container slds-icon-standard-knowledge admin-header-icon" title="Cert Game Admin Console">
-                                <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
-                                    <use xlink:href={headerIconHref}></use>
-                                </svg>
-                            </span>
+                            <lightning-icon icon-name="standard:knowledge" size="medium" alternative-text="Cert Game Admin Console" title="Cert Game Admin Console"></lightning-icon>
                         </div>
                         <div class="slds-media__body">
                             <div class="slds-page-header__name">
@@ -41,9 +37,7 @@
                         <button class="slds-button slds-button_neutral" data-action="tournaments" onclick={handleActionClick}>New Tournament</button>
                         <div class={headerMenuClass}>
                             <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="More actions" onclick={handleOverflowToggle}>
-                                <svg class="slds-button__icon" aria-hidden="true">
-                                    <use xlink:href={overflowIconHref}></use>
-                                </svg>
+                                <lightning-icon icon-name="utility:down" size="x-small" alternative-text="More actions"></lightning-icon>
                                 <span class="slds-assistive-text">More actions</span>
                             </button>
                             <template if:true={headerMenuOpen}>
@@ -105,9 +99,7 @@
                             onclick={handleTabClick}
                         >
                             <span class="tab-label-wrap">
-                                <svg class="slds-icon slds-icon_x-small slds-icon-text-default tab-icon" aria-hidden="true">
-                                    <use xlink:href={tab.iconHref}></use>
-                                </svg>
+                                <lightning-icon icon-name={tab.iconName} size="x-small" alternative-text={tab.label} class="tab-icon"></lightning-icon>
                                 <span class="tab-copy">{tab.label}</span>
                                 <template if:true={tab.countLabel}>
                                     <span class={tab.badgeClass}>{tab.countLabel}</span>

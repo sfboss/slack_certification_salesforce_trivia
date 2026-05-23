@@ -2,9 +2,7 @@
     <div class="dashboard-shell">
         <div class="slds-grid slds-grid_align-end slds-m-bottom_small">
             <button class="slds-button slds-button_neutral" onclick={handleRefresh}>
-                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                    <use xlink:href={refreshIconHref}></use>
-                </svg>
+                <lightning-icon icon-name="utility:refresh" size="x-small" alternative-text="Refresh" class="slds-m-right_x-small"></lightning-icon>
                 Refresh
             </button>
         </div>
@@ -64,11 +62,7 @@
                 <div class="slds-card__header slds-grid">
                     <header class="slds-media slds-media_center slds-has-flexi-truncate">
                         <div class="slds-media__figure">
-                            <span class="slds-icon_container slds-icon-standard-report" title="Activity — Last 30 Days">
-                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                    <use xlink:href={trendCardIconHref}></use>
-                                </svg>
-                            </span>
+                            <lightning-icon icon-name="standard:report" size="small" alternative-text="Activity—Last 30 Days"></lightning-icon>
                         </div>
                         <div class="slds-media__body">
                             <h2 class="slds-card__header-title">
@@ -89,11 +83,7 @@
                         <div class="slds-card__header slds-grid">
                             <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                 <div class="slds-media__figure">
-                                    <span class="slds-icon_container slds-icon-standard-metrics" title="Usage">
-                                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                            <use xlink:href={usageCardIconHref}></use>
-                                        </svg>
-                                    </span>
+                                    <lightning-icon icon-name="standard:metrics" size="small" alternative-text="Usage"></lightning-icon>
                                 </div>
                                 <div class="slds-media__body">
                                     <h2 class="slds-card__header-title">
@@ -109,9 +99,7 @@
                                         <div class="metric-label-wrap">
                                             <span>{row.label}</span>
                                             <button class="slds-button slds-button_icon slds-button_icon-x-small metric-help-trigger" aria-describedby={row.key}>
-                                                <svg class="slds-button__icon" aria-hidden="true">
-                                                    <use xlink:href={dropdownIconHref}></use>
-                                                </svg>
+                                                <lightning-icon icon-name="utility:info" size="xx-small" alternative-text="Help"></lightning-icon>
                                             </button>
                                             <div id={row.key} class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left metric-tooltip" role="tooltip">
                                                 <div class="slds-popover__body">{row.help}</div>
@@ -148,11 +136,7 @@
                         <div class="slds-card__header slds-grid">
                             <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                 <div class="slds-media__figure">
-                                    <span class="slds-icon_container slds-icon-standard-knowledge" title="Question Bank Health">
-                                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                            <use xlink:href={knowledgeIconHref}></use>
-                                        </svg>
-                                    </span>
+                                    <lightning-icon icon-name="standard:knowledge" size="small" alternative-text="Question Bank Health"></lightning-icon>
                                 </div>
                                 <div class="slds-media__body">
                                     <h2 class="slds-card__header-title">
@@ -188,9 +172,7 @@
                                         <div class="slds-card__body slds-card__body_inner">
                                             <div class="slds-media">
                                                 <div class="slds-media__figure">
-                                                    <svg class="slds-icon slds-icon_small slds-icon-text-error" aria-hidden="true">
-                                                        <use xlink:href={warningIconHref}></use>
-                                                    </svg>
+                                                    <lightning-icon icon-name="utility:warning" size="small" variant="error" alternative-text="Broken citations"></lightning-icon>
                                                 </div>
                                                 <div class="slds-media__body">
                                                     <h3 class="slds-text-title_bold">Broken Citations</h3>
@@ -206,9 +188,7 @@
                                         <div class="slds-card__body slds-card__body_inner">
                                             <div class="slds-media">
                                                 <div class="slds-media__figure">
-                                                    <svg class="slds-icon slds-icon_small slds-icon-text-warning" aria-hidden="true">
-                                                        <use xlink:href={qualityIconHref}></use>
-                                                    </svg>
+                                                    <lightning-icon icon-name="utility:dash" size="small" variant="warning" alternative-text="Low quality"></lightning-icon>
                                                 </div>
                                                 <div class="slds-media__body">
                                                     <h3 class="slds-text-title_bold">Low Quality</h3>
@@ -231,11 +211,7 @@
                         <div class="slds-card__header slds-grid">
                             <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                 <div class="slds-media__figure">
-                                    <span class="slds-icon_container slds-icon-standard-report" title="Top Exams">
-                                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                            <use xlink:href={trendCardIconHref}></use>
-                                        </svg>
-                                    </span>
+                                    <lightning-icon icon-name="standard:report" size="small" alternative-text="Top Exams"></lightning-icon>
                                 </div>
                                 <div class="slds-media__body">
                                     <h2 class="slds-card__header-title">
@@ -284,9 +260,7 @@
                                                 <td class="slds-cell-shrink">
                                                     <div class={row.menuClass}>
                                                         <button class="slds-button slds-button_icon slds-button_icon-border-filled" data-id={row.examId} onclick={handleExamMenuToggle}>
-                                                            <svg class="slds-button__icon" aria-hidden="true">
-                                                                <use xlink:href={dropdownIconHref}></use>
-                                                            </svg>
+                                                            <lightning-icon icon-name="utility:down" size="x-small" alternative-text="Actions"></lightning-icon>
                                                         </button>
                                                         <div class="slds-dropdown slds-dropdown_right">
                                                             <ul class="slds-dropdown__list" role="menu">
@@ -320,11 +294,7 @@
                         <div class="slds-card__header slds-grid">
                             <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                 <div class="slds-media__figure">
-                                    <span class="slds-icon_container slds-icon-standard-scan-card" title="Recent Generation Jobs">
-                                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                            <use xlink:href={jobsCardIconHref}></use>
-                                        </svg>
-                                    </span>
+                                    <lightning-icon icon-name="standard:scan_card" size="small" alternative-text="Recent Generation Jobs"></lightning-icon>
                                 </div>
                                 <div class="slds-media__body">
                                     <h2 class="slds-card__header-title">
@@ -364,9 +334,7 @@
                                 <div class="generation-empty-state">
                                     <div class="slds-illustration slds-illustration_small" aria-hidden="true">
                                         <div class="empty-illustration-mark">
-                                            <svg class="slds-icon slds-icon_large slds-icon-text-default" aria-hidden="true">
-                                                <use xlink:href={jobsCardIconHref}></use>
-                                            </svg>
+                                            <lightning-icon icon-name="standard:scan_card" size="large" alternative-text="No jobs"></lightning-icon>
                                         </div>
                                     </div>
                                     <h3 class="slds-text-heading_small slds-m-top_medium">No generation jobs yet.</h3>
@@ -385,11 +353,7 @@
                         <div class="slds-card__header slds-grid">
                             <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                 <div class="slds-media__figure">
-                                    <span class="slds-icon_container slds-icon-standard-maintenance-plan" title="Recent Errors / Warnings">
-                                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                            <use xlink:href={errorCardIconHref}></use>
-                                        </svg>
-                                    </span>
+                                    <lightning-icon icon-name="standard:maintenance_plan" size="small" alternative-text="Recent Errors / Warnings"></lightning-icon>
                                 </div>
                                 <div class="slds-media__body">
                                     <h2 class="slds-card__header-title">
@@ -413,15 +377,11 @@
                                             </div>
                                             <div class="slds-col slds-no-flex error-actions">
                                                 <button class="slds-button slds-button_icon slds-button_icon-border-filled slds-m-right_x-small" data-key={group.key} onclick={handleErrorExpand}>
-                                                    <svg class="slds-button__icon" aria-hidden="true">
-                                                        <use xlink:href={chevronIconHref}></use>
-                                                    </svg>
+                                                    <lightning-icon icon-name="utility:chevronright" size="x-small" alternative-text="Expand"></lightning-icon>
                                                 </button>
                                                 <div class={group.menuClass}>
                                                     <button class="slds-button slds-button_icon slds-button_icon-border-filled" data-key={group.key} onclick={handleErrorMenuToggle}>
-                                                        <svg class="slds-button__icon" aria-hidden="true">
-                                                            <use xlink:href={dropdownIconHref}></use>
-                                                        </svg>
+                                                        <lightning-icon icon-name="utility:down" size="x-small" alternative-text="Actions"></lightning-icon>
                                                     </button>
                                                     <div class="slds-dropdown slds-dropdown_right">
                                                         <ul class="slds-dropdown__list" role="menu">
@@ -470,11 +430,7 @@
                         <div class="slds-card__header slds-grid">
                             <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                 <div class="slds-media__figure">
-                                    <span class="slds-icon_container slds-icon-standard-report" title="Recent License Events">
-                                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                            <use xlink:href={trendCardIconHref}></use>
-                                        </svg>
-                                    </span>
+                                    <lightning-icon icon-name="standard:report" size="small" alternative-text="Recent License Events"></lightning-icon>
                                 </div>
                                 <div class="slds-media__body">
                                     <h2 class="slds-card__header-title">

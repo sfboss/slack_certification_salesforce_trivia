@@ -17,10 +17,15 @@
 
 .kpi-tile {
     min-height: 10rem;
+    padding: 1rem 1.25rem;
     border: 1px solid #d8dde6;
     border-radius: 0.75rem;
     background: linear-gradient(180deg, #ffffff 0%, #f7f9fb 100%);
     box-shadow: 0 2px 8px rgba(1, 118, 211, 0.08);
+}
+
+.kpi-tile .slds-tile__detail {
+    padding: 0;
 }
 
 .kpi-tile_warning {

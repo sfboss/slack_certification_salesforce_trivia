@@ -144,6 +144,7 @@ export default class CertGameAdminHome extends LightningElement {
             return {
                 ...tab,
                 iconHref: spriteHref('utility', tab.icon),
+                iconName: `utility:${tab.icon}`,
                 itemClass: `slds-tabs_default__item${this.activeTab === tab.key ? ' slds-is-active' : ''}`,
                 ariaSelected: this.activeTab === tab.key ? 'true' : 'false',
                 tabIndex: this.activeTab === tab.key ? '0' : '-1',
