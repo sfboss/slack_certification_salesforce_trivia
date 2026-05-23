@@ -20,6 +20,55 @@ Two pieces of feedback drove the work:
 
 ## New fields and objects
 
+```mermaid
+erDiagram
+    TRIVIA_QUESTION ||--o{ TRIVIA_ANSWER_CHOICE : contains
+    PLAYER_ANSWER }o--|| TRIVIA_QUESTION : references
+    PLAYER_ANSWER }o--|| TRIVIA_ANSWER_CHOICE : selects
+    PLAYER_ANSWER }o--|| PLAYER : answered_by
+    PLAYER_TOPIC_STAT }o--|| PLAYER : rollup
+    
+    TRIVIA_QUESTION {
+        string Keywords
+        string Tags
+        json Named_Entities
+        json Glossary_Terms
+        url Primary_Reference_URL
+    }
+    
+    TRIVIA_ANSWER_CHOICE {
+        string Why_Incorrect
+        string Direct_Statement
+        string Misconception_Tag
+    }
+    
+    PLAYER_ANSWER {
+        lookup Selected_Choice
+        string Selected_Choice_Text
+        string Question_Domain
+        string Question_Difficulty
+        string Question_Keywords
+        string Question_Tags
+        string Misconception_Tag
+    }
+    
+    PLAYER_TOPIC_STAT {
+        lookup Player
+        string Topic_Type
+        string Topic_Value
+        string Topic_Key
+        number Times_Seen
+        number Times_Correct
+        number Times_Incorrect
+        datetime Last_Seen_At
+        formula Accuracy_Pct
+    }
+    
+    PLAYER {
+        string Name
+    }
+```
+
 ### `Trivia_Question__c`
 
 | Field | Type | Purpose |
