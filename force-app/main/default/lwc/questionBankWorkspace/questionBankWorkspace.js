@@ -111,6 +111,15 @@ export default class QuestionBankWorkspace extends LightningElement {
     get isSample() { return this.source === SOURCE_SAMPLE; }
     get isGenerate() { return this.source === SOURCE_GENERATE; }
 
+    get viewMode() {
+        if (this.wizardOpen) return 'wizard';
+        if (this.bankDetail) return 'detail';
+        return 'list';
+    }
+    get isListView() { return this.viewMode === 'list'; }
+    get isWizardView() { return this.viewMode === 'wizard'; }
+    get isDetailView() { return this.viewMode === 'detail'; }
+
     get isStepSource() { return this.step === STEP_SOURCE; }
     get isStepValidate() { return this.step === STEP_VALIDATE; }
     get isStepCommit() { return this.step === STEP_COMMIT; }
@@ -210,11 +219,18 @@ export default class QuestionBankWorkspace extends LightningElement {
     }
 
     handleCloseWizard() {
+        const wasSuccess = this.importResult && this.importResult.success;
         this.wizardOpen = false;
         this.resetWizard();
-        if (this.importResult && this.importResult.success) {
+        if (wasSuccess) {
             this.handleRefresh();
         }
+    }
+
+    handleBackToList() {
+        this.bankDetail = null;
+        this.selectedBankId = null;
+        if (this.wizardOpen) this.handleCloseWizard();
     }
 
     resetWizard() {
