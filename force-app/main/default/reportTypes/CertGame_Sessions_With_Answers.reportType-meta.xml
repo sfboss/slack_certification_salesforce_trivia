@@ -35,7 +35,6 @@
         <columns><checkedByDefault>false</checkedByDefault><field>Question_Domain__c</field><table>Game_Session__c.Answers__r</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Question_Tags__c</field><table>Game_Session__c.Answers__r</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Misconception_Tag__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Hint_Used__c</field><table>Game_Session__c.Answers__r</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Selected_Choice_Labels__c</field><table>Game_Session__c.Answers__r</table></columns>
         <masterLabel>Answer Fields</masterLabel>
     </sections>

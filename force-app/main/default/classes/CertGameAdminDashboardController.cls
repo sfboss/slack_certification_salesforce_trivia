@@ -60,7 +60,6 @@ public with sharing class CertGameAdminDashboardController {
         @AuraEnabled public Integer published;
         @AuraEnabled public Integer retired;
         @AuraEnabled public Integer brokenCitations;
-        @AuraEnabled public Integer lowQuality;
     }
 
     public class RecentLicenseDto {
@@ -173,10 +172,6 @@ public with sharing class CertGameAdminDashboardController {
         }
         out.questionHealth.brokenCitations = [
             SELECT COUNT() FROM Question_Citation__c WHERE Broken_Link__c = true WITH SYSTEM_MODE
-        ];
-        out.questionHealth.lowQuality = [
-            SELECT COUNT() FROM Trivia_Question__c
-            WHERE Quality_Score__c != null AND Quality_Score__c < 0.5 WITH SYSTEM_MODE
         ];
         out.kpis.publishedQuestions = out.questionHealth.published;
         out.kpis.draftQuestions = out.questionHealth.draft;

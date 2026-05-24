@@ -11,9 +11,6 @@
     <columns><field>Trivia_Question__c$Name</field></columns>
     <columns><field>Trivia_Question__c$Question_Type__c</field></columns>
     <columns><field>Trivia_Question__c$Difficulty__c</field></columns>
-    <columns><field>Trivia_Question__c$Quality_Score__c</field></columns>
-    <columns><field>Trivia_Question__c$Times_Asked__c</field></columns>
-    <columns><field>Trivia_Question__c$Times_Correct__c</field></columns>
     <groupingsDown>
         <field>Trivia_Question__c$Certification_Exam__c</field>
         <sortOrder>Asc</sortOrder>

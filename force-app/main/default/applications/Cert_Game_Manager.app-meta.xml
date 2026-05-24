@@ -10,6 +10,7 @@
     <navType>Standard</navType>
     <tabs>Cert_Game_Admin_Home</tabs>
     <tabs>Cert_Game_Dashboard</tabs>
+    <tabs>Cert_Game_Users</tabs>
     <tabs>Exams_Workspace</tabs>
     <tabs>Question_Bank_Workspace</tabs>
     <tabs>Cert_Game_Leaderboard</tabs>

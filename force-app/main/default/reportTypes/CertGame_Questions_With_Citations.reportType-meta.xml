@@ -14,14 +14,10 @@
         <columns><checkedByDefault>true</checkedByDefault><field>Status__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Question_Type__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Difficulty__c</field><table>Trivia_Question__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Quality_Score__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Certification_Exam__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Primary_Reference_URL__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Last_Verified_Date__c</field><table>Trivia_Question__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Times_Asked__c</field><table>Trivia_Question__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Times_Correct__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Fact_Check_Passed__c</field><table>Trivia_Question__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Citation_Mode__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Question_Bank__c</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>CreatedDate</field><table>Trivia_Question__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>CreatedBy</field><table>Trivia_Question__c</table></columns>

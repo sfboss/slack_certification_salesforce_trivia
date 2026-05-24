@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Trivia_Question__c.Citation_Mode__c</members>
+        <members>Trivia_Question__c.Reference_Summary__c</members>
+        <members>Trivia_Question__c.Times_Asked__c</members>
+        <members>Trivia_Question__c.Times_Correct__c</members>
+        <members>Trivia_Question__c.Quality_Score__c</members>
+        <members>Tenant__c.Branding_Logo_URL__c</members>
+        <members>Tenant__c.Branding_Primary_Color__c</members>
+        <members>Tenant__c.Data_Region__c</members>
+        <members>Tenant__c.Installed_By_User_Id__c</members>
+        <members>Game_Session__c.Anti_Cheat_Seed__c</members>
+        <members>Game_Round__c.Ended_At__c</members>
+        <members>Game_Round__c.Correct_Answer_Revealed__c</members>
+        <members>Game_Round__c.Slack_Message_Ts__c</members>
+        <members>Player_Answer__c.Hint_Used__c</members>
+        <members>Player__c.Notifications_Opt_In__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>CertGame_Analytics/Question_Quality_Score_Distribution</members>
+        <name>Report</name>
+    </types>
+    <version>60.0</version>
+</Package>

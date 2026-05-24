@@ -694,22 +694,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Game_Round__c.Correct_Answer_Revealed__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Game_Round__c.Ended_At__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Game_Round__c.Round_Number__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Game_Round__c.Slack_Message_Ts__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -720,11 +705,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Game_Round__c.Status__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Game_Session__c.Anti_Cheat_Seed__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -884,11 +864,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Player_Answer__c.Hint_Used__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Player_Answer__c.Is_Correct__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1025,11 +1000,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Player__c.Mapped_Contact__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Player__c.Notifications_Opt_In__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1334,27 +1304,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Tenant__c.Branding_Logo_URL__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Tenant__c.Branding_Primary_Color__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Tenant__c.Data_Region__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Tenant__c.Installed_At__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Tenant__c.Installed_By_User_Id__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1484,11 +1434,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Trivia_Question__c.Citation_Mode__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Trivia_Question__c.Correct_Answer_Mode__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1569,11 +1514,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Trivia_Question__c.Quality_Score__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Trivia_Question__c.Question_Bank__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1585,11 +1525,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Trivia_Question__c.Question_Type__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Trivia_Question__c.Reference_Summary__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1610,16 +1545,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Trivia_Question__c.Tags__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Trivia_Question__c.Times_Asked__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Trivia_Question__c.Times_Correct__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

@@ -12,7 +12,6 @@
     <columns><field>Trivia_Question__c$Certification_Exam__c</field></columns>
     <columns><field>Trivia_Question__c$Question_Type__c</field></columns>
     <columns><field>Trivia_Question__c$Difficulty__c</field></columns>
-    <columns><field>Trivia_Question__c$Quality_Score__c</field></columns>
     <columns><field>Trivia_Question__c$Fact_Check_Passed__c</field></columns>
     <columns><field>Trivia_Question__c$CreatedDate</field></columns>
     <columns><field>Trivia_Question__c$CreatedBy</field></columns>

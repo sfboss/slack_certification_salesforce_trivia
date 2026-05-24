@@ -31,6 +31,7 @@ public with sharing class SlackCertGameCommandHandler {
         if (sub == 'billing') return CertGameBillingService.openBillingModal(teamId, userId, triggerId);
         if (sub == 'debug') return renderDebug();
         if (sub == 'doctor') return CertGameDoctorService.run(teamId, userId);
+        if (sub == 'whoami' || sub == 'me' || sub == 'google') return CertGameWhoamiService.run(teamId, userId);
         if (sub == 'notify-test' || sub == 'notify_test' || sub == 'notifytest') {
             return CertGameNotificationTestService.run(teamId, userId);
         }

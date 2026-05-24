@@ -70,7 +70,7 @@ All Block Kit JSON is built in `CertGameSlackRenderService` — handlers do **no
 
 ### Game loop
 
-`CertGameSessionService` creates `Game_Session__c`, picks N `Trivia_Question__c` rows (only `Status__c = Published`), and shuffles answer choices using `Anti_Cheat_Seed__c` so the order is reproducible-per-session but unguessable. `CertGameScoringService.score()` updates `Player_Answer__c.Points_Awarded__c` and `Player__c` rollups. Duels (`Mode__c = 'Duel'`) link two sessions via `Duel_Group_Id__c`; the finale callout is deferred with `@future(callout=true)` from `recordAnswerFromSlack` to avoid "callout after DML."
+`CertGameSessionService` creates `Game_Session__c`, picks N `Trivia_Question__c` rows (only `Status__c = Published`), and shuffles answer choices per session. `CertGameScoringService.score()` updates `Player_Answer__c.Points_Awarded__c` and `Player__c` rollups. Duels (`Mode__c = 'Duel'`) link two sessions via `Duel_Group_Id__c`; the finale callout is deferred with `@future(callout=true)` from `recordAnswerFromSlack` to avoid "callout after DML."
 
 ### Question generation
 

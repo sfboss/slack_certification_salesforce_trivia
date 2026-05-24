@@ -9,7 +9,6 @@
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
     <columns><field>Trivia_Question__c$Name</field></columns>
-    <columns><field>Trivia_Question__c$Quality_Score__c</field></columns>
     <filter>
         <criteriaItems>
             <column>Trivia_Question__c$Status__c</column>

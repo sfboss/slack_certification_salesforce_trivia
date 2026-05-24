@@ -110,7 +110,7 @@ sf org assign permsetgroup -n Cert_Game_All_Admin -o certgame
 1. `SlackCertGameCommandHandler` opens the setup modal via `views.open` (Block Kit JSON built by `CertGameSlackRenderService.buildSetupModal`).
 2. On `view_submission`:
    - `EntitlementGuard.checkGameStart(tenant, exam)` — at MVP, allow all; stub in entitlement plumbing.
-   - `CertGameSessionService.start(...)` creates `Game_Session__c`, picks N `Trivia_Question__c` (random within filters, only `Published`), shuffles choices per `Anti_Cheat_Seed__c`.
+   - `CertGameSessionService.start(...)` creates `Game_Session__c`, picks N `Trivia_Question__c` (random within filters, only `Published`), shuffles choices per session.
    - Post first question card to the originating channel/DM.
 3. `SlackCertGameInteractionHandler` on `block_actions`:
    - Locate `Game_Round__c` by `Slack_Message_Ts__c`.

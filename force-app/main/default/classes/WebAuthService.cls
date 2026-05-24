@@ -88,8 +88,7 @@ public without sharing class WebAuthService {
                 Google_Name__c = c.name,
                 Google_Picture_URL__c = c.picture,
                 Display_Name__c = String.isBlank(c.name) ? c.email : c.name,
-                Web_Last_Login_At__c = DateTime.now(),
-                Notifications_Opt_In__c = false
+                Web_Last_Login_At__c = DateTime.now()
             );
         }
         Database.upsert(p, Player__c.Google_Sub__c, false, AccessLevel.SYSTEM_MODE);
