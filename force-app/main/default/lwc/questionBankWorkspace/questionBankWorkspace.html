@@ -2,16 +2,31 @@
     <lightning-card icon-name="standard:question_feed">
         <h2 slot="title" class="slds-card__header-title">
             <span class="qbw-title">Question Bank Workspace</span>
-            <span class="qbw-subtitle">Browse banks · Import packs · Generate questions</span>
+            <span class="qbw-subtitle"
+                >Browse banks · Import packs · Generate questions</span
+            >
         </h2>
         <div slot="actions">
             <template if:true={isListView}>
-                <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" title="Refresh"
-                                       onclick={handleRefresh} class="slds-m-right_x-small"></lightning-button-icon>
-                <lightning-button label="+ Import pack" variant="brand" onclick={handleOpenWizard}></lightning-button>
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    alternative-text="Refresh"
+                    title="Refresh"
+                    onclick={handleRefresh}
+                    class="slds-m-right_x-small"
+                ></lightning-button-icon>
+                <lightning-button
+                    label="+ Import pack"
+                    variant="brand"
+                    onclick={handleOpenWizard}
+                ></lightning-button>
             </template>
             <template if:false={isListView}>
-                <lightning-button label="← Back to banks" variant="neutral" onclick={handleBackToList}></lightning-button>
+                <lightning-button
+                    label="← Back to banks"
+                    variant="neutral"
+                    onclick={handleBackToList}
+                ></lightning-button>
             </template>
         </div>
 
@@ -38,13 +53,26 @@
         <!-- ============= LIST VIEW (default) ============= -->
         <template if:true={isListView}>
             <template if:false={hasBanks}>
-                <div class="qbw-empty slds-text-align_center slds-p-around_x-large">
-                    <lightning-icon icon-name="utility:upload" size="large" alternative-text="No banks"></lightning-icon>
-                    <h3 class="slds-text-heading_medium slds-m-top_small">No question banks yet</h3>
+                <div
+                    class="qbw-empty slds-text-align_center slds-p-around_x-large"
+                >
+                    <lightning-icon
+                        icon-name="utility:upload"
+                        size="large"
+                        alternative-text="No banks"
+                    ></lightning-icon>
+                    <h3 class="slds-text-heading_medium slds-m-top_small">
+                        No question banks yet
+                    </h3>
                     <p class="slds-text-color_weak slds-m-bottom_medium">
-                        Import a pack, pick a bundled sample, or kick off LLM generation to populate your first bank.
+                        Import a pack, pick a bundled sample, or kick off LLM
+                        generation to populate your first bank.
                     </p>
-                    <lightning-button label="+ Import your first pack" variant="brand" onclick={handleOpenWizard}></lightning-button>
+                    <lightning-button
+                        label="+ Import your first pack"
+                        variant="brand"
+                        onclick={handleOpenWizard}
+                    ></lightning-button>
                 </div>
             </template>
             <template if:true={hasBanks}>
@@ -65,13 +93,28 @@
                         </thead>
                         <tbody>
                             <template for:each={banks} for:item="b">
-                                <tr key={b.id} data-id={b.id} class="qbw-row" onclick={handleBankClick}>
+                                <tr
+                                    key={b.id}
+                                    data-id={b.id}
+                                    class="qbw-row"
+                                    onclick={handleBankClick}
+                                >
                                     <td><strong>{b.name}</strong></td>
                                     <td>{b.examLabel}</td>
-                                    <td class="qbw-td-num">{b.questionCount}</td>
-                                    <td class="qbw-td-num qbw-td-published">{b.publishedCount}</td>
-                                    <td class="qbw-td-num qbw-td-draft">{b.draftCount}</td>
-                                    <td><span class={b.statusClass}>{b.status}</span></td>
+                                    <td class="qbw-td-num">
+                                        {b.questionCount}
+                                    </td>
+                                    <td class="qbw-td-num qbw-td-published">
+                                        {b.publishedCount}
+                                    </td>
+                                    <td class="qbw-td-num qbw-td-draft">
+                                        {b.draftCount}
+                                    </td>
+                                    <td>
+                                        <span class={b.statusClass}
+                                            >{b.status}</span
+                                        >
+                                    </td>
                                     <td>{b.sourceType}</td>
                                     <td>{b.version}</td>
                                     <td>{b.lastImportedDisplay}</td>
@@ -87,24 +130,49 @@
         <template if:true={isDetailView}>
             <div class="qbw-panel slds-p-around_medium">
                 <header class="slds-m-bottom_medium">
-                    <h2 class="slds-text-heading_medium">{bankDetail.bank.name}</h2>
-                    <p class="slds-text-color_weak slds-m-top_xx-small">{bankDetail.bank.examLabel}</p>
+                    <h2 class="slds-text-heading_medium">
+                        {bankDetail.bank.name}
+                    </h2>
+                    <p class="slds-text-color_weak slds-m-top_xx-small">
+                        {bankDetail.bank.examLabel}
+                    </p>
                 </header>
-                <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium qbw-detail-grid">
-                    <div class="slds-col slds-size_1-of-4"><strong>Status:</strong> {bankDetail.bank.status}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Source:</strong> {bankDetail.bank.sourceType}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Version:</strong> {bankDetail.bank.version}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Questions:</strong> {bankDetail.bank.questionCount}</div>
+                <div
+                    class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium qbw-detail-grid"
+                >
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Status:</strong> {bankDetail.bank.status}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Source:</strong> {bankDetail.bank.sourceType}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Version:</strong> {bankDetail.bank.version}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Questions:</strong>
+                        {bankDetail.bank.questionCount}
+                    </div>
                 </div>
 
-                <lightning-button label="Open in Review Console" icon-name="utility:edit" variant="brand-outline"
-                                  data-status="Needs Review" onclick={handleReviewDeepLink}
-                                  class="slds-m-bottom_small"></lightning-button>
+                <lightning-button
+                    label="Open in Review Console"
+                    icon-name="utility:edit"
+                    variant="brand-outline"
+                    data-status="Needs Review"
+                    onclick={handleReviewDeepLink}
+                    class="slds-m-bottom_small"
+                ></lightning-button>
 
-                <h3 class="slds-text-heading_small slds-m-top_medium">Recent questions</h3>
+                <h3 class="slds-text-heading_small slds-m-top_medium">
+                    Recent questions
+                </h3>
                 <template if:true={bankDetail.recentQuestions.length}>
                     <ul class="qbw-recent">
-                        <template for:each={bankDetail.recentQuestions} for:item="q">
+                        <template
+                            for:each={bankDetail.recentQuestions}
+                            for:item="q"
+                        >
                             <li key={q.id}>
                                 <span class="qbw-q-status">{q.status}</span>
                                 <span class="qbw-q-diff">{q.difficulty}</span>
@@ -114,7 +182,9 @@
                     </ul>
                 </template>
                 <template if:false={bankDetail.recentQuestions.length}>
-                    <p class="slds-text-color_weak">No questions imported into this bank yet.</p>
+                    <p class="slds-text-color_weak">
+                        No questions imported into this bank yet.
+                    </p>
                 </template>
             </div>
         </template>
@@ -123,7 +193,9 @@
         <template if:true={isWizardView}>
             <div class="qbw-panel qbw-wizard slds-p-around_medium">
                 <header class="qbw-wizard-header slds-m-bottom_medium">
-                    <h2 class="slds-text-heading_medium">Import a question pack</h2>
+                    <h2 class="slds-text-heading_medium">
+                        Import a question pack
+                    </h2>
                     <ul class="qbw-stepper">
                         <li class={step1Class}>1. Source</li>
                         <li class={step2Class}>2. Validate</li>
@@ -133,23 +205,39 @@
 
                 <!-- Step 1: Source -->
                 <template if:true={isStepSource}>
-                    <lightning-radio-group name="source" label="Where is the pack coming from?"
-                                           options={sourceOptions} value={source}
-                                           onchange={handleSourceChange} type="radio"></lightning-radio-group>
+                    <lightning-radio-group
+                        name="source"
+                        label="Where is the pack coming from?"
+                        options={sourceOptions}
+                        value={source}
+                        onchange={handleSourceChange}
+                        type="radio"
+                    ></lightning-radio-group>
 
                     <template if:true={isPaste}>
-                        <lightning-textarea label="Pack JSON" value={jsonText} onchange={handleJsonChange}
-                                            placeholder={placeholderJson}
-                                            class="slds-m-top_medium qbw-textarea"></lightning-textarea>
+                        <lightning-textarea
+                            label="Pack JSON"
+                            value={jsonText}
+                            onchange={handleJsonChange}
+                            placeholder={placeholderJson}
+                            class="slds-m-top_medium qbw-textarea"
+                        ></lightning-textarea>
                     </template>
 
                     <template if:true={isUpload}>
                         <div class="slds-m-top_medium">
-                            <lightning-input type="file" label="Choose a .json file" accept=".json,application/json"
-                                             onchange={handleFileChange}></lightning-input>
+                            <lightning-input
+                                type="file"
+                                label="Choose a .json file"
+                                accept=".json,application/json"
+                                onchange={handleFileChange}
+                            ></lightning-input>
                             <template if:true={jsonText}>
-                                <p class="slds-m-top_x-small slds-text-color_success">
-                                    Loaded {jsonText.length} characters. Click Next to validate.
+                                <p
+                                    class="slds-m-top_x-small slds-text-color_success"
+                                >
+                                    Loaded {jsonText.length} characters. Click
+                                    Next to validate.
                                 </p>
                             </template>
                         </div>
@@ -157,15 +245,24 @@
 
                     <template if:true={isSample}>
                         <div class="slds-m-top_medium">
-                            <lightning-combobox label="Bundled sample pack" options={sampleOptions}
-                                                value={selectedSampleKey} onchange={handleSampleChange}
-                                                placeholder="Pick a sample"></lightning-combobox>
+                            <lightning-combobox
+                                label="Bundled sample pack"
+                                options={sampleOptions}
+                                value={selectedSampleKey}
+                                onchange={handleSampleChange}
+                                placeholder="Pick a sample"
+                            ></lightning-combobox>
                             <template if:true={samples.length}>
                                 <ul class="qbw-samples slds-m-top_small">
                                     <template for:each={samples} for:item="s">
                                         <li key={s.key}>
-                                            <strong>{s.label}</strong> — {s.questionCount} questions
-                                            <div class="slds-text-color_weak slds-text-body_small">{s.description}</div>
+                                            <strong>{s.label}</strong> —
+                                            {s.questionCount} questions
+                                            <div
+                                                class="slds-text-color_weak slds-text-body_small"
+                                            >
+                                                {s.description}
+                                            </div>
                                         </li>
                                     </template>
                                 </ul>
@@ -175,20 +272,43 @@
 
                     <template if:true={isGenerate}>
                         <div class="slds-m-top_medium">
-                            <lightning-combobox label="Certification exam" options={examOptions}
-                                                value={selectedExamId} onchange={handleExamChange}
-                                                placeholder="Pick an exam" required></lightning-combobox>
-                            <lightning-combobox label="Provider" options={providerOptions} value={provider}
-                                                onchange={handleProviderChange} class="slds-m-top_x-small"></lightning-combobox>
-                            <lightning-input type="number" label="How many questions?" value={questionCount}
-                                             min="1" max="25" onchange={handleCountChange}
-                                             class="slds-m-top_x-small"></lightning-input>
-                            <lightning-textarea label="Prompt notes (optional)" value={promptText}
-                                                onchange={handlePromptChange}
-                                                placeholder={placeholderPrompt}
-                                                class="slds-m-top_x-small"></lightning-textarea>
-                            <p class="slds-m-top_small slds-text-color_weak slds-text-body_small">
-                                Clicking Next queues a Question Generation Job. Validation happens after the LLM responds; drafts land in the Needs Review queue.
+                            <lightning-combobox
+                                label="Certification exam"
+                                options={examOptions}
+                                value={selectedExamId}
+                                onchange={handleExamChange}
+                                placeholder="Pick an exam"
+                                required
+                            ></lightning-combobox>
+                            <lightning-combobox
+                                label="Provider"
+                                options={providerOptions}
+                                value={provider}
+                                onchange={handleProviderChange}
+                                class="slds-m-top_x-small"
+                            ></lightning-combobox>
+                            <lightning-input
+                                type="number"
+                                label="How many questions?"
+                                value={questionCount}
+                                min="1"
+                                max="25"
+                                onchange={handleCountChange}
+                                class="slds-m-top_x-small"
+                            ></lightning-input>
+                            <lightning-textarea
+                                label="Prompt notes (optional)"
+                                value={promptText}
+                                onchange={handlePromptChange}
+                                placeholder={placeholderPrompt}
+                                class="slds-m-top_x-small"
+                            ></lightning-textarea>
+                            <p
+                                class="slds-m-top_small slds-text-color_weak slds-text-body_small"
+                            >
+                                Clicking Next queues a Question Generation Job.
+                                Validation happens after the LLM responds;
+                                drafts land in the Needs Review queue.
                             </p>
                         </div>
                     </template>
@@ -197,18 +317,30 @@
                 <!-- Step 2: Validate -->
                 <template if:true={isStepValidate}>
                     <template if:true={validation.valid}>
-                        <div class="slds-notify slds-notify_alert slds-theme_success" role="alert">
-                            Valid pack. <strong>{validation.questionCount}</strong> questions ready to import.
+                        <div
+                            class="slds-notify slds-notify_alert slds-theme_success"
+                            role="alert"
+                        >
+                            Valid pack.
+                            <strong>{validation.questionCount}</strong>
+                            questions ready to import.
                         </div>
                     </template>
                     <template if:false={validation.valid}>
-                        <div class="slds-notify slds-notify_alert slds-theme_warning" role="alert">
-                            Validation failed. Go back, fix the JSON, and try again.
+                        <div
+                            class="slds-notify slds-notify_alert slds-theme_warning"
+                            role="alert"
+                        >
+                            Validation failed. Go back, fix the JSON, and try
+                            again.
                         </div>
                     </template>
                     <template if:true={hasValidationErrors}>
                         <ul class="qbw-errors slds-m-top_small">
-                            <template for:each={validation.errors} for:item="er">
+                            <template
+                                for:each={validation.errors}
+                                for:item="er"
+                            >
                                 <li key={er}>{er}</li>
                             </template>
                         </ul>
@@ -217,35 +349,62 @@
 
                 <!-- Step 3: Commit -->
                 <template if:true={isStepCommit}>
-                    <p>About to import <strong>{validation.questionCount}</strong> questions. All inserts land as <strong>Draft</strong>; nothing goes live until a reviewer publishes.</p>
-                    <lightning-button label="Commit import" variant="brand" onclick={handleCommit}
-                                      disabled={commitDisabled} class="slds-m-top_medium"></lightning-button>
+                    <p>
+                        About to import
+                        <strong>{validation.questionCount}</strong> questions.
+                        All inserts land as <strong>Draft</strong>; nothing goes
+                        live until a reviewer publishes.
+                    </p>
+                    <lightning-button
+                        label="Commit import"
+                        variant="brand"
+                        onclick={handleCommit}
+                        disabled={commitDisabled}
+                        class="slds-m-top_medium"
+                    ></lightning-button>
                 </template>
 
                 <!-- Step 4: Done -->
                 <template if:true={isStepDone}>
                     <template if:true={importResult.success}>
-                        <div class="slds-notify slds-notify_alert slds-theme_success" role="alert">
-                            Imported! {importResult.questionsCreated} created · {importResult.questionsUpdated} updated.
+                        <div
+                            class="slds-notify slds-notify_alert slds-theme_success"
+                            role="alert"
+                        >
+                            Imported! {importResult.questionsCreated} created ·
+                            {importResult.questionsUpdated} updated.
                         </div>
                     </template>
                     <template if:false={importResult.success}>
-                        <div class="slds-notify slds-notify_alert slds-theme_warning" role="alert">
+                        <div
+                            class="slds-notify slds-notify_alert slds-theme_warning"
+                            role="alert"
+                        >
                             Import completed with issues.
                         </div>
                     </template>
                     <template if:true={hasImportErrors}>
-                        <p class="slds-text-color_error slds-m-top_small">Errors:</p>
+                        <p class="slds-text-color_error slds-m-top_small">
+                            Errors:
+                        </p>
                         <ul class="qbw-errors">
-                            <template for:each={importResult.errors} for:item="er">
+                            <template
+                                for:each={importResult.errors}
+                                for:item="er"
+                            >
                                 <li key={er}>{er}</li>
                             </template>
                         </ul>
                     </template>
                     <template if:true={hasImportDuplicates}>
-                        <p class="slds-text-color_warning slds-m-top_small">Potential duplicates:</p>
+                        <p class="slds-text-color_warning slds-m-top_small">
+                            Potential duplicates:
+                        </p>
                         <ul class="qbw-errors">
-                            <template for:each={importResult.duplicateExternalIds} for:item="d">
+                            <template
+                                for:each={importResult.duplicateExternalIds}
+                                for:item="d"
+                            >
                                 <li key={d}>{d}</li>
                             </template>
                         </ul>
@@ -255,23 +414,46 @@
                 <!-- Footer controls -->
                 <footer class="qbw-wizard-footer slds-m-top_large">
                     <template if:true={busy}>
-                        <lightning-spinner alternative-text="Working" size="small"></lightning-spinner>
+                        <lightning-spinner
+                            alternative-text="Working"
+                            size="small"
+                        ></lightning-spinner>
                     </template>
                     <template if:false={isStepDone}>
                         <template if:true={isStepValidate}>
-                            <lightning-button label="Back" onclick={handleBack} class="slds-m-right_x-small"></lightning-button>
+                            <lightning-button
+                                label="Back"
+                                onclick={handleBack}
+                                class="slds-m-right_x-small"
+                            ></lightning-button>
                         </template>
                         <template if:true={isStepCommit}>
-                            <lightning-button label="Back" onclick={handleBack} class="slds-m-right_x-small"></lightning-button>
+                            <lightning-button
+                                label="Back"
+                                onclick={handleBack}
+                                class="slds-m-right_x-small"
+                            ></lightning-button>
                         </template>
-                        <lightning-button label="Cancel" onclick={handleCloseWizard} class="slds-m-right_x-small"></lightning-button>
+                        <lightning-button
+                            label="Cancel"
+                            onclick={handleCloseWizard}
+                            class="slds-m-right_x-small"
+                        ></lightning-button>
                         <template if:false={isStepCommit}>
-                            <lightning-button label="Next" variant="brand" onclick={handleNext}
-                                              disabled={nextDisabled}></lightning-button>
+                            <lightning-button
+                                label="Next"
+                                variant="brand"
+                                onclick={handleNext}
+                                disabled={nextDisabled}
+                            ></lightning-button>
                         </template>
                     </template>
                     <template if:true={isStepDone}>
-                        <lightning-button label="Done" variant="brand" onclick={handleCloseWizard}></lightning-button>
+                        <lightning-button
+                            label="Done"
+                            variant="brand"
+                            onclick={handleCloseWizard}
+                        ></lightning-button>
                     </template>
                 </footer>
             </div>

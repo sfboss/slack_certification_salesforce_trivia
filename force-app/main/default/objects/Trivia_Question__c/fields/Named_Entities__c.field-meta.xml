@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Named_Entities__c</fullName>
-    <description>JSON array of named entities mentioned in the question (e.g. [{&quot;type&quot;:&quot;Feature&quot;,&quot;value&quot;:&quot;Role Hierarchy&quot;}]). Feeds knowledge graph edges.</description>
+    <description
+    >JSON array of named entities mentioned in the question (e.g. [{&quot;type&quot;:&quot;Feature&quot;,&quot;value&quot;:&quot;Role Hierarchy&quot;}]). Feeds knowledge graph edges.</description>
     <externalId>false</externalId>
-    <inlineHelpText>JSON array: [{&quot;type&quot;:&quot;Feature|Object|Concept|Persona|Tool&quot;,&quot;value&quot;:&quot;...&quot;}]. Drives the question knowledge graph.</inlineHelpText>
+    <inlineHelpText
+    >JSON array: [{&quot;type&quot;:&quot;Feature|Object|Concept|Persona|Tool&quot;,&quot;value&quot;:&quot;...&quot;}]. Drives the question knowledge graph.</inlineHelpText>
     <label>Named Entities</label>
     <length>32768</length>
     <trackHistory>false</trackHistory>

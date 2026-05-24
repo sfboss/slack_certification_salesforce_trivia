@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Public_Join_Token__c</fullName>
     <caseSensitive>true</caseSensitive>
-    <description>Random slug used in the public join URL (e.g. /certgame/?t=abc123).</description>
+    <description
+    >Random slug used in the public join URL (e.g. /certgame/?t=abc123).</description>
     <externalId>true</externalId>
     <label>Public Join Token</label>
     <length>40</length>

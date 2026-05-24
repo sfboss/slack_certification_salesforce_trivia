@@ -1,6 +1,6 @@
-import { LightningElement, api } from 'lwc';
-import { loadScript } from 'lightning/platformResourceLoader';
-import CHART_JS from '@salesforce/resourceUrl/chartJs';
+import { LightningElement, api } from "lwc";
+import { loadScript } from "lightning/platformResourceLoader";
+import CHART_JS from "@salesforce/resourceUrl/chartJs";
 
 export default class CertGameChart extends LightningElement {
     @api height = 220;
@@ -34,7 +34,10 @@ export default class CertGameChart extends LightningElement {
         }
 
         if (!this.chartJsPromise) {
-            this.chartJsPromise = loadScript(this, `${CHART_JS}/chart.umd.js`).then(() => {
+            this.chartJsPromise = loadScript(
+                this,
+                `${CHART_JS}/chart.umd.js`
+            ).then(() => {
                 this.chartJsReady = true;
                 this.renderChart();
             });
@@ -46,7 +49,7 @@ export default class CertGameChart extends LightningElement {
     }
 
     renderChart() {
-        const canvas = this.template.querySelector('canvas');
+        const canvas = this.template.querySelector("canvas");
         const nextConfig = this.normalizedConfig;
 
         if (!canvas || !nextConfig || !window.Chart) {
@@ -59,7 +62,7 @@ export default class CertGameChart extends LightningElement {
         }
 
         this.destroyChart();
-        this.chart = new window.Chart(canvas.getContext('2d'), nextConfig);
+        this.chart = new window.Chart(canvas.getContext("2d"), nextConfig);
         this.renderedSignature = nextSignature;
     }
 

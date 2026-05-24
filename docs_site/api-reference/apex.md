@@ -104,19 +104,19 @@ public static String handle(Map<String,Object> payload)
 Dispatch table (from
 [`SlackCertGameCommandHandler.cls`](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/force-app/main/default/classes/SlackCertGameCommandHandler.cls)):
 
-| Sub | Service call |
-| --- | --- |
-| `help` | `CertGameSlackRenderService.help()` |
-| `play` | `CertGameSessionService.startQuickGameFromSlack(...)` |
-| `challenge` / `duel` | `CertGameDuelService.openChallengeFromSlack(...)` |
-| `games` | `CertGameExamCatalogService.renderForSlack(...)` |
-| `leaderboard` | `CertGameLeaderboardService.renderLeaderboard(...)` |
-| `stats` | `CertGameLeaderboardService.renderStats(...)` |
-| `plan` | `CertGameStudyPlanService.openPlanModal(...)` |
-| `billing` | `CertGameBillingService.openBillingModal(...)` |
-| `debug` | Inline render of last hour `App_Log__c`. |
-| `doctor` | `CertGameDoctorService.run(...)` |
-| `notify-test` | `CertGameNotificationTestService.run(...)` |
+| Sub                  | Service call                                          |
+| -------------------- | ----------------------------------------------------- |
+| `help`               | `CertGameSlackRenderService.help()`                   |
+| `play`               | `CertGameSessionService.startQuickGameFromSlack(...)` |
+| `challenge` / `duel` | `CertGameDuelService.openChallengeFromSlack(...)`     |
+| `games`              | `CertGameExamCatalogService.renderForSlack(...)`      |
+| `leaderboard`        | `CertGameLeaderboardService.renderLeaderboard(...)`   |
+| `stats`              | `CertGameLeaderboardService.renderStats(...)`         |
+| `plan`               | `CertGameStudyPlanService.openPlanModal(...)`         |
+| `billing`            | `CertGameBillingService.openBillingModal(...)`        |
+| `debug`              | Inline render of last hour `App_Log__c`.              |
+| `doctor`             | `CertGameDoctorService.run(...)`                      |
+| `notify-test`        | `CertGameNotificationTestService.run(...)`            |
 
 ### `SlackCertGameInteractionHandler`
 

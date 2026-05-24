@@ -18,11 +18,11 @@ Used by:
 
 ### Headers
 
-| Header | Required | Purpose |
-| --- | --- | --- |
-| `X-Slack-Signature` | yes (JSON callbacks) | HMAC-SHA256 over `v0:{ts}:{body}`. |
-| `X-Slack-Request-Timestamp` | yes | Replay window enforced (default 300s). |
-| `Content-Type` | yes | `application/x-www-form-urlencoded` or `application/json`. |
+| Header                      | Required             | Purpose                                                    |
+| --------------------------- | -------------------- | ---------------------------------------------------------- |
+| `X-Slack-Signature`         | yes (JSON callbacks) | HMAC-SHA256 over `v0:{ts}:{body}`.                         |
+| `X-Slack-Request-Timestamp` | yes                  | Replay window enforced (default 300s).                     |
+| `Content-Type`              | yes                  | `application/x-www-form-urlencoded` or `application/json`. |
 
 For form-encoded slash commands, Salesforce Sites strips raw bytes; the router falls back
 to verifying via Slack's legacy `token` field plus the timestamp window. See
@@ -64,12 +64,12 @@ Verifies `Stripe-Signature` via
 
 ### Supported events
 
-| Stripe event | Effect |
-| --- | --- |
-| `checkout.session.completed` | Activate plan + status. |
+| Stripe event                    | Effect                   |
+| ------------------------------- | ------------------------ |
+| `checkout.session.completed`    | Activate plan + status.  |
 | `customer.subscription.updated` | Update plan, period end. |
-| `customer.subscription.deleted` | Downgrade to Free. |
-| `invoice.payment_failed` | Mark `Past_Due`. |
+| `customer.subscription.deleted` | Downgrade to Free.       |
+| `invoice.payment_failed`        | Mark `Past_Due`.         |
 
 Unknown events are stored but otherwise ignored.
 
@@ -86,15 +86,15 @@ These are not HTTP endpoints; they are invoked by Lightning Web Components via t
 `@AuraEnabled` decorator. See [LWC reference](../api-reference/lwc.md) for the calling
 components.
 
-| Method | Class | Purpose |
-| --- | --- | --- |
-| `importPack(String json)` | `CertGameImportService` | Import a question pack JSON. |
-| `listDrafts(...)` | `QuestionReviewController` | List reviewable drafts. |
-| `publishQuestion(Id)` | `QuestionReviewController` | Flip draft → published. |
-| `rejectQuestion(Id, String reason)` | `QuestionReviewController` | Flip draft → rejected. |
-| `getDashboardStats(...)` | `CertGameAdminDashboardController` | Admin metrics. |
-| `getPlayerStats(...)` | `CertGamePlayerDashboardController` | Per-player metrics. |
-| `getLeaderboard(...)` | `CertGameLeaderboardController` | Internal leaderboard view. |
-| `openCustomerPortal(...)` | `CertGameBillingController` | Stripe Customer Portal link. |
+| Method                              | Class                               | Purpose                      |
+| ----------------------------------- | ----------------------------------- | ---------------------------- |
+| `importPack(String json)`           | `CertGameImportService`             | Import a question pack JSON. |
+| `listDrafts(...)`                   | `QuestionReviewController`          | List reviewable drafts.      |
+| `publishQuestion(Id)`               | `QuestionReviewController`          | Flip draft → published.      |
+| `rejectQuestion(Id, String reason)` | `QuestionReviewController`          | Flip draft → rejected.       |
+| `getDashboardStats(...)`            | `CertGameAdminDashboardController`  | Admin metrics.               |
+| `getPlayerStats(...)`               | `CertGamePlayerDashboardController` | Per-player metrics.          |
+| `getLeaderboard(...)`               | `CertGameLeaderboardController`     | Internal leaderboard view.   |
+| `openCustomerPortal(...)`           | `CertGameBillingController`         | Stripe Customer Portal link. |
 
 All `@AuraEnabled` methods declare `with sharing` and enforce CRUD/FLS.

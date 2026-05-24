@@ -1,41 +1,134 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
     <baseObject>Game_Session__c</baseObject>
     <category>other</category>
     <deployed>true</deployed>
-    <description>Game sessions with their answer-level detail (one row per Player_Answer__c).</description>
+    <description
+    >Game sessions with their answer-level detail (one row per Player_Answer__c).</description>
     <join>
         <outerJoin>true</outerJoin>
         <relationship>Answers__r</relationship>
     </join>
     <label>CertGame Sessions with Answers</label>
     <sections>
-        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Mode__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Status__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Certification_Exam__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Tenant__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Tournament__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Started_At__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Completed_At__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Total_Questions__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Timer_Seconds__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Slack_Channel_Id__c</field><table>Game_Session__c</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Started_By_Slack_User_Id__c</field><table>Game_Session__c</table></columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Name</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Mode__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Status__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Certification_Exam__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Tenant__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Tournament__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Started_At__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Completed_At__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Total_Questions__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Timer_Seconds__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Slack_Channel_Id__c</field>
+            <table>Game_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Started_By_Slack_User_Id__c</field>
+            <table>Game_Session__c</table>
+        </columns>
         <masterLabel>Game Session Fields</masterLabel>
     </sections>
     <sections>
-        <columns><checkedByDefault>true</checkedByDefault><field>Player__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Trivia_Question__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Is_Correct__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Points_Awarded__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Response_Time_Ms__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>true</checkedByDefault><field>Answered_At__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Question_Difficulty__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Question_Domain__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Question_Tags__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Misconception_Tag__c</field><table>Game_Session__c.Answers__r</table></columns>
-        <columns><checkedByDefault>false</checkedByDefault><field>Selected_Choice_Labels__c</field><table>Game_Session__c.Answers__r</table></columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Player__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Trivia_Question__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Is_Correct__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Points_Awarded__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Response_Time_Ms__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Answered_At__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Question_Difficulty__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Question_Domain__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Question_Tags__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Misconception_Tag__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Selected_Choice_Labels__c</field>
+            <table>Game_Session__c.Answers__r</table>
+        </columns>
         <masterLabel>Answer Fields</masterLabel>
     </sections>
 </ReportType>

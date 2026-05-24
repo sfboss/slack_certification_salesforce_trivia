@@ -1,11 +1,23 @@
 <template>
     <div class="qrc-root">
-        <lightning-card title="Question Review Console" icon-name="standard:question_feed">
+        <lightning-card
+            title="Question Review Console"
+            icon-name="standard:question_feed"
+        >
             <!-- KPI strip -->
-            <div class="slds-grid slds-wrap slds-p-horizontal_medium slds-p-bottom_small qrc-kpi-row">
+            <div
+                class="slds-grid slds-wrap slds-p-horizontal_medium slds-p-bottom_small qrc-kpi-row"
+            >
                 <template for:each={kpiTiles} for:item="t">
-                    <div key={t.key} class="qrc-kpi" data-tone={t.tone} data-status={t.status}
-                        onclick={handleKpiClick} role="button" tabindex="0">
+                    <div
+                        key={t.key}
+                        class="qrc-kpi"
+                        data-tone={t.tone}
+                        data-status={t.status}
+                        onclick={handleKpiClick}
+                        role="button"
+                        tabindex="0"
+                    >
                         <div class="qrc-kpi-value">{t.value}</div>
                         <div class="qrc-kpi-label">{t.label}</div>
                     </div>
@@ -13,41 +25,76 @@
             </div>
 
             <!-- Top bar -->
-            <div class="slds-grid slds-grid_vertical-align-end slds-wrap slds-p-horizontal_medium slds-gutters_x-small">
+            <div
+                class="slds-grid slds-grid_vertical-align-end slds-wrap slds-p-horizontal_medium slds-gutters_x-small"
+            >
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning-combobox label="Status filter" value={status}
-                        options={statusOptions} onchange={handleStatusChange}></lightning-combobox>
+                    <lightning-combobox
+                        label="Status filter"
+                        value={status}
+                        options={statusOptions}
+                        onchange={handleStatusChange}
+                    ></lightning-combobox>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning-combobox label="Sort by" value={sortBy}
-                        options={sortOptions} onchange={handleSortChange}></lightning-combobox>
+                    <lightning-combobox
+                        label="Sort by"
+                        value={sortBy}
+                        options={sortOptions}
+                        onchange={handleSortChange}
+                    ></lightning-combobox>
                 </div>
                 <div class="slds-col slds-size_1-of-2 slds-text-align_right">
-                    <div class="slds-text-title_caps slds-m-bottom_xx-small">Queue</div>
-                    <lightning-button-icon icon-name="utility:chevronleft" alternative-text="Previous"
-                        disabled={atStart} onclick={handlePrev}></lightning-button-icon>
-                    <span class="slds-m-horizontal_small slds-text-body_regular">{queuePosition}</span>
-                    <lightning-button-icon icon-name="utility:chevronright" alternative-text="Next"
-                        disabled={atEnd} onclick={handleNext}></lightning-button-icon>
-                    <lightning-button class="slds-m-left_small" label="Skip"
-                        icon-name="utility:redo" onclick={handleSkip}></lightning-button>
+                    <div class="slds-text-title_caps slds-m-bottom_xx-small">
+                        Queue
+                    </div>
+                    <lightning-button-icon
+                        icon-name="utility:chevronleft"
+                        alternative-text="Previous"
+                        disabled={atStart}
+                        onclick={handlePrev}
+                    ></lightning-button-icon>
+                    <span class="slds-m-horizontal_small slds-text-body_regular"
+                        >{queuePosition}</span
+                    >
+                    <lightning-button-icon
+                        icon-name="utility:chevronright"
+                        alternative-text="Next"
+                        disabled={atEnd}
+                        onclick={handleNext}
+                    ></lightning-button-icon>
+                    <lightning-button
+                        class="slds-m-left_small"
+                        label="Skip"
+                        icon-name="utility:redo"
+                        onclick={handleSkip}
+                    ></lightning-button>
                 </div>
             </div>
 
             <template if:true={loading}>
-                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                <lightning-spinner
+                    alternative-text="Loading"
+                ></lightning-spinner>
             </template>
 
             <!-- Empty state -->
             <template if:true={isEmpty}>
-                <div class="slds-illustration slds-illustration_small slds-p-around_xx-large slds-text-align_center">
-                    <h3 class="slds-text-heading_medium slds-m-top_medium">All caught up</h3>
+                <div
+                    class="slds-illustration slds-illustration_small slds-p-around_xx-large slds-text-align_center"
+                >
+                    <h3 class="slds-text-heading_medium slds-m-top_medium">
+                        All caught up
+                    </h3>
                     <p class="slds-text-color_weak slds-m-top_x-small">
                         No questions in <strong>{status}</strong> status.
                     </p>
                     <p class="slds-m-top_small">
-                        <lightning-button label="Switch to Draft" onclick={handleStatusChange}
-                            data-value="Draft"></lightning-button>
+                        <lightning-button
+                            label="Switch to Draft"
+                            onclick={handleStatusChange}
+                            data-value="Draft"
+                        ></lightning-button>
                     </p>
                 </div>
             </template>
@@ -55,23 +102,39 @@
             <!-- Single-question reviewer -->
             <template if:true={current}>
                 <div class="slds-p-horizontal_medium slds-p-bottom_xx-large">
-
                     <!-- Header strip -->
                     <div class="slds-box slds-theme_shade slds-m-bottom_medium">
-                        <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
+                        <div
+                            class="slds-grid slds-wrap slds-grid_vertical-align-center"
+                        >
                             <div class="slds-col slds-size_2-of-3">
-                                <p class="slds-text-title slds-text-color_weak">{current.externalId}</p>
+                                <p class="slds-text-title slds-text-color_weak">
+                                    {current.externalId}
+                                </p>
                                 <p class="slds-text-heading_small">
                                     {current.examName}
-                                    <template if:true={current.domainName}> &mdash; {current.domainName}</template>
+                                    <template if:true={current.domainName}>
+                                        &mdash; {current.domainName}</template
+                                    >
                                 </p>
                             </div>
-                            <div class="slds-col slds-size_1-of-3 slds-text-align_right">
-                                <span class="slds-badge slds-m-left_x-small">{current.status}</span>
-                                <span class="slds-badge slds-m-left_x-small">{current.difficulty}</span>
-                                <span class="slds-badge slds-m-left_x-small">{current.questionType}</span>
+                            <div
+                                class="slds-col slds-size_1-of-3 slds-text-align_right"
+                            >
+                                <span class="slds-badge slds-m-left_x-small"
+                                    >{current.status}</span
+                                >
+                                <span class="slds-badge slds-m-left_x-small"
+                                    >{current.difficulty}</span
+                                >
+                                <span class="slds-badge slds-m-left_x-small"
+                                    >{current.questionType}</span
+                                >
                                 <template if:true={current.factCheckPassed}>
-                                    <span class="slds-badge slds-theme_success slds-m-left_x-small">Facts Verified</span>
+                                    <span
+                                        class="slds-badge slds-theme_success slds-m-left_x-small"
+                                        >Facts Verified</span
+                                    >
                                 </template>
                             </div>
                         </div>
@@ -79,61 +142,136 @@
 
                     <div class="slds-grid slds-wrap slds-gutters">
                         <!-- LEFT: question -->
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-3">
-                            <lightning-textarea label="Scenario (optional)" value={current.scenarioText}
-                                data-field="scenarioText" onchange={handleField}></lightning-textarea>
-                            <lightning-textarea label="Question stem" value={current.questionText}
-                                data-field="questionText" onchange={handleField} required></lightning-textarea>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-large-size_2-of-3"
+                        >
+                            <lightning-textarea
+                                label="Scenario (optional)"
+                                value={current.scenarioText}
+                                data-field="scenarioText"
+                                onchange={handleField}
+                            ></lightning-textarea>
+                            <lightning-textarea
+                                label="Question stem"
+                                value={current.questionText}
+                                data-field="questionText"
+                                onchange={handleField}
+                                required
+                            ></lightning-textarea>
 
                             <div class="slds-m-top_medium">
-                                <p class="slds-text-title_caps">Answer choices</p>
-                                <template for:each={currentChoices} for:item="c">
-                                    <div key={c.id} class="slds-box slds-box_x-small slds-m-top_x-small">
-                                        <div class="slds-grid slds-grid_vertical-align-center">
-                                            <div class="slds-col slds-shrink-none slds-p-right_small">
+                                <p class="slds-text-title_caps">
+                                    Answer choices
+                                </p>
+                                <template
+                                    for:each={currentChoices}
+                                    for:item="c"
+                                >
+                                    <div
+                                        key={c.id}
+                                        class="slds-box slds-box_x-small slds-m-top_x-small"
+                                    >
+                                        <div
+                                            class="slds-grid slds-grid_vertical-align-center"
+                                        >
+                                            <div
+                                                class="slds-col slds-shrink-none slds-p-right_small"
+                                            >
                                                 <strong>{c.label}.</strong>
                                             </div>
                                             <div class="slds-col">
-                                                <lightning-input type="text" variant="label-hidden"
-                                                    value={c.text} data-id={c.id}
-                                                    onchange={handleChoiceText}></lightning-input>
+                                                <lightning-input
+                                                    type="text"
+                                                    variant="label-hidden"
+                                                    value={c.text}
+                                                    data-id={c.id}
+                                                    onchange={handleChoiceText}
+                                                ></lightning-input>
                                             </div>
-                                            <div class="slds-col slds-shrink-none slds-p-left_small">
-                                                <lightning-input type="checkbox" label="Correct"
-                                                    checked={c.isCorrect} data-id={c.id}
-                                                    onchange={handleCorrectChange}></lightning-input>
+                                            <div
+                                                class="slds-col slds-shrink-none slds-p-left_small"
+                                            >
+                                                <lightning-input
+                                                    type="checkbox"
+                                                    label="Correct"
+                                                    checked={c.isCorrect}
+                                                    data-id={c.id}
+                                                    onchange={handleCorrectChange}
+                                                ></lightning-input>
                                             </div>
                                         </div>
-                                        <lightning-textarea variant="label-hidden" placeholder="Why this choice (rationale)..."
-                                            value={c.explanation} data-id={c.id}
+                                        <lightning-textarea
+                                            variant="label-hidden"
+                                            placeholder="Why this choice (rationale)..."
+                                            value={c.explanation}
+                                            data-id={c.id}
                                             onchange={handleChoiceExplanation}
-                                            class="slds-m-top_x-small"></lightning-textarea>
+                                            class="slds-m-top_x-small"
+                                        ></lightning-textarea>
                                     </div>
                                 </template>
                             </div>
 
-                            <lightning-textarea class="slds-m-top_medium" label="Explanation / rationale"
-                                value={current.explanation} data-field="explanation"
-                                onchange={handleField}></lightning-textarea>
+                            <lightning-textarea
+                                class="slds-m-top_medium"
+                                label="Explanation / rationale"
+                                value={current.explanation}
+                                data-field="explanation"
+                                onchange={handleField}
+                            ></lightning-textarea>
 
                             <div class="slds-m-top_medium">
                                 <p class="slds-text-title_caps">Citations</p>
                                 <template if:false={currentCitations.length}>
-                                    <p class="slds-text-color_weak slds-p-around_x-small">No citations attached.</p>
+                                    <p
+                                        class="slds-text-color_weak slds-p-around_x-small"
+                                    >
+                                        No citations attached.
+                                    </p>
                                 </template>
-                                <template for:each={currentCitations} for:item="ct">
-                                    <div key={ct.id} class="slds-box slds-box_x-small slds-m-top_x-small">
-                                        <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
-                                            <div class="slds-col slds-size_2-of-3">
-                                                <a href={ct.url} target="_blank" rel="noopener">{ct.title}</a>
-                                                <div class="slds-text-color_weak slds-text-body_small">{ct.url}</div>
-                                                <div class="slds-text-body_small">{ct.sourceType}</div>
+                                <template
+                                    for:each={currentCitations}
+                                    for:item="ct"
+                                >
+                                    <div
+                                        key={ct.id}
+                                        class="slds-box slds-box_x-small slds-m-top_x-small"
+                                    >
+                                        <div
+                                            class="slds-grid slds-grid_vertical-align-center slds-wrap"
+                                        >
+                                            <div
+                                                class="slds-col slds-size_2-of-3"
+                                            >
+                                                <a
+                                                    href={ct.url}
+                                                    target="_blank"
+                                                    rel="noopener"
+                                                    >{ct.title}</a
+                                                >
+                                                <div
+                                                    class="slds-text-color_weak slds-text-body_small"
+                                                >
+                                                    {ct.url}
+                                                </div>
+                                                <div
+                                                    class="slds-text-body_small"
+                                                >
+                                                    {ct.sourceType}
+                                                </div>
                                             </div>
-                                            <div class="slds-col slds-size_1-of-3 slds-text-align_right">
-                                                <span class="slds-m-right_small">{ct.statusIcon}</span>
-                                                <lightning-button label="Verify link"
-                                                    icon-name="utility:link" data-id={ct.id}
-                                                    onclick={handleVerifyCitation}></lightning-button>
+                                            <div
+                                                class="slds-col slds-size_1-of-3 slds-text-align_right"
+                                            >
+                                                <span class="slds-m-right_small"
+                                                    >{ct.statusIcon}</span
+                                                >
+                                                <lightning-button
+                                                    label="Verify link"
+                                                    icon-name="utility:link"
+                                                    data-id={ct.id}
+                                                    onclick={handleVerifyCitation}
+                                                ></lightning-button>
                                             </div>
                                         </div>
                                     </div>
@@ -142,69 +280,151 @@
                         </div>
 
                         <!-- RIGHT: metadata + reviewer options -->
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-large-size_1-of-3"
+                        >
                             <div class="slds-box slds-theme_default">
-                                <p class="slds-text-title_caps slds-m-bottom_small">Metadata</p>
+                                <p
+                                    class="slds-text-title_caps slds-m-bottom_small"
+                                >
+                                    Metadata
+                                </p>
 
-                                <lightning-combobox label="Difficulty" value={current.difficulty}
-                                    options={difficultyOptions} data-field="difficulty"
-                                    onchange={handleField}></lightning-combobox>
+                                <lightning-combobox
+                                    label="Difficulty"
+                                    value={current.difficulty}
+                                    options={difficultyOptions}
+                                    data-field="difficulty"
+                                    onchange={handleField}
+                                ></lightning-combobox>
 
-                                <lightning-combobox class="slds-m-top_x-small" label="Question format"
-                                    value={current.questionType} options={qtypeOptions}
-                                    data-field="questionType" onchange={handleField}></lightning-combobox>
+                                <lightning-combobox
+                                    class="slds-m-top_x-small"
+                                    label="Question format"
+                                    value={current.questionType}
+                                    options={qtypeOptions}
+                                    data-field="questionType"
+                                    onchange={handleField}
+                                ></lightning-combobox>
 
-                                <lightning-input class="slds-m-top_x-small" label="Tags (comma separated)"
-                                    value={current.tags} data-field="tags"
-                                    onchange={handleField}></lightning-input>
+                                <lightning-input
+                                    class="slds-m-top_x-small"
+                                    label="Tags (comma separated)"
+                                    value={current.tags}
+                                    data-field="tags"
+                                    onchange={handleField}
+                                ></lightning-input>
 
-                                <div class="slds-m-top_medium slds-text-body_small slds-text-color_weak">
-                                    <p><strong>Certification:</strong> {current.examName}</p>
-                                    <p><strong>Domain:</strong> {current.domainName}</p>
-                                    <p><strong>Created:</strong> <lightning-formatted-date-time value={current.createdDate}></lightning-formatted-date-time></p>
-                                    <p><strong>Created by:</strong> {current.createdByName}</p>
+                                <div
+                                    class="slds-m-top_medium slds-text-body_small slds-text-color_weak"
+                                >
+                                    <p>
+                                        <strong>Certification:</strong>
+                                        {current.examName}
+                                    </p>
+                                    <p>
+                                        <strong>Domain:</strong>
+                                        {current.domainName}
+                                    </p>
+                                    <p>
+                                        <strong>Created:</strong>
+                                        <lightning-formatted-date-time
+                                            value={current.createdDate}
+                                        ></lightning-formatted-date-time>
+                                    </p>
+                                    <p>
+                                        <strong>Created by:</strong>
+                                        {current.createdByName}
+                                    </p>
                                     <template if:true={current.factCheckedDate}>
-                                        <p><strong>Last fact-checked:</strong>
-                                            <lightning-formatted-date-time value={current.factCheckedDate}></lightning-formatted-date-time>
-                                            <template if:true={current.factCheckedByName}> by {current.factCheckedByName}</template>
+                                        <p>
+                                            <strong>Last fact-checked:</strong>
+                                            <lightning-formatted-date-time
+                                                value={current.factCheckedDate}
+                                            ></lightning-formatted-date-time>
+                                            <template
+                                                if:true={current.factCheckedByName}
+                                            >
+                                                by
+                                                {current.factCheckedByName}</template
+                                            >
                                         </p>
                                     </template>
                                     <template if:true={current.publishedDate}>
-                                        <p><strong>Published:</strong>
-                                            <lightning-formatted-date-time value={current.publishedDate}></lightning-formatted-date-time>
-                                            <template if:true={current.publishedByName}> by {current.publishedByName}</template>
+                                        <p>
+                                            <strong>Published:</strong>
+                                            <lightning-formatted-date-time
+                                                value={current.publishedDate}
+                                            ></lightning-formatted-date-time>
+                                            <template
+                                                if:true={current.publishedByName}
+                                            >
+                                                by
+                                                {current.publishedByName}</template
+                                            >
                                         </p>
                                     </template>
                                 </div>
                             </div>
 
-                            <lightning-textarea class="slds-m-top_medium" label="Reviewer notes (required for Needs Revision)"
-                                value={current.reviewerNotes} data-field="reviewerNotes"
-                                onchange={handleField}></lightning-textarea>
+                            <lightning-textarea
+                                class="slds-m-top_medium"
+                                label="Reviewer notes (required for Needs Revision)"
+                                value={current.reviewerNotes}
+                                data-field="reviewerNotes"
+                                onchange={handleField}
+                            ></lightning-textarea>
                         </div>
                     </div>
 
                     <!-- Sticky action bar -->
-                    <footer class="qrc-actionbar slds-box slds-m-top_large slds-grid slds-grid_align-spread slds-wrap">
+                    <footer
+                        class="qrc-actionbar slds-box slds-m-top_large slds-grid slds-grid_align-spread slds-wrap"
+                    >
                         <div class="slds-col slds-grow-none">
-                            <lightning-button label={saveButtonLabel} icon-name="utility:save"
-                                onclick={handleSaveDraft} disabled={saving}></lightning-button>
+                            <lightning-button
+                                label={saveButtonLabel}
+                                icon-name="utility:save"
+                                onclick={handleSaveDraft}
+                                disabled={saving}
+                            ></lightning-button>
                         </div>
                         <div class="slds-col slds-text-align_right">
-                            <lightning-button class="slds-m-left_x-small" label="Needs Revision"
-                                icon-name="utility:back" onclick={handleNeedsRevision}
-                                disabled={saving}></lightning-button>
-                            <lightning-button class="slds-m-left_x-small" label="Retire"
-                                icon-name="utility:delete" variant="destructive-text"
-                                onclick={handleRetire} disabled={saving}></lightning-button>
-                            <lightning-button class="slds-m-left_x-small" label={factsButtonLabel}
-                                icon-name="utility:check" variant={factsButtonVariant}
-                                onclick={handleToggleFacts} disabled={saving}></lightning-button>
-                            <lightning-button class="slds-m-left_x-small" label="Publish ✓✓"
-                                icon-name="utility:publish" variant="brand"
-                                onclick={handlePublish} disabled={publishDisabled}></lightning-button>
+                            <lightning-button
+                                class="slds-m-left_x-small"
+                                label="Needs Revision"
+                                icon-name="utility:back"
+                                onclick={handleNeedsRevision}
+                                disabled={saving}
+                            ></lightning-button>
+                            <lightning-button
+                                class="slds-m-left_x-small"
+                                label="Retire"
+                                icon-name="utility:delete"
+                                variant="destructive-text"
+                                onclick={handleRetire}
+                                disabled={saving}
+                            ></lightning-button>
+                            <lightning-button
+                                class="slds-m-left_x-small"
+                                label={factsButtonLabel}
+                                icon-name="utility:check"
+                                variant={factsButtonVariant}
+                                onclick={handleToggleFacts}
+                                disabled={saving}
+                            ></lightning-button>
+                            <lightning-button
+                                class="slds-m-left_x-small"
+                                label="Publish ✓✓"
+                                icon-name="utility:publish"
+                                variant="brand"
+                                onclick={handlePublish}
+                                disabled={publishDisabled}
+                            ></lightning-button>
                         </div>
-                        <div class="slds-col slds-size_1-of-1 slds-text-align_right slds-text-body_small slds-text-color_weak slds-m-top_x-small">
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-text-align_right slds-text-body_small slds-text-color_weak slds-m-top_x-small"
+                        >
                             {publishHelp}
                         </div>
                     </footer>

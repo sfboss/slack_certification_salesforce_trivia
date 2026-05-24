@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Primary_Reference_URL__c</fullName>
-    <description>One canonical reference link surfaced on every question card so the test taker can dig deeper without leaving Slack.</description>
+    <description
+    >One canonical reference link surfaced on every question card so the test taker can dig deeper without leaving Slack.</description>
     <externalId>false</externalId>
-    <inlineHelpText>One canonical URL surfaced on every question card.</inlineHelpText>
+    <inlineHelpText
+    >One canonical URL surfaced on every question card.</inlineHelpText>
     <label>Primary Reference URL</label>
-    <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Url</type>

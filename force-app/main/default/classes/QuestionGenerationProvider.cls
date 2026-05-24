@@ -10,7 +10,12 @@ public interface QuestionGenerationProvider {
      * @param count number of questions to generate
      * @return JSON string in the same format as the question pack schema
      */
-    String generate(String examCode, List<String> domains, String difficulty, Integer count);
+    String generate(
+        String examCode,
+        List<String> domains,
+        String difficulty,
+        Integer count
+    );
 
     /** Provider name for telemetry / settings, e.g., 'openai', 'gemini', 'claude'. */
     String name();

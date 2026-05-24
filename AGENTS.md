@@ -67,8 +67,8 @@ Each phase ends with a working, demoable slice. Do not start phase N+1 until pha
 1. Create custom objects from [README.md §3](README.md#3-salesforce-data-model). Use master-detail where indicated (`Trivia_Answer_Choice__c → Trivia_Question__c`).
 2. Create `App_Setting__mdt` with fields listed in README.
 3. Create permission sets:
-   - `Cert_Game_Admin`, `Cert_Game_Question_Reviewer`, `Cert_Game_Player_Manager`, `Cert_Game_Tenant_Admin`, `Cert_Game_Read_Only`, `Cert_Game_Integration_User`.
-   - Bundle into `Cert_Game_All_Admin` Permission Set Group.
+    - `Cert_Game_Admin`, `Cert_Game_Question_Reviewer`, `Cert_Game_Player_Manager`, `Cert_Game_Tenant_Admin`, `Cert_Game_Read_Only`, `Cert_Game_Integration_User`.
+    - Bundle into `Cert_Game_All_Admin` Permission Set Group.
 4. Write [sample_data/adm201-question-pack.sample.json](sample_data/adm201-question-pack.sample.json) — 10 questions, full citations.
 5. Write [scripts/validate-question-json.py](scripts/validate-question-json.py) using `jsonschema` against the contract in README §7.
 6. Spin a scratch org and deploy:
@@ -98,9 +98,9 @@ sf org assign permsetgroup -n Cert_Game_All_Admin -o certgame
 2. Create a public Salesforce Site (or Experience Cloud site) with an Apex REST endpoint `/services/apexrest/slack/events`.
 3. `SlackSignatureVerifier.verify(headers, body)` — HMAC-SHA256 of `v0:{timestamp}:{body}` against signing secret from Named Credential. Reject if `|now − timestamp| > 300s`.
 4. `SlackRequestRouter`:
-   - Verify signature.
-   - Upsert `Slack_Event_Log__c` by `Slack_Event_Id__c`. If `Processed__c = true`, return 200 immediately.
-   - Dispatch by payload type: `slash_command` → `SlackCertGameCommandHandler`; `block_actions` / `view_submission` → `SlackCertGameInteractionHandler` / `SlackCertGameModalHandler`; `event_callback` → `SlackCertGameEventHandler`.
+    - Verify signature.
+    - Upsert `Slack_Event_Log__c` by `Slack_Event_Id__c`. If `Processed__c = true`, return 200 immediately.
+    - Dispatch by payload type: `slash_command` → `SlackCertGameCommandHandler`; `block_actions` / `view_submission` → `SlackCertGameInteractionHandler` / `SlackCertGameModalHandler`; `event_callback` → `SlackCertGameEventHandler`.
 5. Configure Named Credential for Slack Web API using a bot token; document setup in [docs/slack-app-setup.md](docs/slack-app-setup.md).
 
 **Exit criteria:** `/certgame help` posts a response from Apex. Slack retries do not double-fire.
@@ -109,14 +109,14 @@ sf org assign permsetgroup -n Cert_Game_All_Admin -o certgame
 
 1. `SlackCertGameCommandHandler` opens the setup modal via `views.open` (Block Kit JSON built by `CertGameSlackRenderService.buildSetupModal`).
 2. On `view_submission`:
-   - `EntitlementGuard.checkGameStart(tenant, exam)` — at MVP, allow all; stub in entitlement plumbing.
-   - `CertGameSessionService.start(...)` creates `Game_Session__c`, picks N `Trivia_Question__c` (random within filters, only `Published`), shuffles choices per session.
-   - Post first question card to the originating channel/DM.
+    - `EntitlementGuard.checkGameStart(tenant, exam)` — at MVP, allow all; stub in entitlement plumbing.
+    - `CertGameSessionService.start(...)` creates `Game_Session__c`, picks N `Trivia_Question__c` (random within filters, only `Published`), shuffles choices per session.
+    - Post first question card to the originating channel/DM.
 3. `SlackCertGameInteractionHandler` on `block_actions`:
-   - Locate `Game_Round__c` by `Slack_Message_Ts__c`.
-   - Insert `Player_Answer__c` (unique constraint: Round + Player).
-   - `CertGameScoringService.score()` → update `Player_Answer__c.Points_Awarded__c` and `Player__c` rollups.
-   - Render explanation card; advance round or finalize.
+    - Locate `Game_Round__c` by `Slack_Message_Ts__c`.
+    - Insert `Player_Answer__c` (unique constraint: Round + Player).
+    - `CertGameScoringService.score()` → update `Player_Answer__c.Points_Awarded__c` and `Player__c` rollups.
+    - Render explanation card; advance round or finalize.
 4. Final card calls `CertGameLeaderboardService.snapshot()` and offers "Export to Salesforce".
 
 **Exit criteria:** End-to-end Solo game in DM: setup → 5 questions → final leaderboard. All state in Salesforce.
@@ -150,9 +150,9 @@ sf org assign permsetgroup -n Cert_Game_All_Admin -o certgame
 1. `Tenant__c` populated on first Slack OAuth install. Store `Slack_Team_Id__c` as External ID.
 2. `EntitlementGuard` fully wired: every handler reads `Tenant__c.Plan__c` + `App_Setting__mdt` quotas + `Usage_Metric__c` for current period.
 3. Stripe:
-   - Named Credential `Stripe_API`.
-   - Public Site endpoint `/services/apexrest/stripe/webhook` → `StripeWebhookHandler` verifies signature with `Stripe-Signature` header, upserts `License_Event__c` keyed by `Stripe_Event_Id__c`, updates `Tenant__c.Plan__c` / `Status__c`.
-   - `/certgame billing` modal links to Stripe Customer Portal (admins only — check `Tenant__c.Admin_Slack_User_Ids__c`).
+    - Named Credential `Stripe_API`.
+    - Public Site endpoint `/services/apexrest/stripe/webhook` → `StripeWebhookHandler` verifies signature with `Stripe-Signature` header, upserts `License_Event__c` keyed by `Stripe_Event_Id__c`, updates `Tenant__c.Plan__c` / `Status__c`.
+    - `/certgame billing` modal links to Stripe Customer Portal (admins only — check `Tenant__c.Admin_Slack_User_Ids__c`).
 4. Upsell Block Kit: when `EntitlementGuard` blocks, return a card with "Upgrade" button → opens billing modal.
 
 ### Phase 9 — Quality, auditing, hardening
@@ -178,8 +178,8 @@ sf org assign permsetgroup -n Cert_Game_All_Admin -o certgame
 
 - One class = one responsibility. Services are stateless static methods that accept and return DTOs (inner classes).
 - Sharing keywords:
-  - `with sharing` for handlers/services invoked from Slack/LWC/Site.
-  - `without sharing` only for `StripeWebhookHandler` and integration internals, with justification comment.
+    - `with sharing` for handlers/services invoked from Slack/LWC/Site.
+    - `without sharing` only for `StripeWebhookHandler` and integration internals, with justification comment.
 - Naming: `*Service`, `*Handler`, `*Provider`, `*Validator`, `*Scheduler`, `*Queueable`.
 - Tests live in `force-app/main/default/classes/` with `_Test` suffix; use `@TestSetup` and `Test.startTest()/stopTest()` properly.
 - No `SeeAllData=true`.

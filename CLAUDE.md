@@ -63,7 +63,7 @@ External traffic enters at a single endpoint exposed by a public Salesforce Site
 
 - **HMAC** via `SlackSignatureVerifier.verify` — `v0:{timestamp}:{body}`, reject if timestamp drift > 300s. Form-encoded slash commands/interactions have a documented fallback to Slack's verification token because Sites strip the raw bytes; JSON event callbacks still require HMAC.
 - **URL verification handshake** short-circuits before signature checks (the body is Slack-controlled — `{type, challenge, token}`).
-- **Idempotency** via `Slack_Event_Log__c` keyed on a synthesized event id. The insert happens *after* dispatch — handlers like `/certgame plan|billing` call `views.open`, and Apex forbids callouts after DML in the same transaction. Don't reorder this.
+- **Idempotency** via `Slack_Event_Log__c` keyed on a synthesized event id. The insert happens _after_ dispatch — handlers like `/certgame plan|billing` call `views.open`, and Apex forbids callouts after DML in the same transaction. Don't reorder this.
 - **Dispatch table**: `slash_command` → `SlackCertGameCommandHandler`; `block_actions`/`view_submission` → `SlackCertGameInteractionHandler` / `SlackCertGameModalHandler`; `event_callback` → `SlackCertGameEventHandler`.
 
 All Block Kit JSON is built in `CertGameSlackRenderService` — handlers do **not** inline JSON. Interactive `action_id`s follow `domain:verb:resourceId` (e.g. `game:answer:a01R0000…`, `duel:accept:…`). User-facing strings route through `CertGameStrings` (localization seam).

@@ -1,143 +1,143 @@
 name: Scratch Org Cleanup
 
 on:
-  schedule:
-    # Daily at 07:00 UTC.
-    - cron: '0 7 * * *'
-  workflow_dispatch:
-    inputs:
-      max_age_hours:
-        description: Delete ci-ephemeral-* scratch orgs older than this many hours.
-        required: false
-        default: '24'
+    schedule:
+        # Daily at 07:00 UTC.
+        - cron: "0 7 * * *"
+    workflow_dispatch:
+        inputs:
+            max_age_hours:
+                description: Delete ci-ephemeral-* scratch orgs older than this many hours.
+                required: false
+                default: "24"
 
 jobs:
-  reap:
-    name: Reap stale ci-ephemeral-* scratch orgs
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    reap:
+        name: Reap stale ci-ephemeral-* scratch orgs
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
 
-    env:
-      DEVHUB_ALIAS: devhub-ci
-      MAX_AGE_HOURS: ${{ github.event.inputs.max_age_hours || '24' }}
-
-    steps:
-      - name: Preflight — required secrets
         env:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          missing=""
-          [ -z "${SFDX_AUTH_URL:-}" ] && missing="$missing SFDX_AUTH_URL"
-          [ -z "${SLACK_WEBHOOK_URL:-}" ] && missing="$missing SLACK_WEBHOOK_URL"
-          if [ -n "$missing" ]; then
-            echo "::error::Missing required secrets:$missing"
-            if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
-              curl -sS -X POST -H 'Content-Type: application/json' \
-                --data "{\"text\":\"❌ scratch-cleanup aborted: missing secrets$missing\"}" \
-                "$SLACK_WEBHOOK_URL" || true
-            fi
-            exit 1
-          fi
+            DEVHUB_ALIAS: devhub-ci
+            MAX_AGE_HOURS: ${{ github.event.inputs.max_age_hours || '24' }}
 
-      - name: Checkout (for composite action)
-        uses: actions/checkout@v4
+        steps:
+            - name: Preflight — required secrets
+              env:
+                  SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              run: |
+                  set -euo pipefail
+                  missing=""
+                  [ -z "${SFDX_AUTH_URL:-}" ] && missing="$missing SFDX_AUTH_URL"
+                  [ -z "${SLACK_WEBHOOK_URL:-}" ] && missing="$missing SLACK_WEBHOOK_URL"
+                  if [ -n "$missing" ]; then
+                    echo "::error::Missing required secrets:$missing"
+                    if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
+                      curl -sS -X POST -H 'Content-Type: application/json' \
+                        --data "{\"text\":\"❌ scratch-cleanup aborted: missing secrets$missing\"}" \
+                        "$SLACK_WEBHOOK_URL" || true
+                    fi
+                    exit 1
+                  fi
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+            - name: Checkout (for composite action)
+              uses: actions/checkout@v4
 
-      - name: Install Salesforce CLI
-        run: |
-          set -euo pipefail
-          npm install --global @salesforce/cli
-          sf --version
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
 
-      - name: Authorize Dev Hub
-        env:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-        run: |
-          set -euo pipefail
-          printf '%s' "$SFDX_AUTH_URL" > ./DEVHUB_AUTH.txt
-          sf org login sfdx-url -f ./DEVHUB_AUTH.txt -a "$DEVHUB_ALIAS" -d
-          rm -f ./DEVHUB_AUTH.txt
+            - name: Install Salesforce CLI
+              run: |
+                  set -euo pipefail
+                  npm install --global @salesforce/cli
+                  sf --version
 
-      - name: List scratch orgs and reap stale ci-ephemeral-*
-        id: reap
-        env:
-          MAX_AGE_HOURS: ${{ env.MAX_AGE_HOURS }}
-        run: |
-          set -euo pipefail
-          mkdir -p reports
-          sf org list --all --json > reports/orgs.json
-          NOW_EPOCH="$(date -u +%s)"
-          MAX_AGE_SEC=$(( MAX_AGE_HOURS * 3600 ))
+            - name: Authorize Dev Hub
+              env:
+                  SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+              run: |
+                  set -euo pipefail
+                  printf '%s' "$SFDX_AUTH_URL" > ./DEVHUB_AUTH.txt
+                  sf org login sfdx-url -f ./DEVHUB_AUTH.txt -a "$DEVHUB_ALIAS" -d
+                  rm -f ./DEVHUB_AUTH.txt
 
-          jq -r --argjson now "$NOW_EPOCH" --argjson maxage "$MAX_AGE_SEC" '
-            .result.scratchOrgs[]?
-            | select(.alias != null and (.alias | startswith("ci-ephemeral-")))
-            | . as $o
-            | ($o.createdDate // $o.created // "") as $cd
-            | (if $cd == "" then 0
-               else ($cd | sub("\\.[0-9]+"; "") | sub("\\+0000$"; "Z") | fromdateiso8601)
-               end) as $created
-            | select(($now - $created) > $maxage)
-            | "\($o.alias)\t\($o.username // "")\t\($o.createdDate // "")"
-          ' reports/orgs.json > reports/stale.tsv || true
+            - name: List scratch orgs and reap stale ci-ephemeral-*
+              id: reap
+              env:
+                  MAX_AGE_HOURS: ${{ env.MAX_AGE_HOURS }}
+              run: |
+                  set -euo pipefail
+                  mkdir -p reports
+                  sf org list --all --json > reports/orgs.json
+                  NOW_EPOCH="$(date -u +%s)"
+                  MAX_AGE_SEC=$(( MAX_AGE_HOURS * 3600 ))
 
-          COUNT="$(wc -l < reports/stale.tsv | tr -d ' ')"
-          echo "found=$COUNT" >> "$GITHUB_OUTPUT"
+                  jq -r --argjson now "$NOW_EPOCH" --argjson maxage "$MAX_AGE_SEC" '
+                    .result.scratchOrgs[]?
+                    | select(.alias != null and (.alias | startswith("ci-ephemeral-")))
+                    | . as $o
+                    | ($o.createdDate // $o.created // "") as $cd
+                    | (if $cd == "" then 0
+                       else ($cd | sub("\\.[0-9]+"; "") | sub("\\+0000$"; "Z") | fromdateiso8601)
+                       end) as $created
+                    | select(($now - $created) > $maxage)
+                    | "\($o.alias)\t\($o.username // "")\t\($o.createdDate // "")"
+                  ' reports/orgs.json > reports/stale.tsv || true
 
-          REAPED=0
-          FAILED=0
-          REAPED_LIST=""
-          if [ "$COUNT" -gt 0 ]; then
-            while IFS=$'\t' read -r alias username created; do
-              [ -z "$alias" ] && continue
-              echo "Deleting $alias (created $created)"
-              if sf org delete scratch -o "$alias" -p 2>/dev/null; then
-                REAPED=$((REAPED + 1))
-                REAPED_LIST="$REAPED_LIST\n• $alias (created $created)"
-              else
-                FAILED=$((FAILED + 1))
-                REAPED_LIST="$REAPED_LIST\n• $alias — DELETE FAILED"
-                echo "::warning::Failed to delete $alias"
-              fi
-            done < reports/stale.tsv
-          fi
+                  COUNT="$(wc -l < reports/stale.tsv | tr -d ' ')"
+                  echo "found=$COUNT" >> "$GITHUB_OUTPUT"
 
-          echo "reaped=$REAPED" >> "$GITHUB_OUTPUT"
-          echo "failed=$FAILED" >> "$GITHUB_OUTPUT"
-          {
-            echo 'summary<<EOF'
-            printf 'Scanned ci-ephemeral-* orgs older than %sh\nFound stale: %s\nDeleted: %s\nFailed: %s%b\n' \
-              "$MAX_AGE_HOURS" "$COUNT" "$REAPED" "$FAILED" "$REAPED_LIST"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
+                  REAPED=0
+                  FAILED=0
+                  REAPED_LIST=""
+                  if [ "$COUNT" -gt 0 ]; then
+                    while IFS=$'\t' read -r alias username created; do
+                      [ -z "$alias" ] && continue
+                      echo "Deleting $alias (created $created)"
+                      if sf org delete scratch -o "$alias" -p 2>/dev/null; then
+                        REAPED=$((REAPED + 1))
+                        REAPED_LIST="$REAPED_LIST\n• $alias (created $created)"
+                      else
+                        FAILED=$((FAILED + 1))
+                        REAPED_LIST="$REAPED_LIST\n• $alias — DELETE FAILED"
+                        echo "::warning::Failed to delete $alias"
+                      fi
+                    done < reports/stale.tsv
+                  fi
 
-      - name: Upload report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: scratch-cleanup-reports
-          path: reports/
-          if-no-files-found: ignore
+                  echo "reaped=$REAPED" >> "$GITHUB_OUTPUT"
+                  echo "failed=$FAILED" >> "$GITHUB_OUTPUT"
+                  {
+                    echo 'summary<<EOF'
+                    printf 'Scanned ci-ephemeral-* orgs older than %sh\nFound stale: %s\nDeleted: %s\nFailed: %s%b\n' \
+                      "$MAX_AGE_HOURS" "$COUNT" "$REAPED" "$FAILED" "$REAPED_LIST"
+                    echo 'EOF'
+                  } >> "$GITHUB_OUTPUT"
 
-      - name: Notify Slack — cleanup summary
-        if: always()
-        uses: ./.github/actions/slack-notify
-        with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: cleanup
-          title: Scheduled scratch cleanup
-          workflow_label: scratch-cleanup / reap
-          extra_fields: |
-            [
-              { "label": "Stale found",   "value": "${{ steps.reap.outputs.found || '0' }}" },
-              { "label": "Deleted",       "value": "${{ steps.reap.outputs.reaped || '0' }}" },
-              { "label": "Delete failed", "value": "${{ steps.reap.outputs.failed || '0' }}" },
-              { "label": "Max age (h)",   "value": "${{ env.MAX_AGE_HOURS }}" }
-            ]
-          log_tail: ${{ steps.reap.outputs.summary }}
+            - name: Upload report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: scratch-cleanup-reports
+                  path: reports/
+                  if-no-files-found: ignore
+
+            - name: Notify Slack — cleanup summary
+              if: always()
+              uses: ./.github/actions/slack-notify
+              with:
+                  webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  status: cleanup
+                  title: Scheduled scratch cleanup
+                  workflow_label: scratch-cleanup / reap
+                  extra_fields: |
+                      [
+                        { "label": "Stale found",   "value": "${{ steps.reap.outputs.found || '0' }}" },
+                        { "label": "Deleted",       "value": "${{ steps.reap.outputs.reaped || '0' }}" },
+                        { "label": "Delete failed", "value": "${{ steps.reap.outputs.failed || '0' }}" },
+                        { "label": "Max age (h)",   "value": "${{ env.MAX_AGE_HOURS }}" }
+                      ]
+                  log_tail: ${{ steps.reap.outputs.summary }}

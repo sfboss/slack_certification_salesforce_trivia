@@ -2,16 +2,31 @@
     <lightning-card icon-name="standard:job">
         <h2 slot="title" class="slds-card__header-title">
             <span class="gjc-title">Generation Workspace</span>
-            <span class="gjc-subtitle">Generate questions · Review history · Export saved JSON</span>
+            <span class="gjc-subtitle"
+                >Generate questions · Review history · Export saved JSON</span
+            >
         </h2>
         <div slot="actions">
             <template if:true={isListView}>
-                <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" title="Refresh"
-                                       onclick={handleRefresh} class="slds-m-right_x-small"></lightning-button-icon>
-                <lightning-button label="+ Generate Questions" variant="brand" onclick={handleOpenWizard}></lightning-button>
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    alternative-text="Refresh"
+                    title="Refresh"
+                    onclick={handleRefresh}
+                    class="slds-m-right_x-small"
+                ></lightning-button-icon>
+                <lightning-button
+                    label="+ Generate Questions"
+                    variant="brand"
+                    onclick={handleOpenWizard}
+                ></lightning-button>
             </template>
             <template if:false={isListView}>
-                <lightning-button label="← Back to jobs" variant="neutral" onclick={handleBackToList}></lightning-button>
+                <lightning-button
+                    label="← Back to jobs"
+                    variant="neutral"
+                    onclick={handleBackToList}
+                ></lightning-button>
             </template>
         </div>
 
@@ -45,11 +60,14 @@
 
         <!-- Live event banner (only when something fires) -->
         <template if:true={hasLiveEvents}>
-            <div class="gjc-live slds-p-horizontal_medium slds-p-bottom_x-small">
+            <div
+                class="gjc-live slds-p-horizontal_medium slds-p-bottom_x-small"
+            >
                 <strong class="slds-text-color_weak">Live:</strong>
                 <template for:each={liveEvents} for:item="ev">
                     <span key={ev.ts} class="gjc-live-chip">
-                        {ev.ts} · {ev.status}{ev.count} <template if:true={ev.message}>· {ev.message}</template>
+                        {ev.ts} · {ev.status}{ev.count}
+                        <template if:true={ev.message}>· {ev.message}</template>
                     </span>
                 </template>
             </div>
@@ -58,13 +76,28 @@
         <!-- ============ LIST VIEW ============ -->
         <template if:true={isListView}>
             <template if:false={hasJobs}>
-                <div class="gjc-empty slds-text-align_center slds-p-around_x-large">
-                    <lightning-icon icon-name="utility:einstein" size="large" alternative-text="No jobs"></lightning-icon>
-                    <h3 class="slds-text-heading_medium slds-m-top_small">No generation jobs yet</h3>
+                <div
+                    class="gjc-empty slds-text-align_center slds-p-around_x-large"
+                >
+                    <lightning-icon
+                        icon-name="utility:einstein"
+                        size="large"
+                        alternative-text="No jobs"
+                    ></lightning-icon>
+                    <h3 class="slds-text-heading_medium slds-m-top_small">
+                        No generation jobs yet
+                    </h3>
                     <p class="slds-text-color_weak slds-m-bottom_medium">
-                        Kick off your first LLM-backed generation. Pick an exam, bias the mix, hit Generate. Drafts land in the Review Console for human approval — nothing publishes from code.
+                        Kick off your first LLM-backed generation. Pick an exam,
+                        bias the mix, hit Generate. Drafts land in the Review
+                        Console for human approval — nothing publishes from
+                        code.
                     </p>
-                    <lightning-button label="+ Generate your first batch" variant="brand" onclick={handleOpenWizard}></lightning-button>
+                    <lightning-button
+                        label="+ Generate your first batch"
+                        variant="brand"
+                        onclick={handleOpenWizard}
+                    ></lightning-button>
                 </div>
             </template>
             <template if:true={hasJobs}>
@@ -86,20 +119,37 @@
                         </thead>
                         <tbody>
                             <template for:each={summary.jobs} for:item="j">
-                                <tr key={j.id} data-id={j.id} class="gjc-row" onclick={handleJobClick}>
+                                <tr
+                                    key={j.id}
+                                    data-id={j.id}
+                                    class="gjc-row"
+                                    onclick={handleJobClick}
+                                >
                                     <td><strong>{j.name}</strong></td>
                                     <td>{j.examLabel}</td>
                                     <td>{j.provider}</td>
-                                    <td class="gjc-td-num">{j.requestedCount}</td>
-                                    <td class="gjc-td-num gjc-td-generated">{j.generatedCount}</td>
+                                    <td class="gjc-td-num">
+                                        {j.requestedCount}
+                                    </td>
+                                    <td class="gjc-td-num gjc-td-generated">
+                                        {j.generatedCount}
+                                    </td>
                                     <td>{j.difficultyFocus}</td>
-                                    <td><span class={j.statusClass}>{j.status}</span></td>
+                                    <td>
+                                        <span class={j.statusClass}
+                                            >{j.status}</span
+                                        >
+                                    </td>
                                     <td class="gjc-td-num">{j.costDisplay}</td>
                                     <td>{j.createdDisplay}</td>
                                     <td class="gjc-td-actions">
-                                        <lightning-button-icon icon-name="utility:refresh" alternative-text="Re-run"
-                                                               title="Re-run with same parameters"
-                                                               data-id={j.id} onclick={handleRerun}></lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:refresh"
+                                            alternative-text="Re-run"
+                                            title="Re-run with same parameters"
+                                            data-id={j.id}
+                                            onclick={handleRerun}
+                                        ></lightning-button-icon>
                                     </td>
                                 </tr>
                             </template>
@@ -113,54 +163,100 @@
         <template if:true={isDetailView}>
             <div class="gjc-panel slds-p-around_medium">
                 <header class="slds-m-bottom_medium">
-                    <h2 class="slds-text-heading_medium">{jobDetail.job.name}</h2>
+                    <h2 class="slds-text-heading_medium">
+                        {jobDetail.job.name}
+                    </h2>
                     <p class="slds-text-color_weak slds-m-top_xx-small">
-                        {jobDetail.job.examLabel} · Requested by {jobDetail.job.requestedByName}
+                        {jobDetail.job.examLabel} · Requested by
+                        {jobDetail.job.requestedByName}
                     </p>
                 </header>
 
-                <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium gjc-detail-grid">
-                    <div class="slds-col slds-size_1-of-4"><strong>Status:</strong> {jobDetail.job.status}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Provider:</strong> {jobDetail.job.provider}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Requested:</strong> {jobDetail.job.requestedCount}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Generated:</strong> {jobDetail.job.generatedCount}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Difficulty:</strong> {jobDetail.job.difficultyFocus}</div>
-                    <div class="slds-col slds-size_1-of-2"><strong>Domain focus:</strong> {jobDetail.job.domainFocus}</div>
-                    <div class="slds-col slds-size_1-of-4"><strong>Token cost:</strong> {jobDetail.job.costDisplay}</div>
+                <div
+                    class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium gjc-detail-grid"
+                >
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Status:</strong> {jobDetail.job.status}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Provider:</strong> {jobDetail.job.provider}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Requested:</strong>
+                        {jobDetail.job.requestedCount}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Generated:</strong>
+                        {jobDetail.job.generatedCount}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Difficulty:</strong>
+                        {jobDetail.job.difficultyFocus}
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <strong>Domain focus:</strong>
+                        {jobDetail.job.domainFocus}
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <strong>Token cost:</strong> {jobDetail.job.costDisplay}
+                    </div>
                 </div>
 
                 <template if:true={jobDetail.job.errorMessage}>
-                    <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_medium" role="alert">
+                    <div
+                        class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_medium"
+                        role="alert"
+                    >
                         <strong>Error:</strong> {jobDetail.job.errorMessage}
                     </div>
                 </template>
 
                 <div class="slds-m-bottom_medium">
-                    <lightning-button label="View questions in Review Console" icon-name="utility:edit"
-                                      variant="brand-outline" onclick={handleViewQuestionsDeepLink}
-                                      class="slds-m-right_x-small"></lightning-button>
-                    <lightning-button label="Copy JSON" icon-name="utility:copy" variant="neutral"
-                                      onclick={handleCopyJson} class="slds-m-right_x-small"></lightning-button>
-                    <lightning-button label="Download JSON" icon-name="utility:download" variant="neutral"
-                                      onclick={handleDownloadJson}></lightning-button>
+                    <lightning-button
+                        label="View questions in Review Console"
+                        icon-name="utility:edit"
+                        variant="brand-outline"
+                        onclick={handleViewQuestionsDeepLink}
+                        class="slds-m-right_x-small"
+                    ></lightning-button>
+                    <lightning-button
+                        label="Copy JSON"
+                        icon-name="utility:copy"
+                        variant="neutral"
+                        onclick={handleCopyJson}
+                        class="slds-m-right_x-small"
+                    ></lightning-button>
+                    <lightning-button
+                        label="Download JSON"
+                        icon-name="utility:download"
+                        variant="neutral"
+                        onclick={handleDownloadJson}
+                    ></lightning-button>
                 </div>
 
                 <template if:true={jobDetail.promptText}>
-                    <h3 class="slds-text-heading_small slds-m-top_medium">Prompt notes</h3>
+                    <h3 class="slds-text-heading_small slds-m-top_medium">
+                        Prompt notes
+                    </h3>
                     <pre class="gjc-pre">{jobDetail.promptText}</pre>
                 </template>
 
                 <h3 class="slds-text-heading_small slds-m-top_medium">
                     Saved output JSON
                     <template if:true={jobDetail.outputJsonLength}>
-                        <small class="slds-text-color_weak">({jobDetail.outputJsonLength} characters)</small>
+                        <small class="slds-text-color_weak"
+                            >({jobDetail.outputJsonLength} characters)</small
+                        >
                     </template>
                 </h3>
                 <template if:true={jobDetail.outputJson}>
                     <pre class="gjc-pre gjc-json">{jobDetail.outputJson}</pre>
                 </template>
                 <template if:false={jobDetail.outputJson}>
-                    <p class="slds-text-color_weak">No output was saved for this job (likely failed before the provider responded).</p>
+                    <p class="slds-text-color_weak">
+                        No output was saved for this job (likely failed before
+                        the provider responded).
+                    </p>
                 </template>
             </div>
         </template>
@@ -180,83 +276,153 @@
 
                 <!-- Step 1: Target -->
                 <template if:true={isStepTarget}>
-                    <lightning-combobox label="Certification exam" options={sourceOptions} value={selectedExamId}
-                                        onchange={handleExamChange} placeholder="Pick an exam" required></lightning-combobox>
-                    <lightning-combobox label="Provider" options={providerOptions} value={provider}
-                                        onchange={handleProviderChange} class="slds-m-top_small"></lightning-combobox>
-                    <lightning-input type="number" label="How many questions to generate?" value={questionCount}
-                                     min="1" max="25" onchange={handleCountChange}
-                                     field-level-help="The Apex job caps this at 25 per run."
-                                     class="slds-m-top_small"></lightning-input>
+                    <lightning-combobox
+                        label="Certification exam"
+                        options={sourceOptions}
+                        value={selectedExamId}
+                        onchange={handleExamChange}
+                        placeholder="Pick an exam"
+                        required
+                    ></lightning-combobox>
+                    <lightning-combobox
+                        label="Provider"
+                        options={providerOptions}
+                        value={provider}
+                        onchange={handleProviderChange}
+                        class="slds-m-top_small"
+                    ></lightning-combobox>
+                    <lightning-input
+                        type="number"
+                        label="How many questions to generate?"
+                        value={questionCount}
+                        min="1"
+                        max="25"
+                        onchange={handleCountChange}
+                        field-level-help="The Apex job caps this at 25 per run."
+                        class="slds-m-top_small"
+                    ></lightning-input>
                 </template>
 
                 <!-- Step 2: Mix -->
                 <template if:true={isStepMix}>
                     <p class="slds-text-color_weak slds-m-bottom_small">
-                        Bias the generated set. Skipping these is fine — the model will spread across all domains and difficulties.
+                        Bias the generated set. Skipping these is fine — the
+                        model will spread across all domains and difficulties.
                     </p>
-                    <lightning-radio-group name="difficulty" label="Difficulty focus"
-                                           options={difficultyOptions} value={difficulty} type="radio"
-                                           onchange={handleDifficultyChange}></lightning-radio-group>
+                    <lightning-radio-group
+                        name="difficulty"
+                        label="Difficulty focus"
+                        options={difficultyOptions}
+                        value={difficulty}
+                        type="radio"
+                        onchange={handleDifficultyChange}
+                    ></lightning-radio-group>
                     <template if:true={examDomains.length}>
-                        <lightning-dual-listbox name="domains" label="Domain focus (optional)"
-                                                source-label="Available domains" selected-label="Focus on"
-                                                options={examDomains} value={selectedDomains}
-                                                onchange={handleDomainsChange}
-                                                class="slds-m-top_medium gjc-dual-listbox"></lightning-dual-listbox>
+                        <lightning-dual-listbox
+                            name="domains"
+                            label="Domain focus (optional)"
+                            source-label="Available domains"
+                            selected-label="Focus on"
+                            options={examDomains}
+                            value={selectedDomains}
+                            onchange={handleDomainsChange}
+                            class="slds-m-top_medium gjc-dual-listbox"
+                        ></lightning-dual-listbox>
                     </template>
                     <template if:false={examDomains.length}>
-                        <p class="slds-text-color_weak slds-m-top_small slds-text-body_small">
-                            No Exam_Domain__c rows for this exam yet — the model will generate without domain hints.
+                        <p
+                            class="slds-text-color_weak slds-m-top_small slds-text-body_small"
+                        >
+                            No Exam_Domain__c rows for this exam yet — the model
+                            will generate without domain hints.
                         </p>
                     </template>
                 </template>
 
                 <!-- Step 3: Notes -->
                 <template if:true={isStepNotes}>
-                    <lightning-textarea label="Prompt notes (optional)" value={promptNotes}
-                                        onchange={handleNotesChange} placeholder={placeholderPrompt}
-                                        class="gjc-textarea"></lightning-textarea>
-                    <p class="slds-text-color_weak slds-m-top_small slds-text-body_small">
-                        These notes are stored on Question_Generation_Job__c.Prompt_Text__c for analytics and replay. They are also concatenated into the generator prompt as guidance.
+                    <lightning-textarea
+                        label="Prompt notes (optional)"
+                        value={promptNotes}
+                        onchange={handleNotesChange}
+                        placeholder={placeholderPrompt}
+                        class="gjc-textarea"
+                    ></lightning-textarea>
+                    <p
+                        class="slds-text-color_weak slds-m-top_small slds-text-body_small"
+                    >
+                        These notes are stored on
+                        Question_Generation_Job__c.Prompt_Text__c for analytics
+                        and replay. They are also concatenated into the
+                        generator prompt as guidance.
                     </p>
                 </template>
 
                 <!-- Step 4: Confirm -->
                 <template if:true={isStepConfirm}>
-                    <div class="slds-box slds-theme_default slds-m-bottom_medium">
-                        <h4 class="slds-text-heading_small">Review the request</h4>
+                    <div
+                        class="slds-box slds-theme_default slds-m-bottom_medium"
+                    >
+                        <h4 class="slds-text-heading_small">
+                            Review the request
+                        </h4>
                         <ul class="slds-list_dotted slds-m-top_x-small">
                             <li><strong>Exam:</strong> {selectedExamLabel}</li>
                             <li><strong>Provider:</strong> {provider}</li>
                             <li><strong>Questions:</strong> {questionCount}</li>
                             <li><strong>Difficulty:</strong> {difficulty}</li>
-                            <li><strong>Domain focus:</strong> {selectedDomainsLabel}</li>
+                            <li>
+                                <strong>Domain focus:</strong>
+                                {selectedDomainsLabel}
+                            </li>
                         </ul>
                     </div>
                     <p class="slds-text-color_weak slds-text-body_small">
-                        On confirm we create a Question_Generation_Job__c, enqueue the worker, and save the raw provider JSON to Output_JSON__c when it completes. Drafts land in the Review Console — nothing publishes automatically.
+                        On confirm we create a Question_Generation_Job__c,
+                        enqueue the worker, and save the raw provider JSON to
+                        Output_JSON__c when it completes. Drafts land in the
+                        Review Console — nothing publishes automatically.
                     </p>
                 </template>
 
                 <!-- Footer -->
                 <footer class="gjc-wizard-footer slds-m-top_large">
                     <template if:true={busy}>
-                        <lightning-spinner alternative-text="Working" size="small"></lightning-spinner>
+                        <lightning-spinner
+                            alternative-text="Working"
+                            size="small"
+                        ></lightning-spinner>
                     </template>
                     <template if:false={isStepTarget}>
-                        <lightning-button label="Back" onclick={handleBack} class="slds-m-right_x-small"></lightning-button>
+                        <lightning-button
+                            label="Back"
+                            onclick={handleBack}
+                            class="slds-m-right_x-small"
+                        ></lightning-button>
                     </template>
-                    <lightning-button label="Cancel" onclick={handleCloseWizard} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleCloseWizard}
+                        class="slds-m-right_x-small"
+                    ></lightning-button>
                     <template if:false={isStepConfirm}>
-                        <lightning-button label="Next" variant="brand" onclick={handleNext} disabled={nextDisabled}></lightning-button>
+                        <lightning-button
+                            label="Next"
+                            variant="brand"
+                            onclick={handleNext}
+                            disabled={nextDisabled}
+                        ></lightning-button>
                     </template>
                     <template if:true={isStepConfirm}>
-                        <lightning-button label="Generate" variant="brand" onclick={handleConfirm} disabled={busy}></lightning-button>
+                        <lightning-button
+                            label="Generate"
+                            variant="brand"
+                            onclick={handleConfirm}
+                            disabled={busy}
+                        ></lightning-button>
                     </template>
                 </footer>
             </div>
         </template>
-
     </lightning-card>
 </template>

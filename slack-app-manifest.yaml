@@ -10,40 +10,40 @@
 # This manifest sets both, which is the #1 cause of "buttons don't do anything".
 
 display_information:
-  name: Cert Game
-  description: Salesforce certification trivia inside Slack.
-  background_color: "#1c1c3c"
+    name: Cert Game
+    description: Salesforce certification trivia inside Slack.
+    background_color: "#1c1c3c"
 
 features:
-  bot_user:
-    display_name: Cert Game
-    always_online: true
-  slash_commands:
-    - command: /certgame
-      url: https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/services/apexrest/slack/events
-      description: Play Salesforce certification trivia
-      usage_hint: "help | play [CODE] | leaderboard | stats | plan | billing | debug"
-      should_escape: false
+    bot_user:
+        display_name: Cert Game
+        always_online: true
+    slash_commands:
+        - command: /certgame
+          url: https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/services/apexrest/slack/events
+          description: Play Salesforce certification trivia
+          usage_hint: "help | play [CODE] | leaderboard | stats | plan | billing | debug"
+          should_escape: false
 
 oauth_config:
-  scopes:
-    bot:
-      - app_mentions:read
-      - channels:read
-      - chat:write
-      - commands
-      - im:write
-      - users:read
+    scopes:
+        bot:
+            - app_mentions:read
+            - channels:read
+            - chat:write
+            - commands
+            - im:write
+            - users:read
 
 settings:
-  interactivity:
-    is_enabled: true
-    request_url: https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/services/apexrest/slack/events
-  event_subscriptions:
-    request_url: https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/services/apexrest/slack/events
-    bot_events:
-      - app_home_opened
-      - app_mention
-  org_deploy_enabled: false
-  socket_mode_enabled: false
-  token_rotation_enabled: false
+    interactivity:
+        is_enabled: true
+        request_url: https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/services/apexrest/slack/events
+    event_subscriptions:
+        request_url: https://dream-dream-110-dev-ed.scratch.my.salesforce-sites.com/services/apexrest/slack/events
+        bot_events:
+            - app_home_opened
+            - app_mention
+    org_deploy_enabled: false
+    socket_mode_enabled: false
+    token_rotation_enabled: false

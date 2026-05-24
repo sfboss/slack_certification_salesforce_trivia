@@ -3,15 +3,16 @@
  * Used by the Question Review console to flag broken citation links.
  */
 public with sharing class CitationLinkVerifier {
-
     /**
      * Returns true if the URL is reachable (HTTP 2xx or 3xx).
      * Falls back to GET if HEAD is not supported by the remote.
      * Failures (timeout, DNS, blocked) return false.
      */
     public static Boolean check(String url) {
-        if (String.isBlank(url)) return false;
-        if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
+        if (String.isBlank(url))
+            return false;
+        if (!url.startsWith('http://') && !url.startsWith('https://'))
+            return false;
         try {
             HttpResponse res = send(url, 'HEAD');
             Integer code = res.getStatusCode();

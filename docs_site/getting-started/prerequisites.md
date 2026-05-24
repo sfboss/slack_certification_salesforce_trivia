@@ -2,12 +2,12 @@
 
 ## Tooling
 
-| Tool | Minimum version | Used for |
-| --- | --- | --- |
-| [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli) (`sf`) | 2.0+ | Scratch org create, deploy, test |
-| Node.js | 20+ | LWC + Jest tests (`jest.config.js`) |
-| Python | 3.11+ | JSON validators and import scripts under `scripts/` |
-| Git | recent | source control |
+| Tool                                                                          | Minimum version | Used for                                            |
+| ----------------------------------------------------------------------------- | --------------- | --------------------------------------------------- |
+| [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli) (`sf`) | 2.0+            | Scratch org create, deploy, test                    |
+| Node.js                                                                       | 20+             | LWC + Jest tests (`jest.config.js`)                 |
+| Python                                                                        | 3.11+           | JSON validators and import scripts under `scripts/` |
+| Git                                                                           | recent          | source control                                      |
 
 Verify:
 

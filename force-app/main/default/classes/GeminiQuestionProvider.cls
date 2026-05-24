@@ -3,8 +3,15 @@
  * Implement when those services are configured.
  */
 public with sharing class GeminiQuestionProvider implements QuestionGenerationProvider {
-    public String name() { return 'gemini'; }
-    public String generate(String examCode, List<String> domains, String difficulty, Integer count) {
+    public String name() {
+        return 'gemini';
+    }
+    public String generate(
+        String examCode,
+        List<String> domains,
+        String difficulty,
+        Integer count
+    ) {
         throw new CalloutException('Gemini provider not yet implemented.');
     }
 }

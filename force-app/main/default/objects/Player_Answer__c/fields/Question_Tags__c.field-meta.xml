@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Question_Tags__c</fullName>
-    <description>Snapshot of the question&apos;s tags at answer time.</description>
+    <description
+    >Snapshot of the question&apos;s tags at answer time.</description>
     <externalId>false</externalId>
     <label>Question Tags</label>
     <length>255</length>

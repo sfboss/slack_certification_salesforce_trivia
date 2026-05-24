@@ -5,17 +5,17 @@ All LWCs live under
 
 ## Inventory
 
-| LWC | Backing Apex | Purpose |
-| --- | --- | --- |
-| `certGameAdminHome` | composed | Hosts the 4-tab admin landing page (Review Drafts, Question Bank, Generation Jobs, Tournaments). |
-| `certGameAdminDashboard` | `CertGameAdminDashboardController` | Org-wide gameplay metrics. |
-| `certGamePlayerDashboard` | `CertGamePlayerDashboardController` | Per-player drill-down. |
-| `certGameLeaderboard` | `CertGameLeaderboardController` | In-org leaderboard view. |
-| `certGameBilling` | `CertGameBillingController` | Tenant plan management UI. |
-| `questionBankManager` | `CertGameImportService` | Upload pack JSON; list `Question_Bank__c` records. |
-| `questionReviewConsole` | `QuestionReviewController` | Inline-edit drafts; publish / reject; show citations. |
-| `generationJobConsole` | (CometD over `QuestionGenerationJob__e`) | Live status stream of generation jobs. |
-| `tournamentBuilder` | `CertGameTournamentService` | Tournament creation + bracket build. |
+| LWC                       | Backing Apex                             | Purpose                                                                                          |
+| ------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `certGameAdminHome`       | composed                                 | Hosts the 4-tab admin landing page (Review Drafts, Question Bank, Generation Jobs, Tournaments). |
+| `certGameAdminDashboard`  | `CertGameAdminDashboardController`       | Org-wide gameplay metrics.                                                                       |
+| `certGamePlayerDashboard` | `CertGamePlayerDashboardController`      | Per-player drill-down.                                                                           |
+| `certGameLeaderboard`     | `CertGameLeaderboardController`          | In-org leaderboard view.                                                                         |
+| `certGameBilling`         | `CertGameBillingController`              | Tenant plan management UI.                                                                       |
+| `questionBankManager`     | `CertGameImportService`                  | Upload pack JSON; list `Question_Bank__c` records.                                               |
+| `questionReviewConsole`   | `QuestionReviewController`               | Inline-edit drafts; publish / reject; show citations.                                            |
+| `generationJobConsole`    | (CometD over `QuestionGenerationJob__e`) | Live status stream of generation jobs.                                                           |
+| `tournamentBuilder`       | `CertGameTournamentService`              | Tournament creation + bracket build.                                                             |
 
 ## Conventions
 
@@ -40,13 +40,13 @@ sf org open -o certgame -p /lightning/app/Cert_Game_Manager
 The `generationJobConsole` LWC subscribes to `QuestionGenerationJob__e` via the empApi
 CometD bridge. Each event row contains:
 
-| Field | Value |
-| --- | --- |
-| `Job_Id__c` | Owning `Question_Generation_Job__c` Id. |
-| `Tenant_Id__c` | `Tenant__c` Id. |
-| `Status__c` | `Queued` / `Running` / `Succeeded` / `Failed`. |
-| `Generated_Count__c` | Questions inserted so far. |
-| `Message__c` | Provider message (e.g. token usage, error). |
+| Field                | Value                                          |
+| -------------------- | ---------------------------------------------- |
+| `Job_Id__c`          | Owning `Question_Generation_Job__c` Id.        |
+| `Tenant_Id__c`       | `Tenant__c` Id.                                |
+| `Status__c`          | `Queued` / `Running` / `Succeeded` / `Failed`. |
+| `Generated_Count__c` | Questions inserted so far.                     |
+| `Message__c`         | Provider message (e.g. token usage, error).    |
 
 Manually fire one for UI testing:
 

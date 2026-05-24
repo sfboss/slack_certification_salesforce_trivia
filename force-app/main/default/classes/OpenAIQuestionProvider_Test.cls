@@ -1,6 +1,5 @@
 @IsTest
 private class OpenAIQuestionProvider_Test {
-
     public class OkMock implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest req) {
             HttpResponse r = new HttpResponse();
@@ -18,17 +17,24 @@ private class OpenAIQuestionProvider_Test {
         }
     }
 
-    @IsTest static void generateReturnsExtractedText() {
+    @IsTest
+    static void generateReturnsExtractedText() {
         Test.setMock(HttpCalloutMock.class, new OkMock());
         OpenAIQuestionProvider p = new OpenAIQuestionProvider();
         Test.startTest();
-        String out = p.generate('ADM-201', new List<String>{'Security'}, 'Beginner', 2);
+        String out = p.generate(
+            'ADM-201',
+            new List<String>{ 'Security' },
+            'Beginner',
+            2
+        );
         Test.stopTest();
         System.assertEquals('PACK_JSON', out);
         System.assertEquals('openai', p.name());
     }
 
-    @IsTest static void non2xxThrows() {
+    @IsTest
+    static void non2xxThrows() {
         Test.setMock(HttpCalloutMock.class, new ErrMock());
         try {
             new OpenAIQuestionProvider().generate('X', null, null, 1);

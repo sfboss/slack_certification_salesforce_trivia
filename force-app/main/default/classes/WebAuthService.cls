@@ -3,7 +3,6 @@
  * Used by the public web app (Visualforce on a Salesforce Site, guest user context).
  */
 public without sharing class WebAuthService {
-
     public class AuthResult {
         public Boolean ok;
         public String error;
@@ -32,27 +31,45 @@ public without sharing class WebAuthService {
 
     public static AuthResult signInWithGoogleIdToken(String idToken) {
         AuthResult r = new AuthResult();
-        if (String.isBlank(idToken)) { r.ok = false; r.error = 'missing_id_token'; return r; }
+        if (String.isBlank(idToken)) {
+            r.ok = false;
+            r.error = 'missing_id_token';
+            return r;
+        }
         GoogleClaims claims;
         try {
             claims = verifyGoogleToken(idToken);
         } catch (Exception e) {
             r.ok = false;
             r.error = 'verify_failed:' + e.getMessage();
-            AppLogger.error('WebAuthService', 'signInWithGoogleIdToken', 'Google token verify failed', e);
+            AppLogger.error(
+                'WebAuthService',
+                'signInWithGoogleIdToken',
+                'Google token verify failed',
+                e
+            );
             return r;
         }
         if (claims == null || String.isBlank(claims.sub)) {
-            r.ok = false; r.error = 'invalid_claims'; return r;
+            r.ok = false;
+            r.error = 'invalid_claims';
+            return r;
         }
         // Audience check
         String expectedAud = AppSettings.get().Web_Google_Client_Id__c;
         if (String.isNotBlank(expectedAud) && expectedAud != claims.aud) {
-            r.ok = false; r.error = 'aud_mismatch'; return r;
+            r.ok = false;
+            r.error = 'aud_mismatch';
+            return r;
         }
         // Issuer check
-        if (claims.iss != 'accounts.google.com' && claims.iss != 'https://accounts.google.com') {
-            r.ok = false; r.error = 'iss_mismatch'; return r;
+        if (
+            claims.iss != 'accounts.google.com' &&
+            claims.iss != 'https://accounts.google.com'
+        ) {
+            r.ok = false;
+            r.error = 'iss_mismatch';
+            return r;
         }
 
         Player__c p = upsertPlayer(claims);
@@ -68,7 +85,13 @@ public without sharing class WebAuthService {
 
     private static Player__c upsertPlayer(GoogleClaims c) {
         List<Player__c> existing = [
-            SELECT Id, Google_Sub__c, Google_Email__c, Google_Name__c, Google_Picture_URL__c, Display_Name__c
+            SELECT
+                Id,
+                Google_Sub__c,
+                Google_Email__c,
+                Google_Name__c,
+                Google_Picture_URL__c,
+                Display_Name__c
             FROM Player__c
             WHERE Google_Sub__c = :c.sub
             LIMIT 1
@@ -80,7 +103,8 @@ public without sharing class WebAuthService {
             p.Google_Name__c = c.name;
             p.Google_Picture_URL__c = c.picture;
             p.Web_Last_Login_At__c = DateTime.now();
-            if (String.isBlank(p.Display_Name__c)) p.Display_Name__c = c.name;
+            if (String.isBlank(p.Display_Name__c))
+                p.Display_Name__c = c.name;
         } else {
             p = new Player__c(
                 Google_Sub__c = c.sub,
@@ -91,12 +115,18 @@ public without sharing class WebAuthService {
                 Web_Last_Login_At__c = DateTime.now()
             );
         }
-        Database.upsert(p, Player__c.Google_Sub__c, false, AccessLevel.SYSTEM_MODE);
+        Database.upsert(
+            p,
+            Player__c.Google_Sub__c,
+            false,
+            AccessLevel.SYSTEM_MODE
+        );
         return p;
     }
 
     private static GoogleClaims verifyGoogleToken(String idToken) {
-        if (claimsOverride != null) return claimsOverride;
+        if (claimsOverride != null)
+            return claimsOverride;
         if (Test.isRunningTest()) {
             GoogleClaims tc = new GoogleClaims();
             tc.iss = 'accounts.google.com';
@@ -106,14 +136,21 @@ public without sharing class WebAuthService {
             return tc;
         }
         HttpRequest req = new HttpRequest();
-        req.setEndpoint('https://oauth2.googleapis.com/tokeninfo?id_token=' + EncodingUtil.urlEncode(idToken, 'UTF-8'));
+        req.setEndpoint(
+            'https://oauth2.googleapis.com/tokeninfo?id_token=' +
+            EncodingUtil.urlEncode(idToken, 'UTF-8')
+        );
         req.setMethod('GET');
         req.setTimeout(10000);
         HttpResponse res = new Http().send(req);
         if (res.getStatusCode() != 200) {
-            throw new AuthException('tokeninfo HTTP ' + res.getStatusCode() + ': ' + res.getBody());
+            throw new AuthException(
+                'tokeninfo HTTP ' + res.getStatusCode() + ': ' + res.getBody()
+            );
         }
-        Map<String, Object> m = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+        Map<String, Object> m = (Map<String, Object>) JSON.deserializeUntyped(
+            res.getBody()
+        );
         GoogleClaims c = new GoogleClaims();
         c.iss = (String) m.get('iss');
         c.aud = (String) m.get('aud');
@@ -125,5 +162,6 @@ public without sharing class WebAuthService {
         return c;
     }
 
-    public class AuthException extends Exception {}
+    public class AuthException extends Exception {
+    }
 }

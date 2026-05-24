@@ -1,236 +1,436 @@
 {
-  "exam": {
-    "name": "Salesforce Administrator",
-    "code": "ADM-201"
-  },
-  "questionBank": {
-    "name": "ADM-201 Practice Pack 001",
-    "version": "1.0.0",
-    "sourceType": "Imported",
-    "status": "Draft",
-    "externalId": "BANK-ADM201-001"
-  },
-  "questions": [
-    {
-      "externalId": "ADM201-SEC-001",
-      "domain": "Security and Access",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "scenario": "A sales manager needs access to records owned by direct reports.",
-      "question": "Which Salesforce feature most directly supports this requirement?",
-      "choices": [
-        { "label": "A", "text": "Permission Set Group", "isCorrect": false, "explanation": "PSGs aggregate permissions but do not create hierarchical record access." },
-        { "label": "B", "text": "Organization-Wide Defaults", "isCorrect": false, "explanation": "OWD establishes baseline access only." },
-        { "label": "C", "text": "Role Hierarchy", "isCorrect": true, "explanation": "Role hierarchy opens record access upward to managers." },
-        { "label": "D", "text": "Login IP Ranges", "isCorrect": false, "explanation": "IP ranges control login, not record access." }
-      ],
-      "explanation": "Role hierarchy is the most direct mechanism for upward record access through management structure.",
-      "citations": [
-        {
-          "title": "Salesforce Help: Control Access to Records",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.security_data_access.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Explains record access and role hierarchy."
-        }
-      ]
+    "exam": {
+        "name": "Salesforce Administrator",
+        "code": "ADM-201"
     },
-    {
-      "externalId": "ADM201-SEC-002",
-      "domain": "Security and Access",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which feature controls the baseline level of access a user has to records they do not own?",
-      "choices": [
-        { "label": "A", "text": "Profiles", "isCorrect": false, "explanation": "Profiles control object and field access, not record-level baseline." },
-        { "label": "B", "text": "Organization-Wide Defaults", "isCorrect": true, "explanation": "OWD sets the baseline record access for non-owners." },
-        { "label": "C", "text": "Permission Sets", "isCorrect": false, "explanation": "Permission sets extend object/field access, not record sharing baseline." },
-        { "label": "D", "text": "Sharing Rules", "isCorrect": false, "explanation": "Sharing rules open access above OWD but do not set the baseline." }
-      ],
-      "explanation": "OWD is the foundation of the record-access pyramid.",
-      "citations": [
-        {
-          "title": "Trailhead: Data Security",
-          "url": "https://trailhead.salesforce.com/content/learn/modules/data_security",
-          "sourceType": "Trailhead",
-          "relevanceNote": "Module covering OWD and the sharing model."
-        }
-      ]
+    "questionBank": {
+        "name": "ADM-201 Practice Pack 001",
+        "version": "1.0.0",
+        "sourceType": "Imported",
+        "status": "Draft",
+        "externalId": "BANK-ADM201-001"
     },
-    {
-      "externalId": "ADM201-DM-001",
-      "domain": "Object Manager and Lightning App Builder",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which field type creates a parent-child relationship that cascades delete?",
-      "choices": [
-        { "label": "A", "text": "Lookup Relationship", "isCorrect": false, "explanation": "Lookup is loosely coupled and does not cascade delete by default." },
-        { "label": "B", "text": "Master-Detail Relationship", "isCorrect": true, "explanation": "Master-Detail tightly couples the child to the parent and cascades delete." },
-        { "label": "C", "text": "Hierarchical Relationship", "isCorrect": false, "explanation": "Hierarchical is a special lookup on the User object." },
-        { "label": "D", "text": "External Lookup", "isCorrect": false, "explanation": "External lookup targets an external object." }
-      ],
-      "explanation": "Master-Detail enforces parent ownership and cascade delete.",
-      "citations": [
+    "questions": [
         {
-          "title": "Salesforce Help: Relationships",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.relationships_considerations.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Comparison of relationship types."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-PA-001",
-      "domain": "Process Automation",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which automation tool is now the recommended option for record-triggered automation?",
-      "choices": [
-        { "label": "A", "text": "Workflow Rules", "isCorrect": false, "explanation": "Workflow Rules are retired for new automations." },
-        { "label": "B", "text": "Process Builder", "isCorrect": false, "explanation": "Process Builder is also being retired in favor of Flow." },
-        { "label": "C", "text": "Flow Builder", "isCorrect": true, "explanation": "Salesforce recommends Flow for new record-triggered automation." },
-        { "label": "D", "text": "Apex Trigger", "isCorrect": false, "explanation": "Apex is only when declarative tools cannot meet a requirement." }
-      ],
-      "explanation": "Flow Builder is the strategic automation tool.",
-      "citations": [
+            "externalId": "ADM201-SEC-001",
+            "domain": "Security and Access",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "scenario": "A sales manager needs access to records owned by direct reports.",
+            "question": "Which Salesforce feature most directly supports this requirement?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Permission Set Group",
+                    "isCorrect": false,
+                    "explanation": "PSGs aggregate permissions but do not create hierarchical record access."
+                },
+                {
+                    "label": "B",
+                    "text": "Organization-Wide Defaults",
+                    "isCorrect": false,
+                    "explanation": "OWD establishes baseline access only."
+                },
+                {
+                    "label": "C",
+                    "text": "Role Hierarchy",
+                    "isCorrect": true,
+                    "explanation": "Role hierarchy opens record access upward to managers."
+                },
+                {
+                    "label": "D",
+                    "text": "Login IP Ranges",
+                    "isCorrect": false,
+                    "explanation": "IP ranges control login, not record access."
+                }
+            ],
+            "explanation": "Role hierarchy is the most direct mechanism for upward record access through management structure.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Control Access to Records",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.security_data_access.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Explains record access and role hierarchy."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Migrate to Flow",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.flow_concepts_migrate.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Guidance on moving off Workflow / Process Builder."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-RP-001",
-      "domain": "Analytics - Reports and Dashboards",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which report format lets you group records by both row and column?",
-      "choices": [
-        { "label": "A", "text": "Tabular", "isCorrect": false, "explanation": "Tabular has no grouping." },
-        { "label": "B", "text": "Summary", "isCorrect": false, "explanation": "Summary groups by rows only." },
-        { "label": "C", "text": "Matrix", "isCorrect": true, "explanation": "Matrix groups by both rows and columns." },
-        { "label": "D", "text": "Joined", "isCorrect": false, "explanation": "Joined combines multiple report blocks." }
-      ],
-      "explanation": "Matrix reports support row + column grouping.",
-      "citations": [
+            "externalId": "ADM201-SEC-002",
+            "domain": "Security and Access",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which feature controls the baseline level of access a user has to records they do not own?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Profiles",
+                    "isCorrect": false,
+                    "explanation": "Profiles control object and field access, not record-level baseline."
+                },
+                {
+                    "label": "B",
+                    "text": "Organization-Wide Defaults",
+                    "isCorrect": true,
+                    "explanation": "OWD sets the baseline record access for non-owners."
+                },
+                {
+                    "label": "C",
+                    "text": "Permission Sets",
+                    "isCorrect": false,
+                    "explanation": "Permission sets extend object/field access, not record sharing baseline."
+                },
+                {
+                    "label": "D",
+                    "text": "Sharing Rules",
+                    "isCorrect": false,
+                    "explanation": "Sharing rules open access above OWD but do not set the baseline."
+                }
+            ],
+            "explanation": "OWD is the foundation of the record-access pyramid.",
+            "citations": [
+                {
+                    "title": "Trailhead: Data Security",
+                    "url": "https://trailhead.salesforce.com/content/learn/modules/data_security",
+                    "sourceType": "Trailhead",
+                    "relevanceNote": "Module covering OWD and the sharing model."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Report Formats",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.reports_formats.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Defines tabular, summary, matrix, and joined formats."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-SC-001",
-      "domain": "Sales and Marketing Applications",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which object represents a qualified sales prospect that is being actively worked?",
-      "choices": [
-        { "label": "A", "text": "Lead", "isCorrect": false, "explanation": "Leads are unqualified prospects." },
-        { "label": "B", "text": "Opportunity", "isCorrect": true, "explanation": "Opportunities track qualified deals in the pipeline." },
-        { "label": "C", "text": "Account", "isCorrect": false, "explanation": "Accounts represent organizations." },
-        { "label": "D", "text": "Case", "isCorrect": false, "explanation": "Cases are service tickets." }
-      ],
-      "explanation": "Opportunities track qualified pipeline.",
-      "citations": [
+            "externalId": "ADM201-DM-001",
+            "domain": "Object Manager and Lightning App Builder",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which field type creates a parent-child relationship that cascades delete?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Lookup Relationship",
+                    "isCorrect": false,
+                    "explanation": "Lookup is loosely coupled and does not cascade delete by default."
+                },
+                {
+                    "label": "B",
+                    "text": "Master-Detail Relationship",
+                    "isCorrect": true,
+                    "explanation": "Master-Detail tightly couples the child to the parent and cascades delete."
+                },
+                {
+                    "label": "C",
+                    "text": "Hierarchical Relationship",
+                    "isCorrect": false,
+                    "explanation": "Hierarchical is a special lookup on the User object."
+                },
+                {
+                    "label": "D",
+                    "text": "External Lookup",
+                    "isCorrect": false,
+                    "explanation": "External lookup targets an external object."
+                }
+            ],
+            "explanation": "Master-Detail enforces parent ownership and cascade delete.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Relationships",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.relationships_considerations.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Comparison of relationship types."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Opportunities",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.opportunities_overview.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Overview of opportunities."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-SVC-001",
-      "domain": "Service and Support Applications",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which feature automatically routes incoming cases based on defined criteria?",
-      "choices": [
-        { "label": "A", "text": "Assignment Rules", "isCorrect": true, "explanation": "Assignment rules route cases to users/queues based on criteria." },
-        { "label": "B", "text": "Escalation Rules", "isCorrect": false, "explanation": "Escalation rules act on idle cases." },
-        { "label": "C", "text": "Auto-Response Rules", "isCorrect": false, "explanation": "Auto-response sends emails, not routes." },
-        { "label": "D", "text": "Validation Rules", "isCorrect": false, "explanation": "Validation rules enforce data quality." }
-      ],
-      "explanation": "Assignment rules are the routing mechanism.",
-      "citations": [
+            "externalId": "ADM201-PA-001",
+            "domain": "Process Automation",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which automation tool is now the recommended option for record-triggered automation?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Workflow Rules",
+                    "isCorrect": false,
+                    "explanation": "Workflow Rules are retired for new automations."
+                },
+                {
+                    "label": "B",
+                    "text": "Process Builder",
+                    "isCorrect": false,
+                    "explanation": "Process Builder is also being retired in favor of Flow."
+                },
+                {
+                    "label": "C",
+                    "text": "Flow Builder",
+                    "isCorrect": true,
+                    "explanation": "Salesforce recommends Flow for new record-triggered automation."
+                },
+                {
+                    "label": "D",
+                    "text": "Apex Trigger",
+                    "isCorrect": false,
+                    "explanation": "Apex is only when declarative tools cannot meet a requirement."
+                }
+            ],
+            "explanation": "Flow Builder is the strategic automation tool.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Migrate to Flow",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.flow_concepts_migrate.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Guidance on moving off Workflow / Process Builder."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Case Assignment Rules",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.customize_leadrules.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Configuring case routing."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-PRO-001",
-      "domain": "Productivity and Collaboration",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which feature lets users follow records and receive feed updates?",
-      "choices": [
-        { "label": "A", "text": "Chatter", "isCorrect": true, "explanation": "Chatter feeds support following records, users, and groups." },
-        { "label": "B", "text": "Tasks", "isCorrect": false, "explanation": "Tasks are activities, not feeds." },
-        { "label": "C", "text": "Events", "isCorrect": false, "explanation": "Events are calendar items." },
-        { "label": "D", "text": "Notes", "isCorrect": false, "explanation": "Notes attach to records but are not feeds." }
-      ],
-      "explanation": "Chatter is the collaboration feed.",
-      "citations": [
+            "externalId": "ADM201-RP-001",
+            "domain": "Analytics - Reports and Dashboards",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which report format lets you group records by both row and column?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Tabular",
+                    "isCorrect": false,
+                    "explanation": "Tabular has no grouping."
+                },
+                {
+                    "label": "B",
+                    "text": "Summary",
+                    "isCorrect": false,
+                    "explanation": "Summary groups by rows only."
+                },
+                {
+                    "label": "C",
+                    "text": "Matrix",
+                    "isCorrect": true,
+                    "explanation": "Matrix groups by both rows and columns."
+                },
+                {
+                    "label": "D",
+                    "text": "Joined",
+                    "isCorrect": false,
+                    "explanation": "Joined combines multiple report blocks."
+                }
+            ],
+            "explanation": "Matrix reports support row + column grouping.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Report Formats",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.reports_formats.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Defines tabular, summary, matrix, and joined formats."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Chatter Basics",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.collab_overview.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Chatter overview."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-DM-002",
-      "domain": "Data and Analytics Management",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which tool is best for bulk-loading 50,000 Contact records with parent Account lookups?",
-      "choices": [
-        { "label": "A", "text": "Data Import Wizard", "isCorrect": false, "explanation": "Import Wizard handles up to 50k but with limited object support and no full upsert features." },
-        { "label": "B", "text": "Data Loader", "isCorrect": true, "explanation": "Data Loader handles large volumes and most standard/custom objects with relationships." },
-        { "label": "C", "text": "Schema Builder", "isCorrect": false, "explanation": "Schema Builder is for designing objects, not loading data." },
-        { "label": "D", "text": "Object Manager", "isCorrect": false, "explanation": "Object Manager configures metadata." }
-      ],
-      "explanation": "Data Loader is preferred for large bulk loads.",
-      "citations": [
+            "externalId": "ADM201-SC-001",
+            "domain": "Sales and Marketing Applications",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which object represents a qualified sales prospect that is being actively worked?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Lead",
+                    "isCorrect": false,
+                    "explanation": "Leads are unqualified prospects."
+                },
+                {
+                    "label": "B",
+                    "text": "Opportunity",
+                    "isCorrect": true,
+                    "explanation": "Opportunities track qualified deals in the pipeline."
+                },
+                {
+                    "label": "C",
+                    "text": "Account",
+                    "isCorrect": false,
+                    "explanation": "Accounts represent organizations."
+                },
+                {
+                    "label": "D",
+                    "text": "Case",
+                    "isCorrect": false,
+                    "explanation": "Cases are service tickets."
+                }
+            ],
+            "explanation": "Opportunities track qualified pipeline.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Opportunities",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.opportunities_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Overview of opportunities."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Data Loader",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.data_loader.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Bulk data tool capabilities."
-        }
-      ]
-    },
-    {
-      "externalId": "ADM201-UX-001",
-      "domain": "Object Manager and Lightning App Builder",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which builder allows admins to drag and drop Lightning components onto a record page?",
-      "choices": [
-        { "label": "A", "text": "Flow Builder", "isCorrect": false, "explanation": "Flow Builder builds automation, not page layouts." },
-        { "label": "B", "text": "Schema Builder", "isCorrect": false, "explanation": "Schema Builder models data, not pages." },
-        { "label": "C", "text": "Lightning App Builder", "isCorrect": true, "explanation": "Lightning App Builder is the drag-and-drop tool for record/app/home pages." },
-        { "label": "D", "text": "Page Layout Editor", "isCorrect": false, "explanation": "Page Layout Editor edits Classic-style layouts." }
-      ],
-      "explanation": "Lightning App Builder is the modern page composer.",
-      "citations": [
+            "externalId": "ADM201-SVC-001",
+            "domain": "Service and Support Applications",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which feature automatically routes incoming cases based on defined criteria?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Assignment Rules",
+                    "isCorrect": true,
+                    "explanation": "Assignment rules route cases to users/queues based on criteria."
+                },
+                {
+                    "label": "B",
+                    "text": "Escalation Rules",
+                    "isCorrect": false,
+                    "explanation": "Escalation rules act on idle cases."
+                },
+                {
+                    "label": "C",
+                    "text": "Auto-Response Rules",
+                    "isCorrect": false,
+                    "explanation": "Auto-response sends emails, not routes."
+                },
+                {
+                    "label": "D",
+                    "text": "Validation Rules",
+                    "isCorrect": false,
+                    "explanation": "Validation rules enforce data quality."
+                }
+            ],
+            "explanation": "Assignment rules are the routing mechanism.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Case Assignment Rules",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.customize_leadrules.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Configuring case routing."
+                }
+            ]
+        },
         {
-          "title": "Salesforce Help: Lightning App Builder",
-          "url": "https://help.salesforce.com/s/articleView?id=sf.lightning_app_builder_overview.htm",
-          "sourceType": "Salesforce Help",
-          "relevanceNote": "Drag-and-drop page authoring."
+            "externalId": "ADM201-PRO-001",
+            "domain": "Productivity and Collaboration",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which feature lets users follow records and receive feed updates?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Chatter",
+                    "isCorrect": true,
+                    "explanation": "Chatter feeds support following records, users, and groups."
+                },
+                {
+                    "label": "B",
+                    "text": "Tasks",
+                    "isCorrect": false,
+                    "explanation": "Tasks are activities, not feeds."
+                },
+                {
+                    "label": "C",
+                    "text": "Events",
+                    "isCorrect": false,
+                    "explanation": "Events are calendar items."
+                },
+                {
+                    "label": "D",
+                    "text": "Notes",
+                    "isCorrect": false,
+                    "explanation": "Notes attach to records but are not feeds."
+                }
+            ],
+            "explanation": "Chatter is the collaboration feed.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Chatter Basics",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.collab_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Chatter overview."
+                }
+            ]
+        },
+        {
+            "externalId": "ADM201-DM-002",
+            "domain": "Data and Analytics Management",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which tool is best for bulk-loading 50,000 Contact records with parent Account lookups?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Data Import Wizard",
+                    "isCorrect": false,
+                    "explanation": "Import Wizard handles up to 50k but with limited object support and no full upsert features."
+                },
+                {
+                    "label": "B",
+                    "text": "Data Loader",
+                    "isCorrect": true,
+                    "explanation": "Data Loader handles large volumes and most standard/custom objects with relationships."
+                },
+                {
+                    "label": "C",
+                    "text": "Schema Builder",
+                    "isCorrect": false,
+                    "explanation": "Schema Builder is for designing objects, not loading data."
+                },
+                {
+                    "label": "D",
+                    "text": "Object Manager",
+                    "isCorrect": false,
+                    "explanation": "Object Manager configures metadata."
+                }
+            ],
+            "explanation": "Data Loader is preferred for large bulk loads.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Data Loader",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.data_loader.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Bulk data tool capabilities."
+                }
+            ]
+        },
+        {
+            "externalId": "ADM201-UX-001",
+            "domain": "Object Manager and Lightning App Builder",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which builder allows admins to drag and drop Lightning components onto a record page?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Flow Builder",
+                    "isCorrect": false,
+                    "explanation": "Flow Builder builds automation, not page layouts."
+                },
+                {
+                    "label": "B",
+                    "text": "Schema Builder",
+                    "isCorrect": false,
+                    "explanation": "Schema Builder models data, not pages."
+                },
+                {
+                    "label": "C",
+                    "text": "Lightning App Builder",
+                    "isCorrect": true,
+                    "explanation": "Lightning App Builder is the drag-and-drop tool for record/app/home pages."
+                },
+                {
+                    "label": "D",
+                    "text": "Page Layout Editor",
+                    "isCorrect": false,
+                    "explanation": "Page Layout Editor edits Classic-style layouts."
+                }
+            ],
+            "explanation": "Lightning App Builder is the modern page composer.",
+            "citations": [
+                {
+                    "title": "Salesforce Help: Lightning App Builder",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.lightning_app_builder_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Drag-and-drop page authoring."
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

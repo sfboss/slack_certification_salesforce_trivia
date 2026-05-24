@@ -1,9 +1,9 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(sf apex *)",
-      "Bash(sf org *)",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); s=d.get\\('result',{}\\).get\\('scratchOrgs',[]\\); print\\(json.dumps\\([{'alias':o.get\\('alias'\\),'username':o.get\\('username'\\),'status':o.get\\('status'\\),'connectedStatus':o.get\\('connectedStatus'\\),'isDefault':o.get\\('isDefaultUsername'\\),'expirationDate':o.get\\('expirationDate'\\)} for o in s], indent=2\\)\\)\")"
-    ]
-  }
+    "permissions": {
+        "allow": [
+            "Bash(sf apex *)",
+            "Bash(sf org *)",
+            "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); s=d.get\\('result',{}\\).get\\('scratchOrgs',[]\\); print\\(json.dumps\\([{'alias':o.get\\('alias'\\),'username':o.get\\('username'\\),'status':o.get\\('status'\\),'connectedStatus':o.get\\('connectedStatus'\\),'isDefault':o.get\\('isDefaultUsername'\\),'expirationDate':o.get\\('expirationDate'\\)} for o in s], indent=2\\)\\)\")"
+        ]
+    }
 }

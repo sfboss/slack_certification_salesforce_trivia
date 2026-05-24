@@ -10,42 +10,64 @@
  * Retries 5xx and Slack rate_limited responses up to 2 times with simple backoff.
  */
 public with sharing class SlackApiClient {
+    public class SlackApiException extends Exception {
+    }
 
-    public class SlackApiException extends Exception {}
-
-    public static Map<String, Object> postMessage(String channel, String text, List<Object> blocks) {
+    public static Map<String, Object> postMessage(
+        String channel,
+        String text,
+        List<Object> blocks
+    ) {
         Map<String, Object> body = new Map<String, Object>{
             'channel' => channel,
             'text' => text == null ? '' : text
         };
-        if (blocks != null) body.put('blocks', blocks);
+        if (blocks != null)
+            body.put('blocks', blocks);
         return call('chat.postMessage', body);
     }
 
-    public static Map<String, Object> updateMessage(String channel, String ts, String text, List<Object> blocks) {
+    public static Map<String, Object> updateMessage(
+        String channel,
+        String ts,
+        String text,
+        List<Object> blocks
+    ) {
         Map<String, Object> body = new Map<String, Object>{
-            'channel' => channel, 'ts' => ts, 'text' => text == null ? '' : text
+            'channel' => channel,
+            'ts' => ts,
+            'text' => text == null ? '' : text
         };
-        if (blocks != null) body.put('blocks', blocks);
+        if (blocks != null)
+            body.put('blocks', blocks);
         return call('chat.update', body);
     }
 
-    public static Map<String, Object> publishHome(String userId, Map<String, Object> view) {
-        return call('views.publish', new Map<String, Object>{
-            'user_id' => userId, 'view' => view
-        });
+    public static Map<String, Object> publishHome(
+        String userId,
+        Map<String, Object> view
+    ) {
+        return call(
+            'views.publish',
+            new Map<String, Object>{ 'user_id' => userId, 'view' => view }
+        );
     }
 
-    public static Map<String, Object> openView(String triggerId, Map<String, Object> view) {
-        return call('views.open', new Map<String, Object>{
-            'trigger_id' => triggerId, 'view' => view
-        });
+    public static Map<String, Object> openView(
+        String triggerId,
+        Map<String, Object> view
+    ) {
+        return call(
+            'views.open',
+            new Map<String, Object>{ 'trigger_id' => triggerId, 'view' => view }
+        );
     }
 
     public static Map<String, Object> openConversation(List<String> userIds) {
-        return call('conversations.open', new Map<String, Object>{
-            'users' => String.join(userIds, ',')
-        });
+        return call(
+            'conversations.open',
+            new Map<String, Object>{ 'users' => String.join(userIds, ',') }
+        );
     }
 
     /**
@@ -54,19 +76,34 @@ public with sharing class SlackApiClient {
      * @future cannot accept complex types.
      */
     @future(callout=true)
-    public static void updateMessageAsync(String channel, String ts, String text, String blocksJson) {
+    public static void updateMessageAsync(
+        String channel,
+        String ts,
+        String text,
+        String blocksJson
+    ) {
         List<Object> blocks = null;
         if (String.isNotBlank(blocksJson)) {
-            try { blocks = (List<Object>) JSON.deserializeUntyped(blocksJson); } catch (Exception e) {}
+            try {
+                blocks = (List<Object>) JSON.deserializeUntyped(blocksJson);
+            } catch (Exception e) {
+            }
         }
         updateMessage(channel, ts, text, blocks);
     }
 
     @future(callout=true)
-    public static void postMessageAsync(String channel, String text, String blocksJson) {
+    public static void postMessageAsync(
+        String channel,
+        String text,
+        String blocksJson
+    ) {
         List<Object> blocks = null;
         if (String.isNotBlank(blocksJson)) {
-            try { blocks = (List<Object>) JSON.deserializeUntyped(blocksJson); } catch (Exception e) {}
+            try {
+                blocks = (List<Object>) JSON.deserializeUntyped(blocksJson);
+            } catch (Exception e) {
+            }
         }
         postMessage(channel, text, blocks);
     }
@@ -80,7 +117,8 @@ public with sharing class SlackApiClient {
      */
     @future(callout=true)
     public static void postToResponseUrlAsync(String url, String envelopeJson) {
-        if (String.isBlank(url) || String.isBlank(envelopeJson)) return;
+        if (String.isBlank(url) || String.isBlank(envelopeJson))
+            return;
         HttpRequest req = new HttpRequest();
         req.setEndpoint(url);
         req.setMethod('POST');
@@ -91,18 +129,34 @@ public with sharing class SlackApiClient {
             HttpResponse resp = new Http().send(req);
             Integer sc = resp.getStatusCode();
             if (sc >= 300) {
-                AppLogger.writeSafe('WARN', 'SlackApiClient', 'postToResponseUrl',
-                    'response_url POST failed: status=' + sc + ' body='
-                        + (resp.getBody() == null ? '' : resp.getBody().left(500)),
-                    null);
+                AppLogger.writeSafe(
+                    'WARN',
+                    'SlackApiClient',
+                    'postToResponseUrl',
+                    'response_url POST failed: status=' +
+                        sc +
+                        ' body=' +
+                        (resp.getBody() == null
+                            ? ''
+                            : resp.getBody().left(500)),
+                    null
+                );
             }
         } catch (Exception e) {
-            AppLogger.writeSafe('WARN', 'SlackApiClient', 'postToResponseUrl',
-                'response_url POST exception: ' + e.getMessage(), null);
+            AppLogger.writeSafe(
+                'WARN',
+                'SlackApiClient',
+                'postToResponseUrl',
+                'response_url POST exception: ' + e.getMessage(),
+                null
+            );
         }
     }
 
-    private static Map<String, Object> call(String method, Map<String, Object> body) {
+    private static Map<String, Object> call(
+        String method,
+        Map<String, Object> body
+    ) {
         Integer attempts = 0;
         Map<String, Object> parsed = null;
         App_Setting__mdt s = AppSettings.get();
@@ -131,28 +185,61 @@ public with sharing class SlackApiClient {
                 // Do NOT insert App_Log__c here: a retry would then hit
                 // "uncommitted work pending" on the next callout. System.debug
                 // captures the failure in the transaction log instead.
-                System.debug(LoggingLevel.ERROR, '[SlackApiClient] ' + method + ' attempt ' + attempts
-                    + ' callout exception: ' + e.getTypeName() + ': ' + e.getMessage());
-                if (attempts >= 2) throw new SlackApiException('Slack callout failed: ' + e.getMessage());
+                System.debug(
+                    LoggingLevel.ERROR,
+                    '[SlackApiClient] ' +
+                        method +
+                        ' attempt ' +
+                        attempts +
+                        ' callout exception: ' +
+                        e.getTypeName() +
+                        ': ' +
+                        e.getMessage()
+                );
+                if (attempts >= 2)
+                    throw new SlackApiException(
+                        'Slack callout failed: ' + e.getMessage()
+                    );
                 continue;
             }
             Integer code = resp.getStatusCode();
             String respBody = resp.getBody();
-            if (code >= 500 && attempts < 2) continue;
-            try { parsed = (Map<String, Object>) JSON.deserializeUntyped(respBody); }
-            catch (Exception e) { throw new SlackApiException('Bad Slack response: ' + respBody); }
+            if (code >= 500 && attempts < 2)
+                continue;
+            try {
+                parsed = (Map<String, Object>) JSON.deserializeUntyped(
+                    respBody
+                );
+            } catch (Exception e) {
+                throw new SlackApiException('Bad Slack response: ' + respBody);
+            }
             Boolean ok = parsed.get('ok') == true;
             if (!ok) {
                 String err = String.valueOf(parsed.get('error'));
-                if (err == 'rate_limited' && attempts < 2) continue;
+                if (err == 'rate_limited' && attempts < 2)
+                    continue;
                 // System.debug for inline trace; @future insert so the failure also lands
                 // in App_Log__c without tripping "uncommitted work pending" on follow-up
                 // callouts in the same transaction.
-                System.debug(LoggingLevel.WARN, '[SlackApiClient] ' + method + ' Slack returned not-ok: ' + err);
-                AppLogger.writeSafe('WARN', 'SlackApiClient', method,
-                    'Slack ok=false: ' + err + ' :: req=' + JSON.serialize(body).left(2000)
-                        + ' :: resp=' + (respBody == null ? '' : respBody.left(2000)),
-                    null);
+                System.debug(
+                    LoggingLevel.WARN,
+                    '[SlackApiClient] ' +
+                        method +
+                        ' Slack returned not-ok: ' +
+                        err
+                );
+                AppLogger.writeSafe(
+                    'WARN',
+                    'SlackApiClient',
+                    method,
+                    'Slack ok=false: ' +
+                        err +
+                        ' :: req=' +
+                        JSON.serialize(body).left(2000) +
+                        ' :: resp=' +
+                        (respBody == null ? '' : respBody.left(2000)),
+                    null
+                );
             }
             return parsed;
         }

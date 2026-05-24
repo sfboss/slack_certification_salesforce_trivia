@@ -12,6 +12,7 @@ This repository includes automated CI/CD workflows with Slack notifications. To 
 2. **Add GitHub Secret**: `SLACK_WEBHOOK_URL` - [Full Documentation](docs/slack-notifications-setup.md)
 
 You'll get automatic notifications for:
+
 - CI builds (success/failure)
 - Pull requests (opened/merged/closed)
 - Scratch org deployments

@@ -1,95 +1,214 @@
 {
-  "exam": { "name": "Reports and Dashboards Basics", "code": "CRT-RPT", "vendor": "Salesforce" },
-  "questionBank": {
-    "name": "Reports & Dashboards Pack",
-    "version": "1.0.0",
-    "sourceType": "Manual",
-    "status": "Draft",
-    "externalId": "BANK-RPT-001"
-  },
-  "questions": [
-    {
-      "externalId": "RPT-Q1",
-      "domain": "Report Types",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which standard report format lets you group by both rows and columns and is useful for comparison matrices?",
-      "choices": [
-        { "label": "A", "text": "Tabular", "isCorrect": false, "explanation": "Tabular has no grouping." },
-        { "label": "B", "text": "Summary", "isCorrect": false, "explanation": "Summary groups by rows only." },
-        { "label": "C", "text": "Matrix", "isCorrect": true, "explanation": "Matrix groups by rows AND columns." },
-        { "label": "D", "text": "Joined", "isCorrect": false, "explanation": "Joined combines multiple report blocks." }
-      ],
-      "explanation": "Matrix is the row-and-column grouping format.",
-      "citations": [
-        { "title": "Report Formats", "url": "https://help.salesforce.com/s/articleView?id=sf.reports_builder_formats.htm", "sourceType": "Salesforce Help", "relevanceNote": "Format comparison." }
-      ]
+    "exam": {
+        "name": "Reports and Dashboards Basics",
+        "code": "CRT-RPT",
+        "vendor": "Salesforce"
     },
-    {
-      "externalId": "RPT-Q2",
-      "domain": "Dashboards",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Each dashboard component is powered by what?",
-      "choices": [
-        { "label": "A", "text": "A list view", "isCorrect": false, "explanation": "List views aren't dashboard sources." },
-        { "label": "B", "text": "A source report", "isCorrect": true, "explanation": "Components read from a saved report." },
-        { "label": "C", "text": "An Apex class", "isCorrect": false, "explanation": "Apex isn't required for standard dashboard components." },
-        { "label": "D", "text": "A custom object", "isCorrect": false, "explanation": "Reports query objects; dashboards consume reports." }
-      ],
-      "explanation": "Each dashboard component is backed by a saved source report.",
-      "citations": [
-        { "title": "Dashboards Overview", "url": "https://help.salesforce.com/s/articleView?id=sf.dashboards_overview.htm", "sourceType": "Salesforce Help", "relevanceNote": "Dashboard fundamentals." }
-      ]
+    "questionBank": {
+        "name": "Reports & Dashboards Pack",
+        "version": "1.0.0",
+        "sourceType": "Manual",
+        "status": "Draft",
+        "externalId": "BANK-RPT-001"
     },
-    {
-      "externalId": "RPT-Q3",
-      "domain": "Filters",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which report filter restricts results to records owned by the running user or their subordinates?",
-      "choices": [
-        { "label": "A", "text": "My team's records", "isCorrect": true, "explanation": "Built-in 'My team's records' filter scopes to subordinates." },
-        { "label": "B", "text": "All records", "isCorrect": false, "explanation": "Returns everything visible." },
-        { "label": "C", "text": "My records", "isCorrect": false, "explanation": "Restricts to running user only." },
-        { "label": "D", "text": "Cross filter", "isCorrect": false, "explanation": "Cross filters relate to child records, not ownership." }
-      ],
-      "explanation": "The 'My team's records' scope filter includes the running user and their hierarchy below.",
-      "citations": [
-        { "title": "Report Scope Filters", "url": "https://help.salesforce.com/s/articleView?id=sf.reports_filter_show.htm", "sourceType": "Salesforce Help", "relevanceNote": "Scope filter reference." }
-      ]
-    },
-    {
-      "externalId": "RPT-Q4",
-      "domain": "Sharing",
-      "difficulty": "Intermediate",
-      "questionType": "True False",
-      "question": "Dashboard view access depends on the running user defined for the dashboard.",
-      "choices": [
-        { "label": "A", "text": "True", "isCorrect": true, "explanation": "The running user determines what data the viewer sees on a classic dashboard." },
-        { "label": "B", "text": "False", "isCorrect": false, "explanation": "The running user is the data context for the dashboard." }
-      ],
-      "explanation": "By default the dashboard's running user defines the data context; dynamic dashboards let viewers see their own data.",
-      "citations": [
-        { "title": "Dashboard Running User", "url": "https://help.salesforce.com/s/articleView?id=sf.dashboards_running_user.htm", "sourceType": "Salesforce Help", "relevanceNote": "Running user reference." }
-      ]
-    },
-    {
-      "externalId": "RPT-Q5",
-      "domain": "Formulas",
-      "difficulty": "Advanced",
-      "questionType": "Single Select",
-      "question": "Which feature lets you add a calculated value to a report that aggregates after grouping (e.g., percent of total)?",
-      "choices": [
-        { "label": "A", "text": "Custom Formula Field on the object", "isCorrect": false, "explanation": "That's stored per record, not aggregate after grouping." },
-        { "label": "B", "text": "Summary Formula in the report", "isCorrect": true, "explanation": "Summary formulas operate on grouped/aggregated values." },
-        { "label": "C", "text": "Validation Rule", "isCorrect": false, "explanation": "Validation rules block saves, not for reporting math." },
-        { "label": "D", "text": "Bucket Field", "isCorrect": false, "explanation": "Buckets categorize values, not aggregate." }
-      ],
-      "explanation": "Summary Formulas compute on grouped data within a report.",
-      "citations": [
-        { "title": "Summary Formulas in Reports", "url": "https://help.salesforce.com/s/articleView?id=sf.reports_summary_formulas.htm", "sourceType": "Salesforce Help", "relevanceNote": "Summary formula reference." }
-      ]
-    }
-  ]
+    "questions": [
+        {
+            "externalId": "RPT-Q1",
+            "domain": "Report Types",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which standard report format lets you group by both rows and columns and is useful for comparison matrices?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Tabular",
+                    "isCorrect": false,
+                    "explanation": "Tabular has no grouping."
+                },
+                {
+                    "label": "B",
+                    "text": "Summary",
+                    "isCorrect": false,
+                    "explanation": "Summary groups by rows only."
+                },
+                {
+                    "label": "C",
+                    "text": "Matrix",
+                    "isCorrect": true,
+                    "explanation": "Matrix groups by rows AND columns."
+                },
+                {
+                    "label": "D",
+                    "text": "Joined",
+                    "isCorrect": false,
+                    "explanation": "Joined combines multiple report blocks."
+                }
+            ],
+            "explanation": "Matrix is the row-and-column grouping format.",
+            "citations": [
+                {
+                    "title": "Report Formats",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.reports_builder_formats.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Format comparison."
+                }
+            ]
+        },
+        {
+            "externalId": "RPT-Q2",
+            "domain": "Dashboards",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Each dashboard component is powered by what?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "A list view",
+                    "isCorrect": false,
+                    "explanation": "List views aren't dashboard sources."
+                },
+                {
+                    "label": "B",
+                    "text": "A source report",
+                    "isCorrect": true,
+                    "explanation": "Components read from a saved report."
+                },
+                {
+                    "label": "C",
+                    "text": "An Apex class",
+                    "isCorrect": false,
+                    "explanation": "Apex isn't required for standard dashboard components."
+                },
+                {
+                    "label": "D",
+                    "text": "A custom object",
+                    "isCorrect": false,
+                    "explanation": "Reports query objects; dashboards consume reports."
+                }
+            ],
+            "explanation": "Each dashboard component is backed by a saved source report.",
+            "citations": [
+                {
+                    "title": "Dashboards Overview",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.dashboards_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Dashboard fundamentals."
+                }
+            ]
+        },
+        {
+            "externalId": "RPT-Q3",
+            "domain": "Filters",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which report filter restricts results to records owned by the running user or their subordinates?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "My team's records",
+                    "isCorrect": true,
+                    "explanation": "Built-in 'My team's records' filter scopes to subordinates."
+                },
+                {
+                    "label": "B",
+                    "text": "All records",
+                    "isCorrect": false,
+                    "explanation": "Returns everything visible."
+                },
+                {
+                    "label": "C",
+                    "text": "My records",
+                    "isCorrect": false,
+                    "explanation": "Restricts to running user only."
+                },
+                {
+                    "label": "D",
+                    "text": "Cross filter",
+                    "isCorrect": false,
+                    "explanation": "Cross filters relate to child records, not ownership."
+                }
+            ],
+            "explanation": "The 'My team's records' scope filter includes the running user and their hierarchy below.",
+            "citations": [
+                {
+                    "title": "Report Scope Filters",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.reports_filter_show.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Scope filter reference."
+                }
+            ]
+        },
+        {
+            "externalId": "RPT-Q4",
+            "domain": "Sharing",
+            "difficulty": "Intermediate",
+            "questionType": "True False",
+            "question": "Dashboard view access depends on the running user defined for the dashboard.",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "True",
+                    "isCorrect": true,
+                    "explanation": "The running user determines what data the viewer sees on a classic dashboard."
+                },
+                {
+                    "label": "B",
+                    "text": "False",
+                    "isCorrect": false,
+                    "explanation": "The running user is the data context for the dashboard."
+                }
+            ],
+            "explanation": "By default the dashboard's running user defines the data context; dynamic dashboards let viewers see their own data.",
+            "citations": [
+                {
+                    "title": "Dashboard Running User",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.dashboards_running_user.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Running user reference."
+                }
+            ]
+        },
+        {
+            "externalId": "RPT-Q5",
+            "domain": "Formulas",
+            "difficulty": "Advanced",
+            "questionType": "Single Select",
+            "question": "Which feature lets you add a calculated value to a report that aggregates after grouping (e.g., percent of total)?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Custom Formula Field on the object",
+                    "isCorrect": false,
+                    "explanation": "That's stored per record, not aggregate after grouping."
+                },
+                {
+                    "label": "B",
+                    "text": "Summary Formula in the report",
+                    "isCorrect": true,
+                    "explanation": "Summary formulas operate on grouped/aggregated values."
+                },
+                {
+                    "label": "C",
+                    "text": "Validation Rule",
+                    "isCorrect": false,
+                    "explanation": "Validation rules block saves, not for reporting math."
+                },
+                {
+                    "label": "D",
+                    "text": "Bucket Field",
+                    "isCorrect": false,
+                    "explanation": "Buckets categorize values, not aggregate."
+                }
+            ],
+            "explanation": "Summary Formulas compute on grouped data within a report.",
+            "citations": [
+                {
+                    "title": "Summary Formulas in Reports",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.reports_summary_formulas.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Summary formula reference."
+                }
+            ]
+        }
+    ]
 }

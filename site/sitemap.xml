@@ -1,151 +1,188 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/_gaps/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/_gaps/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/apex/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/apex/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/lwc/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/lwc/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/salesforce-api/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/salesforce-api/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/slack-api/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/api-reference/slack-api/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/components/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/components/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/data-flow/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/data-flow/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/overview/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/architecture/overview/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/development/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/development/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/development/contributing/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/development/contributing/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/development/deployment/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/development/deployment/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/development/testing/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/development/testing/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/installation/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/installation/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/prerequisites/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/prerequisites/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/quick-start/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/getting-started/quick-start/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/apis/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/apis/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/authentication/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/authentication/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/data-model/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/data-model/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/deployment/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/deployment/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/overview/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/overview/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/setup/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/salesforce/setup/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/slack/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/slack/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/slack/commands/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/slack/commands/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/slack/events/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/slack/events/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/slack/overview/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/slack/overview/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/slack/permissions/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/slack/permissions/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/slack/setup/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/slack/setup/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/faq/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/faq/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/features/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/features/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/troubleshooting/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/troubleshooting/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
     <url>
-         <loc>https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/workflows/</loc>
+         <loc
+        >https://sfboss.github.io/slack_certification_salesforce_trivia/user-guide/workflows/</loc>
          <lastmod>2026-05-19</lastmod>
     </url>
 </urlset>

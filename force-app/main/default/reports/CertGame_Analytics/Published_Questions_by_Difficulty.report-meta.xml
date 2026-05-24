@@ -1,14 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <name>Published Questions by Difficulty</name>
-    <description>Distribution of Published questions across difficulty levels per certification exam. Highlights gaps where an exam is missing easy/medium/hard coverage.</description>
-    <reportType>CertGame_Questions_With_Citations__c</reportType>
-    <format>Matrix</format>
-    <scope>organization</scope>
-    <showDetails>false</showDetails>
-    <showGrandTotal>true</showGrandTotal>
-    <showSubTotals>true</showSubTotals>
-    <columns><field>Trivia_Question__c$Name</field></columns>
+    <columns>
+        <field>Trivia_Question__c$Name</field>
+    </columns>
+    <description
+    >Distribution of Published questions across difficulty levels per certification exam. Highlights gaps where an exam is missing easy/medium/hard coverage.</description>
     <filter>
         <criteriaItems>
             <column>Trivia_Question__c$Status__c</column>
@@ -18,14 +14,29 @@
             <value>Published</value>
         </criteriaItems>
     </filter>
-    <groupingsDown>
-        <field>Trivia_Question__c$Certification_Exam__c</field>
-        <sortOrder>Asc</sortOrder>
-        <dateGranularity>Day</dateGranularity>
-    </groupingsDown>
+    <format>Matrix</format>
     <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
         <field>Trivia_Question__c$Difficulty__c</field>
         <sortOrder>Asc</sortOrder>
-        <dateGranularity>Day</dateGranularity>
     </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Trivia_Question__c$Certification_Exam__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Published Questions by Difficulty</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CertGame_Questions_With_Citations__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Trivia_Question__c$Last_Verified_Date__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
 </Report>

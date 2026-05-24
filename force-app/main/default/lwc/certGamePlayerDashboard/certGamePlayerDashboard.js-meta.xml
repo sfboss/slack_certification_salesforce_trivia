@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>60.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Cert Game Player Dashboard</masterLabel>
-    <description>Player profile with stats, domain accuracy, recent answers, achievements, and study plans.</description>
+    <description
+    >Player profile with stats, domain accuracy, recent answers, achievements, and study plans.</description>
     <targets>
         <target>lightning__RecordPage</target>
         <target>lightning__AppPage</target>
@@ -17,9 +18,18 @@
             </objects>
         </targetConfig>
         <targetConfig targets="lightning__AppPage,lightning__HomePage">
-            <property name="playerId" type="String" label="Player Id (optional)"
-                      description="Show this specific Player__c. Leave blank to show the current user."/>
-            <property name="currentUser" type="Boolean" label="Use current Salesforce user" default="true"/>
+            <property
+                name="playerId"
+                type="String"
+                label="Player Id (optional)"
+                description="Show this specific Player__c. Leave blank to show the current user."
+            />
+            <property
+                name="currentUser"
+                type="Boolean"
+                label="Use current Salesforce user"
+                default="true"
+            />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

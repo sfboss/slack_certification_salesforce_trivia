@@ -1,97 +1,226 @@
 {
-  "exam": { "name": "Salesforce Security Fundamentals", "code": "CRT-SEC", "vendor": "Salesforce" },
-  "questionBank": {
-    "name": "Security Fundamentals Pack",
-    "version": "1.0.0",
-    "sourceType": "Manual",
-    "status": "Draft",
-    "externalId": "BANK-SEC-001"
-  },
-  "questions": [
-    {
-      "externalId": "SEC-Q1",
-      "domain": "Org Access",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which setting restricts user logins to specific network locations?",
-      "choices": [
-        { "label": "A", "text": "Login IP Ranges", "isCorrect": true, "explanation": "IP ranges restrict where users can log in from." },
-        { "label": "B", "text": "Profiles", "isCorrect": false, "explanation": "Profiles handle object/field access, not network restriction directly." },
-        { "label": "C", "text": "Sharing Rules", "isCorrect": false, "explanation": "Sharing rules grant record access." },
-        { "label": "D", "text": "Permission Set Groups", "isCorrect": false, "explanation": "PSGs aggregate permissions, not network rules." }
-      ],
-      "explanation": "Login IP Ranges (on profiles or org-wide) restrict permitted login networks.",
-      "citations": [
-        { "title": "Restrict Login IP Addresses", "url": "https://help.salesforce.com/s/articleView?id=sf.security_login_ip_ranges.htm", "sourceType": "Salesforce Help", "relevanceNote": "IP range docs." }
-      ]
+    "exam": {
+        "name": "Salesforce Security Fundamentals",
+        "code": "CRT-SEC",
+        "vendor": "Salesforce"
     },
-    {
-      "externalId": "SEC-Q2",
-      "domain": "Record Access",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "If OWD for an object is Private, which feature most easily opens read access to an entire role hierarchy?",
-      "choices": [
-        { "label": "A", "text": "Manual Sharing", "isCorrect": false, "explanation": "Manual is record-by-record." },
-        { "label": "B", "text": "Role Hierarchy", "isCorrect": true, "explanation": "Role hierarchy automatically grants upward access (when 'Grant Access Using Hierarchies' is on)." },
-        { "label": "C", "text": "Public Groups", "isCorrect": false, "explanation": "Used with sharing rules; not automatic." },
-        { "label": "D", "text": "Apex managed sharing", "isCorrect": false, "explanation": "Requires custom code." }
-      ],
-      "explanation": "Role hierarchy is the simplest mechanism for upward access through management chains.",
-      "citations": [
-        { "title": "Sharing Rules and Role Hierarchy", "url": "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owner_skipping.htm", "sourceType": "Salesforce Help", "relevanceNote": "Hierarchy-based access." }
-      ]
+    "questionBank": {
+        "name": "Security Fundamentals Pack",
+        "version": "1.0.0",
+        "sourceType": "Manual",
+        "status": "Draft",
+        "externalId": "BANK-SEC-001"
     },
-    {
-      "externalId": "SEC-Q3",
-      "domain": "Field Security",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which setting hides specific fields from a user's UI and API access?",
-      "choices": [
-        { "label": "A", "text": "Field-Level Security on the Profile or Permission Set", "isCorrect": true, "explanation": "FLS controls field visibility." },
-        { "label": "B", "text": "Page Layouts", "isCorrect": false, "explanation": "Layouts can hide on the page but don't enforce API security." },
-        { "label": "C", "text": "Validation Rules", "isCorrect": false, "explanation": "Validation rules block save; not visibility." },
-        { "label": "D", "text": "Sharing Rules", "isCorrect": false, "explanation": "Sharing rules govern records, not fields." }
-      ],
-      "explanation": "FLS on profiles or permission sets controls both UI and API field access.",
-      "citations": [
-        { "title": "Field-Level Security", "url": "https://help.salesforce.com/s/articleView?id=sf.users_profiles_fls.htm", "sourceType": "Salesforce Help", "relevanceNote": "FLS reference." }
-      ]
-    },
-    {
-      "externalId": "SEC-Q4",
-      "domain": "Authentication",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which Salesforce capability enforces a second factor for user logins via TOTP, push, or SMS?",
-      "choices": [
-        { "label": "A", "text": "Identity Verification (email/SMS)", "isCorrect": false, "explanation": "That's challenge-on-unrecognized-device, not enforced MFA." },
-        { "label": "B", "text": "Multi-Factor Authentication (MFA)", "isCorrect": true, "explanation": "MFA enforces an additional verification factor." },
-        { "label": "C", "text": "Session Settings", "isCorrect": false, "explanation": "Session settings handle timeouts, not MFA enforcement directly." },
-        { "label": "D", "text": "Password Policies", "isCorrect": false, "explanation": "Password policy is single-factor." }
-      ],
-      "explanation": "MFA, required by Salesforce for all production logins, adds a second factor.",
-      "citations": [
-        { "title": "MFA Requirement", "url": "https://help.salesforce.com/s/articleView?id=sf.mfa_overview.htm", "sourceType": "Salesforce Help", "relevanceNote": "MFA enforcement reference." }
-      ]
-    },
-    {
-      "externalId": "SEC-Q5",
-      "domain": "Permission Strategy",
-      "difficulty": "Advanced",
-      "questionType": "Single Select",
-      "question": "What is the modern Salesforce recommendation for assigning permissions to users?",
-      "choices": [
-        { "label": "A", "text": "Use only Profiles and avoid Permission Sets", "isCorrect": false, "explanation": "Salesforce is moving permissions OFF profiles." },
-        { "label": "B", "text": "Use minimal Profiles plus Permission Sets / Permission Set Groups", "isCorrect": true, "explanation": "Recommended pattern: lean profile + assignable permission sets." },
-        { "label": "C", "text": "Grant every user the System Administrator profile", "isCorrect": false, "explanation": "Massive security risk." },
-        { "label": "D", "text": "Use Sharing Rules exclusively", "isCorrect": false, "explanation": "Sharing rules govern records, not permissions." }
-      ],
-      "explanation": "Lean profiles + permission sets/groups is the recommended modern pattern.",
-      "citations": [
-        { "title": "User Access Strategy", "url": "https://help.salesforce.com/s/articleView?id=sf.perm_sets_overview.htm", "sourceType": "Salesforce Help", "relevanceNote": "Permission Set guidance." }
-      ]
-    }
-  ]
+    "questions": [
+        {
+            "externalId": "SEC-Q1",
+            "domain": "Org Access",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which setting restricts user logins to specific network locations?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Login IP Ranges",
+                    "isCorrect": true,
+                    "explanation": "IP ranges restrict where users can log in from."
+                },
+                {
+                    "label": "B",
+                    "text": "Profiles",
+                    "isCorrect": false,
+                    "explanation": "Profiles handle object/field access, not network restriction directly."
+                },
+                {
+                    "label": "C",
+                    "text": "Sharing Rules",
+                    "isCorrect": false,
+                    "explanation": "Sharing rules grant record access."
+                },
+                {
+                    "label": "D",
+                    "text": "Permission Set Groups",
+                    "isCorrect": false,
+                    "explanation": "PSGs aggregate permissions, not network rules."
+                }
+            ],
+            "explanation": "Login IP Ranges (on profiles or org-wide) restrict permitted login networks.",
+            "citations": [
+                {
+                    "title": "Restrict Login IP Addresses",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.security_login_ip_ranges.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "IP range docs."
+                }
+            ]
+        },
+        {
+            "externalId": "SEC-Q2",
+            "domain": "Record Access",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "If OWD for an object is Private, which feature most easily opens read access to an entire role hierarchy?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Manual Sharing",
+                    "isCorrect": false,
+                    "explanation": "Manual is record-by-record."
+                },
+                {
+                    "label": "B",
+                    "text": "Role Hierarchy",
+                    "isCorrect": true,
+                    "explanation": "Role hierarchy automatically grants upward access (when 'Grant Access Using Hierarchies' is on)."
+                },
+                {
+                    "label": "C",
+                    "text": "Public Groups",
+                    "isCorrect": false,
+                    "explanation": "Used with sharing rules; not automatic."
+                },
+                {
+                    "label": "D",
+                    "text": "Apex managed sharing",
+                    "isCorrect": false,
+                    "explanation": "Requires custom code."
+                }
+            ],
+            "explanation": "Role hierarchy is the simplest mechanism for upward access through management chains.",
+            "citations": [
+                {
+                    "title": "Sharing Rules and Role Hierarchy",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.security_sharing_owner_skipping.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Hierarchy-based access."
+                }
+            ]
+        },
+        {
+            "externalId": "SEC-Q3",
+            "domain": "Field Security",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which setting hides specific fields from a user's UI and API access?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Field-Level Security on the Profile or Permission Set",
+                    "isCorrect": true,
+                    "explanation": "FLS controls field visibility."
+                },
+                {
+                    "label": "B",
+                    "text": "Page Layouts",
+                    "isCorrect": false,
+                    "explanation": "Layouts can hide on the page but don't enforce API security."
+                },
+                {
+                    "label": "C",
+                    "text": "Validation Rules",
+                    "isCorrect": false,
+                    "explanation": "Validation rules block save; not visibility."
+                },
+                {
+                    "label": "D",
+                    "text": "Sharing Rules",
+                    "isCorrect": false,
+                    "explanation": "Sharing rules govern records, not fields."
+                }
+            ],
+            "explanation": "FLS on profiles or permission sets controls both UI and API field access.",
+            "citations": [
+                {
+                    "title": "Field-Level Security",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.users_profiles_fls.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "FLS reference."
+                }
+            ]
+        },
+        {
+            "externalId": "SEC-Q4",
+            "domain": "Authentication",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which Salesforce capability enforces a second factor for user logins via TOTP, push, or SMS?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Identity Verification (email/SMS)",
+                    "isCorrect": false,
+                    "explanation": "That's challenge-on-unrecognized-device, not enforced MFA."
+                },
+                {
+                    "label": "B",
+                    "text": "Multi-Factor Authentication (MFA)",
+                    "isCorrect": true,
+                    "explanation": "MFA enforces an additional verification factor."
+                },
+                {
+                    "label": "C",
+                    "text": "Session Settings",
+                    "isCorrect": false,
+                    "explanation": "Session settings handle timeouts, not MFA enforcement directly."
+                },
+                {
+                    "label": "D",
+                    "text": "Password Policies",
+                    "isCorrect": false,
+                    "explanation": "Password policy is single-factor."
+                }
+            ],
+            "explanation": "MFA, required by Salesforce for all production logins, adds a second factor.",
+            "citations": [
+                {
+                    "title": "MFA Requirement",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.mfa_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "MFA enforcement reference."
+                }
+            ]
+        },
+        {
+            "externalId": "SEC-Q5",
+            "domain": "Permission Strategy",
+            "difficulty": "Advanced",
+            "questionType": "Single Select",
+            "question": "What is the modern Salesforce recommendation for assigning permissions to users?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Use only Profiles and avoid Permission Sets",
+                    "isCorrect": false,
+                    "explanation": "Salesforce is moving permissions OFF profiles."
+                },
+                {
+                    "label": "B",
+                    "text": "Use minimal Profiles plus Permission Sets / Permission Set Groups",
+                    "isCorrect": true,
+                    "explanation": "Recommended pattern: lean profile + assignable permission sets."
+                },
+                {
+                    "label": "C",
+                    "text": "Grant every user the System Administrator profile",
+                    "isCorrect": false,
+                    "explanation": "Massive security risk."
+                },
+                {
+                    "label": "D",
+                    "text": "Use Sharing Rules exclusively",
+                    "isCorrect": false,
+                    "explanation": "Sharing rules govern records, not permissions."
+                }
+            ],
+            "explanation": "Lean profiles + permission sets/groups is the recommended modern pattern.",
+            "citations": [
+                {
+                    "title": "User Access Strategy",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.perm_sets_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Permission Set guidance."
+                }
+            ]
+        }
+    ]
 }

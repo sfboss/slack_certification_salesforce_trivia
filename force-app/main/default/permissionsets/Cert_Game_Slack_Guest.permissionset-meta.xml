@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <classAccesses>
         <apexClass>AppLogger</apexClass>
@@ -96,10 +96,12 @@
         <apexClass>WebSessionToken</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <description>Minimum perms for Site guest user to receive Slack inbound calls. Read+Create only (guest license limits). HACK: paired with system-mode DML in service classes; see /memories/repo/cleanup-debts.md.</description>
+    <description
+    >Minimum perms for Site guest user to receive Slack inbound calls. Read+Create only (guest license limits). HACK: paired with system-mode DML in service classes; see /memories/repo/cleanup-debts.md.</description>
     <externalCredentialPrincipalAccesses>
         <enabled>true</enabled>
-        <externalCredentialPrincipal>Slack_Bot-Default</externalCredentialPrincipal>
+        <externalCredentialPrincipal
+        >Slack_Bot-Default</externalCredentialPrincipal>
     </externalCredentialPrincipalAccesses>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Cert Game Slack Guest</label>

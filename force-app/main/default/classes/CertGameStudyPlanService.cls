@@ -3,32 +3,62 @@
  * Slack modal flow: /certgame plan → modal → submit → upsert plan → schedule nudges.
  */
 public with sharing class CertGameStudyPlanService {
-
-    public static String openPlanModal(String slackTeamId, String slackUserId, String triggerId) {
+    public static String openPlanModal(
+        String slackTeamId,
+        String slackUserId,
+        String triggerId
+    ) {
         Map<String, Object> view = new Map<String, Object>{
             'type' => 'modal',
             'callback_id' => 'plan:create',
-            'title' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Study Plan' },
-            'submit' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Save' },
-            'close' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Cancel' },
+            'title' => new Map<String, Object>{
+                'type' => 'plain_text',
+                'text' => 'Study Plan'
+            },
+            'submit' => new Map<String, Object>{
+                'type' => 'plain_text',
+                'text' => 'Save'
+            },
+            'close' => new Map<String, Object>{
+                'type' => 'plain_text',
+                'text' => 'Cancel'
+            },
             'blocks' => new List<Object>{
                 new Map<String, Object>{
                     'type' => 'input',
                     'block_id' => 'exam_block',
-                    'label' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Certification code' },
-                    'element' => new Map<String, Object>{ 'type' => 'plain_text_input', 'action_id' => 'exam' }
+                    'label' => new Map<String, Object>{
+                        'type' => 'plain_text',
+                        'text' => 'Certification code'
+                    },
+                    'element' => new Map<String, Object>{
+                        'type' => 'plain_text_input',
+                        'action_id' => 'exam'
+                    }
                 },
                 new Map<String, Object>{
                     'type' => 'input',
                     'block_id' => 'target_block',
-                    'label' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Target exam date (YYYY-MM-DD)' },
-                    'element' => new Map<String, Object>{ 'type' => 'plain_text_input', 'action_id' => 'target' }
+                    'label' => new Map<String, Object>{
+                        'type' => 'plain_text',
+                        'text' => 'Target exam date (YYYY-MM-DD)'
+                    },
+                    'element' => new Map<String, Object>{
+                        'type' => 'plain_text_input',
+                        'action_id' => 'target'
+                    }
                 },
                 new Map<String, Object>{
                     'type' => 'input',
                     'block_id' => 'daily_block',
-                    'label' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Daily question goal' },
-                    'element' => new Map<String, Object>{ 'type' => 'plain_text_input', 'action_id' => 'daily' }
+                    'label' => new Map<String, Object>{
+                        'type' => 'plain_text',
+                        'text' => 'Daily question goal'
+                    },
+                    'element' => new Map<String, Object>{
+                        'type' => 'plain_text_input',
+                        'action_id' => 'daily'
+                    }
                 }
             }
         };
@@ -36,18 +66,32 @@ public with sharing class CertGameStudyPlanService {
         return '';
     }
 
-    public static String handlePlanSubmission(String slackTeamId, String slackUserId, Map<String, Object> view) {
-        Map<String, Object> state = (Map<String, Object>)((Map<String, Object>) view.get('state')).get('values');
+    public static String handlePlanSubmission(
+        String slackTeamId,
+        String slackUserId,
+        Map<String, Object> view
+    ) {
+        Map<String, Object> state = (Map<String, Object>) ((Map<String, Object>) view.get(
+                'state'
+            ))
+            .get('values');
         String examCode = readVal(state, 'exam_block', 'exam');
         String targetStr = readVal(state, 'target_block', 'target');
         String dailyStr = readVal(state, 'daily_block', 'daily');
 
         Tenant__c t = CertGameTenantService.getOrCreateTenant(slackTeamId);
-        Player__c p = CertGameTenantService.getOrCreatePlayer(t.Id, slackUserId);
+        Player__c p = CertGameTenantService.getOrCreatePlayer(
+            t.Id,
+            slackUserId
+        );
 
         PlanDml dml = new PlanDml();
         Certification_Exam__c exam = dml.findExam(examCode);
-        if (exam == null) return CertGameSlackRenderService.text(CertGameStrings.NO_EXAM, true);
+        if (exam == null)
+            return CertGameSlackRenderService.text(
+                CertGameStrings.NO_EXAM,
+                true
+            );
 
         Study_Plan__c sp = new Study_Plan__c(
             Player__c = p.Id,
@@ -57,30 +101,57 @@ public with sharing class CertGameStudyPlanService {
             Status__c = 'Active'
         );
         dml.insertPlan(sp);
-        AuditLogger.log('plan_create', 'Study_Plan__c', sp.Id, null, JSON.serialize(sp), slackUserId);
+        AuditLogger.log(
+            'plan_create',
+            'Study_Plan__c',
+            sp.Id,
+            null,
+            JSON.serialize(sp),
+            slackUserId
+        );
         return '';
     }
 
     private without sharing class PlanDml {
         public Certification_Exam__c findExam(String code) {
-            List<Certification_Exam__c> exams = [SELECT Id FROM Certification_Exam__c
-                                                  WHERE Certification_Code__c = :code LIMIT 1];
+            List<Certification_Exam__c> exams = [
+                SELECT Id
+                FROM Certification_Exam__c
+                WHERE Certification_Code__c = :code
+                LIMIT 1
+            ];
             return exams.isEmpty() ? null : exams[0];
         }
-        public void insertPlan(Study_Plan__c sp) { insert sp; }
+        public void insertPlan(Study_Plan__c sp) {
+            insert sp;
+        }
     }
 
-    private static String readVal(Map<String, Object> state, String block, String action) {
-        if (!state.containsKey(block)) return null;
+    private static String readVal(
+        Map<String, Object> state,
+        String block,
+        String action
+    ) {
+        if (!state.containsKey(block))
+            return null;
         Map<String, Object> b = (Map<String, Object>) state.get(block);
-        if (!b.containsKey(action)) return null;
+        if (!b.containsKey(action))
+            return null;
         Map<String, Object> a = (Map<String, Object>) b.get(action);
         return (String) a.get('value');
     }
     private static Date parseDate(String s) {
-        try { return Date.valueOf(s); } catch (Exception e) { return null; }
+        try {
+            return Date.valueOf(s);
+        } catch (Exception e) {
+            return null;
+        }
     }
     private static Integer parseInt(String s, Integer fallback) {
-        try { return Integer.valueOf(s); } catch (Exception e) { return fallback; }
+        try {
+            return Integer.valueOf(s);
+        } catch (Exception e) {
+            return fallback;
+        }
     }
 }

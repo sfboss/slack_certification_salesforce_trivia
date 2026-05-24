@@ -1,19 +1,19 @@
 # Troubleshooting
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| Slack reports `dispatch_failed` or `operation_timeout` | Apex took > 3s to ack. | Check `App_Log__c` for slow SOQL; ensure the Site Guest User has the integration permission set. |
-| `/certgame help` returns no response | Slash command URL not pointing at `/services/apexrest/slack/events`. | Fix the Slack manifest URL. |
-| `/certgame play X` → "No published questions yet" | Drafts not published. | Open **Review Drafts** and publish. |
-| `/certgame play X` → "Daily quota reached" | Tenant is Free and exceeded `Max_Games_Per_Day_Free__c`. | Upgrade or raise the limit in `App_Setting.Default`. |
-| Buttons do nothing | Interactivity URL ≠ slash command URL. | All three Slack URLs must be the **same** Salesforce endpoint. |
-| `401 invalid signature` in `App_Log__c` | `Slack_Signing_Secret__c` is wrong or rotated. | Re-paste the signing secret. |
-| `400 invalid signature` from Stripe webhook | Stripe webhook secret mismatch. | Update the Stripe External Credential principal. |
-| Tournament save → "Something went wrong" | `Certification_Exam__c` required field not selected. | Pick an exam in the combobox. |
-| Generation Jobs tab is empty | No job has been run. | Trigger a job from Apex or via `/certgame plan` on a qualifying tenant. |
-| `dispatch_failed` on slash command but events work | Form-encoded body HMAC mismatch (Site strips raw bytes). | Set `App_Setting.Default.Slack_Verification_Token__c` to enable the token fallback. |
-| Citations panel shows red badges | Citation auditor flagged URL as 4xx/5xx. | Fix the URL and re-publish. |
-| Player_Answer insert fails | Duplicate `Unique_Key__c` (round + player). | Expected — Apex falls back to `Database.upsert(..., AccessLevel.SYSTEM_MODE)` and treats duplicates as a no-op. |
+| Symptom                                                | Likely cause                                                         | Fix                                                                                                             |
+| ------------------------------------------------------ | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Slack reports `dispatch_failed` or `operation_timeout` | Apex took > 3s to ack.                                               | Check `App_Log__c` for slow SOQL; ensure the Site Guest User has the integration permission set.                |
+| `/certgame help` returns no response                   | Slash command URL not pointing at `/services/apexrest/slack/events`. | Fix the Slack manifest URL.                                                                                     |
+| `/certgame play X` → "No published questions yet"      | Drafts not published.                                                | Open **Review Drafts** and publish.                                                                             |
+| `/certgame play X` → "Daily quota reached"             | Tenant is Free and exceeded `Max_Games_Per_Day_Free__c`.             | Upgrade or raise the limit in `App_Setting.Default`.                                                            |
+| Buttons do nothing                                     | Interactivity URL ≠ slash command URL.                               | All three Slack URLs must be the **same** Salesforce endpoint.                                                  |
+| `401 invalid signature` in `App_Log__c`                | `Slack_Signing_Secret__c` is wrong or rotated.                       | Re-paste the signing secret.                                                                                    |
+| `400 invalid signature` from Stripe webhook            | Stripe webhook secret mismatch.                                      | Update the Stripe External Credential principal.                                                                |
+| Tournament save → "Something went wrong"               | `Certification_Exam__c` required field not selected.                 | Pick an exam in the combobox.                                                                                   |
+| Generation Jobs tab is empty                           | No job has been run.                                                 | Trigger a job from Apex or via `/certgame plan` on a qualifying tenant.                                         |
+| `dispatch_failed` on slash command but events work     | Form-encoded body HMAC mismatch (Site strips raw bytes).             | Set `App_Setting.Default.Slack_Verification_Token__c` to enable the token fallback.                             |
+| Citations panel shows red badges                       | Citation auditor flagged URL as 4xx/5xx.                             | Fix the URL and re-publish.                                                                                     |
+| Player_Answer insert fails                             | Duplicate `Unique_Key__c` (round + player).                          | Expected — Apex falls back to `Database.upsert(..., AccessLevel.SYSTEM_MODE)` and treats duplicates as a no-op. |
 
 ## Diagnostic commands
 
@@ -42,12 +42,12 @@ Confirms outbound `chat.postMessage` works against the bound `Slack_Bot` credent
 
 ## Log surfaces
 
-| Surface | Object | Owner |
-| --- | --- | --- |
-| Apex info/warn/error | `App_Log__c` | `AppLogger` |
-| Tamper-evident audit | `Audit_Log__c` | `AuditLogger` |
-| Inbound Slack idempotency | `Slack_Event_Log__c` | `SlackRequestRouter` |
-| Stripe webhook events | `License_Event__c` | `StripeWebhookHandler` |
+| Surface                   | Object               | Owner                  |
+| ------------------------- | -------------------- | ---------------------- |
+| Apex info/warn/error      | `App_Log__c`         | `AppLogger`            |
+| Tamper-evident audit      | `Audit_Log__c`       | `AuditLogger`          |
+| Inbound Slack idempotency | `Slack_Event_Log__c` | `SlackRequestRouter`   |
+| Stripe webhook events     | `License_Event__c`   | `StripeWebhookHandler` |
 
 ## Replays
 

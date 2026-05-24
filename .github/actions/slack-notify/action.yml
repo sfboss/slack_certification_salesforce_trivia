@@ -2,169 +2,170 @@ name: Slack Notify
 description: Post a Block Kit message to a Slack incoming webhook with consistent CI status formatting.
 
 inputs:
-  webhook_url:
-    description: Slack incoming webhook URL.
-    required: true
-  status:
-    description: One of start | success | failure | cleanup.
-    required: true
-  title:
-    description: Human-readable headline (e.g. "Build validation").
-    required: true
-  workflow_label:
-    description: Workflow + job label (e.g. "validate-build / build").
-    required: false
-    default: ${{ github.workflow }}
-  extra_fields:
-    description: |
-      Optional JSON array of additional Block Kit field rows, each `{ "label": "...", "value": "..." }`.
-      Rendered as 2-column mrkdwn fields after the standard metadata.
-    required: false
-    default: "[]"
-  log_tail:
-    description: Optional pre-formatted code block (failure logs, deploy errors, etc.). Truncated to ~3500 chars.
-    required: false
-    default: ""
+    webhook_url:
+        description: Slack incoming webhook URL.
+        required: true
+    status:
+        description: One of start | success | failure | cleanup.
+        required: true
+    title:
+        description: Human-readable headline (e.g. "Build validation").
+        required: true
+    workflow_label:
+        description: Workflow + job label (e.g. "validate-build / build").
+        required: false
+        default: ${{ github.workflow }}
+    extra_fields:
+        description: |
+            Optional JSON array of additional Block Kit field rows, each `{ "label": "...", "value": "..." }`.
+            Rendered as 2-column mrkdwn fields after the standard metadata.
+        required: false
+        default: "[]"
+    log_tail:
+        description: Optional pre-formatted code block (failure logs, deploy errors, etc.). Truncated to ~3500 chars.
+        required: false
+        default: ""
 
 runs:
-  using: composite
-  steps:
-    - name: Build and send Slack payload
-      shell: bash
-      env:
-        SLACK_WEBHOOK_URL: ${{ inputs.webhook_url }}
-        STATUS: ${{ inputs.status }}
-        TITLE: ${{ inputs.title }}
-        WORKFLOW_LABEL: ${{ inputs.workflow_label }}
-        EXTRA_FIELDS: ${{ inputs.extra_fields }}
-        LOG_TAIL: ${{ inputs.log_tail }}
-        GH_REPO: ${{ github.repository }}
-        GH_REF: ${{ github.ref_name }}
-        GH_SHA: ${{ github.sha }}
-        GH_ACTOR: ${{ github.actor }}
-        GH_EVENT: ${{ github.event_name }}
-        GH_SERVER: ${{ github.server_url }}
-        GH_RUN_ID: ${{ github.run_id }}
-        GH_COMMIT_MSG: ${{ github.event.head_commit.message }}
-      run: |
-        set -euo pipefail
+    using: composite
+    steps:
+        - name: Build and send Slack payload
+          shell: bash
+          env:
+              SLACK_WEBHOOK_URL: ${{ inputs.webhook_url }}
+              STATUS: ${{ inputs.status }}
+              TITLE: ${{ inputs.title }}
+              WORKFLOW_LABEL: ${{ inputs.workflow_label }}
+              EXTRA_FIELDS: ${{ inputs.extra_fields }}
+              LOG_TAIL: ${{ inputs.log_tail }}
+              GH_REPO: ${{ github.repository }}
+              GH_REF: ${{ github.ref_name }}
+              GH_SHA: ${{ github.sha }}
+              GH_ACTOR: ${{ github.actor }}
+              GH_EVENT: ${{ github.event_name }}
+              GH_SERVER: ${{ github.server_url }}
+              GH_RUN_ID: ${{ github.run_id }}
+              GH_COMMIT_MSG: ${{ github.event.head_commit.message }}
+          run: |
+              set -euo pipefail
 
-        if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
-          echo "::warning::SLACK_WEBHOOK_URL is empty; skipping Slack notification."
-          exit 0
-        fi
+              if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
+                echo "::warning::SLACK_WEBHOOK_URL is empty; skipping Slack notification."
+                exit 0
+              fi
 
-        case "$STATUS" in
-          start)   EMOJI="🟡"; STATUS_TEXT="Started" ;;
-          success) EMOJI="✅"; STATUS_TEXT="Succeeded" ;;
-          failure) EMOJI="❌"; STATUS_TEXT="Failed" ;;
-          cleanup) EMOJI="🧹"; STATUS_TEXT="Cleanup" ;;
-          *)       EMOJI="ℹ️"; STATUS_TEXT="$STATUS" ;;
-        esac
+              case "$STATUS" in
+                start)   EMOJI="🟡"; STATUS_TEXT="Started" ;;
+                success) EMOJI="✅"; STATUS_TEXT="Succeeded" ;;
+                failure) EMOJI="❌"; STATUS_TEXT="Failed" ;;
+                cleanup) EMOJI="🧹"; STATUS_TEXT="Cleanup" ;;
+                *)       EMOJI="ℹ️"; STATUS_TEXT="$STATUS" ;;
+              esac
 
-        SHORT_SHA="${GH_SHA:0:7}"
-        RUN_URL="${GH_SERVER}/${GH_REPO}/actions/runs/${GH_RUN_ID}"
-        # First line of commit message only.
-        COMMIT_LINE="$(printf '%s' "${GH_COMMIT_MSG:-}" | head -n 1)"
+              SHORT_SHA="${GH_SHA:0:7}"
+              RUN_URL="${GH_SERVER}/${GH_REPO}/actions/runs/${GH_RUN_ID}"
+              # First line of commit message only.
+              COMMIT_LINE="$(printf '%s' "${GH_COMMIT_MSG:-}" | head -n 1)"
 
-        # Truncate any log tail to keep payload under Slack's 40KB cap.
-        if [ -n "${LOG_TAIL:-}" ]; then
-          LOG_TAIL_TRIMMED="$(printf '%s' "$LOG_TAIL" | tail -c 3500)"
-        else
-          LOG_TAIL_TRIMMED=""
-        fi
+              # Truncate any log tail to keep payload under Slack's 40KB cap.
+              if [ -n "${LOG_TAIL:-}" ]; then
+                LOG_TAIL_TRIMMED="$(printf '%s' "$LOG_TAIL" | tail -c 3500)"
+              else
+                LOG_TAIL_TRIMMED=""
+              fi
 
-        PAYLOAD="$(
-          EMOJI="$EMOJI" STATUS_TEXT="$STATUS_TEXT" TITLE="$TITLE" \
-          WORKFLOW_LABEL="$WORKFLOW_LABEL" GH_REPO="$GH_REPO" GH_REF="$GH_REF" \
-          SHORT_SHA="$SHORT_SHA" GH_SHA="$GH_SHA" GH_ACTOR="$GH_ACTOR" \
-          GH_EVENT="$GH_EVENT" RUN_URL="$RUN_URL" COMMIT_LINE="$COMMIT_LINE" \
-          EXTRA_FIELDS="$EXTRA_FIELDS" LOG_TAIL_TRIMMED="$LOG_TAIL_TRIMMED" \
-          jq -n '
-            ( env.EXTRA_FIELDS | fromjson ) as $extra
-            | (
-                [
-                  { type: "mrkdwn", text: ("*Repo:*\n" + env.GH_REPO) },
-                  { type: "mrkdwn", text: ("*Branch:*\n" + env.GH_REF) },
-                  { type: "mrkdwn", text: ("*Commit:*\n<" + env.RUN_URL + "|" + env.SHORT_SHA + ">") },
-                  { type: "mrkdwn", text: ("*Actor:*\n" + env.GH_ACTOR) },
-                  { type: "mrkdwn", text: ("*Workflow:*\n" + env.WORKFLOW_LABEL) },
-                  { type: "mrkdwn", text: ("*Trigger:*\n" + env.GH_EVENT) }
-                ]
-                + ( $extra | map({ type: "mrkdwn", text: ("*" + (.label|tostring) + ":*\n" + (.value|tostring)) }) )
-              ) as $all_fields
-            | (
-                [range(0; ($all_fields | length); 10)]
-                | map({ type: "section", fields: ($all_fields[.:(.+10)]) })
-              ) as $meta
-            | (
-                if (env.COMMIT_LINE // "") == "" then []
-                else [
-                  { type: "section",
-                    text: { type: "mrkdwn", text: ("*Message:* " + env.COMMIT_LINE) } }
-                ] end
-              ) as $msg
-            | (
-                if (env.LOG_TAIL_TRIMMED // "") == "" then []
-                else [
-                  { type: "section",
-                    text: { type: "mrkdwn",
-                            text: ("*Details:*\n```" + env.LOG_TAIL_TRIMMED + "```") } }
-                ] end
-              ) as $logs
-            | {
-                text: (env.EMOJI + " " + env.TITLE + " " + env.STATUS_TEXT),
-                blocks: (
-                  [
-                    { type: "header",
-                      text: { type: "plain_text",
-                              text: (env.EMOJI + " " + env.TITLE + " " + env.STATUS_TEXT),
-                              emoji: true } }
-                  ]
-                  + $meta + $msg + $logs
-                  + [
-                      { type: "actions",
-                        elements: [
-                          { type: "button",
-                            text: { type: "plain_text", text: "View Run" },
-                            url: env.RUN_URL }
-                        ] }
-                    ]
-                )
-              }
-          '
-        )"
+              PAYLOAD="$(
+                EMOJI="$EMOJI" STATUS_TEXT="$STATUS_TEXT" TITLE="$TITLE" \
+                WORKFLOW_LABEL="$WORKFLOW_LABEL" GH_REPO="$GH_REPO" GH_REF="$GH_REF" \
+                SHORT_SHA="$SHORT_SHA" GH_SHA="$GH_SHA" GH_ACTOR="$GH_ACTOR" \
+                GH_EVENT="$GH_EVENT" RUN_URL="$RUN_URL" COMMIT_LINE="$COMMIT_LINE" \
+                EXTRA_FIELDS="$EXTRA_FIELDS" LOG_TAIL_TRIMMED="$LOG_TAIL_TRIMMED" \
+                jq -n '
+                  ( env.EXTRA_FIELDS | fromjson ) as $extra
+                  | (
+                      [
+                        { type: "mrkdwn", text: ("*Repo:*\n" + env.GH_REPO) },
+                        { type: "mrkdwn", text: ("*Branch:*\n" + env.GH_REF) },
+                        { type: "mrkdwn", text: ("*Commit:*\n<" + env.RUN_URL + "|" + env.SHORT_SHA + ">") },
+                        { type: "mrkdwn", text: ("*Actor:*\n" + env.GH_ACTOR) },
+                        { type: "mrkdwn", text: ("*Workflow:*\n" + env.WORKFLOW_LABEL) },
+                        { type: "mrkdwn", text: ("*Trigger:*\n" + env.GH_EVENT) }
+                      ]
+                      + ( $extra | map({ type: "mrkdwn", text: ("*" + (.label|tostring) + ":*\n" + (.value|tostring)) }) )
+                    ) as $all_fields
+                  | (
+                      [range(0; ($all_fields | length); 10)]
+                      | map({ type: "section", fields: ($all_fields[.:(.+10)]) })
+                    ) as $meta
+                  | (
+                      if (env.COMMIT_LINE // "") == "" then []
+                      else [
+                        { type: "section",
+                          text: { type: "mrkdwn", text: ("*Message:* " + env.COMMIT_LINE) } }
+                      ] end
+                    ) as $msg
+                  | (
+                      if (env.LOG_TAIL_TRIMMED // "") == "" then []
+                      else [
+                        { type: "section",
+                          text: { type: "mrkdwn",
+                                  text: ("*Details:*\n```" + env.LOG_TAIL_TRIMMED + "```") } }
+                      ] end
+                    ) as $logs
+                  | {
+                      text: (env.EMOJI + " " + env.TITLE + " " + env.STATUS_TEXT),
+                      blocks: (
+                        [
+                          { type: "header",
+                            text: { type: "plain_text",
+                                    text: (env.EMOJI + " " + env.TITLE + " " + env.STATUS_TEXT),
+                                    emoji: true } }
+                        ]
+                        + $meta + $msg + $logs
+                        + [
+                            { type: "actions",
+                              elements: [
+                                { type: "button",
+                                  text: { type: "plain_text", text: "View Run" },
+                                  url: env.RUN_URL }
+                              ] }
+                          ]
+                      )
+                    }
+                '
+              )"
 
-        # Post to Slack. Hide URL from logs.
-        HTTP_CODE="$(
-          curl -sS -o slack_resp.txt -w '%{http_code}' \
-               -X POST -H 'Content-Type: application/json' \
-               --data "$PAYLOAD" \
-               "$SLACK_WEBHOOK_URL"
-        )"
-        if [ "$HTTP_CODE" != "200" ]; then
-          echo "::warning::Slack webhook responded with HTTP $HTTP_CODE"
-          cat slack_resp.txt || true
+              # Post to Slack. Hide URL from logs.
+              HTTP_CODE="$(
+                curl -sS -o slack_resp.txt -w '%{http_code}' \
+                     -X POST -H 'Content-Type: application/json' \
+                     --data "$PAYLOAD" \
+                     "$SLACK_WEBHOOK_URL"
+              )"
+              if [ "$HTTP_CODE" != "200" ]; then
+                echo "::warning::Slack webhook responded with HTTP $HTTP_CODE"
+                cat slack_resp.txt || true
 
-          # Fallback to plain text so we still notify on block formatting issues.
-          FALLBACK_PAYLOAD="$(jq -n \
-            --arg emoji "$EMOJI" \
-            --arg title "$TITLE" \
-            --arg status "$STATUS_TEXT" \
-            --arg repo "$GH_REPO" \
-            --arg ref "$GH_REF" \
-            --arg actor "$GH_ACTOR" \
-            --arg run "$RUN_URL" \
-            '{text: ($emoji + " " + $title + " " + $status + "\nRepo: " + $repo + "\nBranch: " + $ref + "\nActor: " + $actor + "\nRun: " + $run)}')"
-          FALLBACK_HTTP_CODE="$(
-            curl -sS -o slack_resp_fallback.txt -w '%{http_code}' \
-                 -X POST -H 'Content-Type: application/json' \
-                 --data "$FALLBACK_PAYLOAD" \
-                 "$SLACK_WEBHOOK_URL"
-          )"
-          if [ "$FALLBACK_HTTP_CODE" != "200" ]; then
-            echo "::warning::Slack fallback webhook responded with HTTP $FALLBACK_HTTP_CODE"
-            cat slack_resp_fallback.txt || true
-          fi
-        fi
+                # Fallback to plain text so we still notify on block formatting issues.
+                FALLBACK_PAYLOAD="$(jq -n \
+                  --arg emoji "$EMOJI" \
+                  --arg title "$TITLE" \
+                  --arg status "$STATUS_TEXT" \
+                  --arg repo "$GH_REPO" \
+                  --arg ref "$GH_REF" \
+                  --arg actor "$GH_ACTOR" \
+                  --arg run "$RUN_URL" \
+                  '{text: ($emoji + " " + $title + " " + $status + "\nRepo: " + $repo + "\nBranch: " + $ref + "\nActor: " + $actor + "\nRun: " + $run)}')"
+                FALLBACK_HTTP_CODE="$(
+                  curl -sS -o slack_resp_fallback.txt -w '%{http_code}' \
+                       -X POST -H 'Content-Type: application/json' \
+                       --data "$FALLBACK_PAYLOAD" \
+                       "$SLACK_WEBHOOK_URL"
+                )"
+                if [ "$FALLBACK_HTTP_CODE" != "200" ]; then
+                  echo "::warning::Slack fallback webhook responded with HTTP $FALLBACK_HTTP_CODE"
+                  cat slack_resp_fallback.txt || true
+                fi
+              fi
+
 #

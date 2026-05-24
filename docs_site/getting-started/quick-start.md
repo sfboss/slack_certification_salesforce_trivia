@@ -29,9 +29,9 @@ python scripts/import_all_packs.py --org certgame
 Drafts become `Status__c = Published` and the package treats them as playable.
 
 !!! warning "Drafts never play live"
-    The import pipeline never creates `Status__c = Published`. Only a human action in the
-    review console flips a question into play. This is enforced by
-    [CertGameImportService](../api-reference/apex.md#certgameimportservice).
+The import pipeline never creates `Status__c = Published`. Only a human action in the
+review console flips a question into play. This is enforced by
+[CertGameImportService](../api-reference/apex.md#certgameimportservice).
 
 ## 3. Verify with SOQL
 

@@ -8,12 +8,12 @@ This guide provides a systematic framework for evaluating the quality of trivia 
 
 Every question should be evaluated across **six dimensions**. Each dimension is scored 0-5, with a maximum total score of 30 points. Questions scoring below 18 should be rejected or require major revision.
 
-| Score Range | Quality Level | Action |
-|-------------|---------------|--------|
-| 27-30 | Excellent | Publish immediately |
-| 23-26 | Good | Minor polish, then publish |
-| 18-22 | Fair | Revise and re-review |
-| 0-17 | Poor | Reject or major rewrite |
+| Score Range | Quality Level | Action                     |
+| ----------- | ------------- | -------------------------- |
+| 27-30       | Excellent     | Publish immediately        |
+| 23-26       | Good          | Minor polish, then publish |
+| 18-22       | Fair          | Revise and re-review       |
+| 0-17        | Poor          | Reject or major rewrite    |
 
 ---
 
@@ -31,12 +31,14 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 - **0 pts**: Fundamentally incorrect or contradicts official docs
 
 **Red Flags:**
+
 - References deprecated features without noting deprecation
 - Uses outdated API versions (< 55.0 for modern questions)
 - Contradicts Trailhead modules or official guides
 - Contains "trick" wording that misleads on actual functionality
 
 **Validation Checklist:**
+
 - [ ] Cross-referenced with official Salesforce docs (link in `Question_Citation__c`)
 - [ ] Verified correct answer aligns with current Salesforce behavior
 - [ ] No deprecated features unless explicitly teaching legacy patterns
@@ -56,6 +58,7 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 - **0 pts**: Incomprehensible or grammatically broken
 
 **Red Flags:**
+
 - Double negatives ("Which is NOT incorrect...")
 - Unclear antecedents ("What does IT do?")
 - Mixing multiple concepts without clear separation
@@ -63,6 +66,7 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 - Jargon without context (assuming knowledge not in prerequisites)
 
 **Best Practices:**
+
 - Use active voice
 - One concept per question
 - Define acronyms on first use within question text
@@ -83,12 +87,14 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 - **0 pts**: Completely off-topic for the exam
 
 **Red Flags:**
+
 - Questions about rarely-used features with no exam coverage
 - Testing minutiae (e.g., "What year was Salesforce founded?")
 - Requiring knowledge beyond the exam level (e.g., Einstein AI on Admin exam)
 - Personal opinion questions with no objective answer
 
 **Alignment Check:**
+
 - [ ] Maps to specific `Exam_Domain__c` objective
 - [ ] Difficulty appropriate for `Certification_Exam__c.Level__c`
 - [ ] Practical scenario or commonly-tested concept
@@ -108,6 +114,7 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 - **0 pts**: Distractors overlap or make no sense
 
 **Characteristics of Strong Distractors:**
+
 - Represent common beginner mistakes
 - Are technically possible but suboptimal
 - Test understanding of "why not" this approach
@@ -115,6 +122,7 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 - Don't include absolutes ("always", "never") unless correct answer does too
 
 **Red Flags:**
+
 - Obviously joke answers ("Hire a consultant")
 - Distractors that are technically correct in different contexts
 - Two choices that mean the same thing
@@ -124,6 +132,7 @@ Every question should be evaluated across **six dimensions**. Each dimension is 
 **Example (Poor vs. Good):**
 
 ❌ **Poor Distractors:**
+
 ```
 Q: What permission is needed to delete records?
 A) Delete
@@ -133,6 +142,7 @@ D) Superman powers
 ```
 
 ✅ **Good Distractors:**
+
 ```
 Q: What permission is needed to delete records?
 A) Delete ✓
@@ -155,6 +165,7 @@ D) View All (tests understanding of CRUD separation)
 - **0 pts**: No explanation or explanation contradicts question
 
 **Best Practices:**
+
 - Start with "Why X is correct:"
 - Include "Why others are incorrect:" section
 - Provide a real-world use case or example
@@ -162,6 +173,7 @@ D) View All (tests understanding of CRUD separation)
 - Use analogies when explaining complex concepts
 
 **Template:**
+
 ```
 Why [Correct Answer] is correct:
 [1-2 sentences explaining the concept and when to use it]
@@ -175,6 +187,7 @@ Learn more: [Trailhead module/doc link]
 ```
 
 **Red Flags:**
+
 - Copy-pasting question text into explanation
 - No educational value; just confirming answer
 - Incorrect information in explanation
@@ -195,6 +208,7 @@ Learn more: [Trailhead module/doc link]
 - **0 pts**: No citation or link is broken
 
 **Authoritative Sources (Ranked):**
+
 1. **Tier 1 (5 pts)**: Salesforce official docs, Trailhead, Release Notes, Help articles
 2. **Tier 2 (4 pts)**: Salesforce Developer Blog, official MVPs, Architect guides
 3. **Tier 3 (3 pts)**: Trailblazer Community (verified answers), Salesforce DX guides
@@ -202,6 +216,7 @@ Learn more: [Trailhead module/doc link]
 5. **Tier 5 (1 pt)**: Generic tutorials, personal blogs, outdated sources
 
 **Citation Format:**
+
 ```
 Source: [Title of Document/Page]
 URL: [Full HTTPS URL]
@@ -209,6 +224,7 @@ Last Verified: [YYYY-MM-DD]
 ```
 
 **Red Flags:**
+
 - Linking to paywalled content
 - Linking to competitor products as "the way"
 - No citation for complex/debatable topics
@@ -217,6 +233,7 @@ Last Verified: [YYYY-MM-DD]
 - Circular citations (linking to other trivia sites)
 
 **Automated Checks:**
+
 - Run `scripts/verify-citations.py` to validate all URLs
 - Flag any citations with `Question_Citation__c.Broken_Link__c = true`
 - Scheduled Apex `CertGameCitationCrawler` (not yet implemented) will check nightly
@@ -228,15 +245,18 @@ Last Verified: [YYYY-MM-DD]
 ### Example 1: Excellent Question (Score: 28/30)
 
 **Question:**
+
 > A user needs to update Lead records but should not be able to delete them. Which permission should be granted?
 
 **Choices:**
+
 - A) Edit on Leads ✓
 - B) Delete on Leads
 - C) Modify All Data
 - D) View All and Modify All
 
 **Explanation:**
+
 > Why Edit on Leads is correct:
 > The Edit permission allows creating and updating records but does not include deletion. This follows the principle of least privilege.
 >
@@ -248,6 +268,7 @@ Last Verified: [YYYY-MM-DD]
 > Learn more: https://help.salesforce.com/s/articleView?id=sf.users_profiles_object_perms.htm
 
 **Scoring:**
+
 - Accuracy: 5/5 (Correct per official docs)
 - Clarity: 5/5 (No ambiguity)
 - Relevance: 5/5 (Core Admin exam topic)
@@ -261,18 +282,22 @@ Last Verified: [YYYY-MM-DD]
 ### Example 2: Fair Question (Score: 20/30)
 
 **Question:**
+
 > What's the thing you click to make a formula field?
 
 **Choices:**
+
 - A) Formula return type
 - B) New Custom Field button ✓
 - C) Settings
 - D) Go to formula wizard
 
 **Explanation:**
+
 > You need to click the New Custom Field button.
 
 **Scoring:**
+
 - Accuracy: 4/5 (Technically correct but vague)
 - Clarity: 2/5 (Unprofessional phrasing; "the thing you click")
 - Relevance: 4/5 (Relevant but too basic)
@@ -282,9 +307,11 @@ Last Verified: [YYYY-MM-DD]
 - **Total: 13/30** → Reject and rewrite
 
 **Recommended Fix:**
+
 > **Question:** Where in Setup do you initiate creating a new Formula field on the Account object?
-> 
+>
 > **Choices:**
+>
 > - A) Setup > Object Manager > Account > Fields & Relationships > New ✓
 > - B) Setup > Formula Fields > New
 > - C) Setup > Customization > Formula Wizard
@@ -304,24 +331,21 @@ Add a "Quality Score" section:
 
 ```html
 <lightning-card title="Quality Score">
-  <div class="slds-p-around_medium">
-    <!-- Score sliders for each dimension -->
-    <lightning-input 
-      type="number" 
-      label="Accuracy (0-5)" 
-      max="5" 
-      value={accuracyScore}>
-    </lightning-input>
-    <!-- Repeat for each dimension -->
-    
-    <div class="slds-text-heading_medium">
-      Total Score: {totalScore}/30
+    <div class="slds-p-around_medium">
+        <!-- Score sliders for each dimension -->
+        <lightning-input
+            type="number"
+            label="Accuracy (0-5)"
+            max="5"
+            value="{accuracyScore}"
+        >
+        </lightning-input>
+        <!-- Repeat for each dimension -->
+
+        <div class="slds-text-heading_medium">Total Score: {totalScore}/30</div>
+        <lightning-badge label="{scoreLabel}" class="{scoreBadgeClass}">
+        </lightning-badge>
     </div>
-    <lightning-badge 
-      label={scoreLabel} 
-      class={scoreBadgeClass}>
-    </lightning-badge>
-  </div>
 </lightning-card>
 ```
 
@@ -341,6 +365,7 @@ public with sharing class QuestionQualityScorer {
     @AuraEnabled public Integer total;
     @AuraEnabled public String qualityLevel; // Excellent/Good/Fair/Poor
   }
-  
+
   @AuraEnabled
   public static void saveQ
+```

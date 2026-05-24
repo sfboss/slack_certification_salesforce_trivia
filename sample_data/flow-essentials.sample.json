@@ -1,95 +1,214 @@
 {
-  "exam": { "name": "Flow Builder Essentials", "code": "CRT-FLOW", "vendor": "Salesforce" },
-  "questionBank": {
-    "name": "Flow Essentials Pack",
-    "version": "1.0.0",
-    "sourceType": "Manual",
-    "status": "Draft",
-    "externalId": "BANK-FLOW-001"
-  },
-  "questions": [
-    {
-      "externalId": "FLOW-Q1",
-      "domain": "Flow Types",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which Flow type runs without user interaction and is triggered by a record change?",
-      "choices": [
-        { "label": "A", "text": "Screen Flow", "isCorrect": false, "explanation": "Screen Flows require user interaction." },
-        { "label": "B", "text": "Record-Triggered Flow", "isCorrect": true, "explanation": "Record-Triggered Flows fire on insert/update/delete." },
-        { "label": "C", "text": "Autolaunched Flow (No Trigger)", "isCorrect": false, "explanation": "These run when called, not on record changes." },
-        { "label": "D", "text": "Platform Event–Triggered Flow", "isCorrect": false, "explanation": "These fire on platform events, not record changes." }
-      ],
-      "explanation": "Record-Triggered Flows respond to DML on a specific object.",
-      "citations": [
-        { "title": "Record-Triggered Flow", "url": "https://help.salesforce.com/s/articleView?id=sf.flow_concepts_trigger_record.htm", "sourceType": "Salesforce Help", "relevanceNote": "Defines the trigger type." }
-      ]
+    "exam": {
+        "name": "Flow Builder Essentials",
+        "code": "CRT-FLOW",
+        "vendor": "Salesforce"
     },
-    {
-      "externalId": "FLOW-Q2",
-      "domain": "Performance",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Where should you place same-record field updates for the best performance in a Record-Triggered Flow?",
-      "choices": [
-        { "label": "A", "text": "After-save with Update Records", "isCorrect": false, "explanation": "After-save causes a second DML; not as efficient." },
-        { "label": "B", "text": "Before-save Fast Field Update", "isCorrect": true, "explanation": "Before-save updates occur in the same DML, no recursion." },
-        { "label": "C", "text": "Scheduled Path 0 minutes after", "isCorrect": false, "explanation": "Scheduled paths run asynchronously." },
-        { "label": "D", "text": "Subflow called from a Process Builder", "isCorrect": false, "explanation": "Process Builder is retired; not a performance choice." }
-      ],
-      "explanation": "Before-save flows handle same-record updates in the same DML operation.",
-      "citations": [
-        { "title": "Before-Save vs After-Save", "url": "https://help.salesforce.com/s/articleView?id=sf.flow_concepts_trigger_before_save.htm", "sourceType": "Salesforce Help", "relevanceNote": "Performance comparison." }
-      ]
+    "questionBank": {
+        "name": "Flow Essentials Pack",
+        "version": "1.0.0",
+        "sourceType": "Manual",
+        "status": "Draft",
+        "externalId": "BANK-FLOW-001"
     },
-    {
-      "externalId": "FLOW-Q3",
-      "domain": "Decisions",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "What element in Flow Builder routes the flow down different paths based on conditions?",
-      "choices": [
-        { "label": "A", "text": "Assignment", "isCorrect": false, "explanation": "Assignment sets variable values." },
-        { "label": "B", "text": "Decision", "isCorrect": true, "explanation": "Decision evaluates outcomes and branches accordingly." },
-        { "label": "C", "text": "Get Records", "isCorrect": false, "explanation": "Get Records retrieves data only." },
-        { "label": "D", "text": "Loop", "isCorrect": false, "explanation": "Loop iterates a collection." }
-      ],
-      "explanation": "The Decision element implements branching logic.",
-      "citations": [
-        { "title": "Decision Element", "url": "https://help.salesforce.com/s/articleView?id=sf.flow_ref_elements_decision.htm", "sourceType": "Salesforce Help", "relevanceNote": "Element reference." }
-      ]
-    },
-    {
-      "externalId": "FLOW-Q4",
-      "domain": "Debugging",
-      "difficulty": "Intermediate",
-      "questionType": "True False",
-      "question": "Flow debug mode can run a flow as a different user.",
-      "choices": [
-        { "label": "A", "text": "True", "isCorrect": true, "explanation": "Run-as user is supported in debug mode." },
-        { "label": "B", "text": "False", "isCorrect": false, "explanation": "Run-as user is supported." }
-      ],
-      "explanation": "Flow Debug allows you to run as another user to test sharing and permissions.",
-      "citations": [
-        { "title": "Debug a Flow", "url": "https://help.salesforce.com/s/articleView?id=sf.flow_debug.htm", "sourceType": "Salesforce Help", "relevanceNote": "Documents run-as functionality." }
-      ]
-    },
-    {
-      "externalId": "FLOW-Q5",
-      "domain": "Bulkification",
-      "difficulty": "Advanced",
-      "questionType": "Single Select",
-      "question": "Which is the BEST practice for performing DML on multiple records inside a flow?",
-      "choices": [
-        { "label": "A", "text": "Loop the records and call Update Records inside the loop", "isCorrect": false, "explanation": "DML inside loops violates bulkification limits." },
-        { "label": "B", "text": "Build a collection inside the loop, then Update Records once after the loop", "isCorrect": true, "explanation": "Collect into a variable and DML once after the loop." },
-        { "label": "C", "text": "Call a Queueable Apex action for each record", "isCorrect": false, "explanation": "Per-record async invocations are inefficient." },
-        { "label": "D", "text": "Use Scheduled Paths for each record separately", "isCorrect": false, "explanation": "Schedule per-record is unnecessary overhead." }
-      ],
-      "explanation": "Build a collection variable in the loop and run one Update Records after.",
-      "citations": [
-        { "title": "Flow Best Practices", "url": "https://help.salesforce.com/s/articleView?id=sf.flow_best_practices.htm", "sourceType": "Salesforce Help", "relevanceNote": "Bulkification guidance." }
-      ]
-    }
-  ]
+    "questions": [
+        {
+            "externalId": "FLOW-Q1",
+            "domain": "Flow Types",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which Flow type runs without user interaction and is triggered by a record change?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Screen Flow",
+                    "isCorrect": false,
+                    "explanation": "Screen Flows require user interaction."
+                },
+                {
+                    "label": "B",
+                    "text": "Record-Triggered Flow",
+                    "isCorrect": true,
+                    "explanation": "Record-Triggered Flows fire on insert/update/delete."
+                },
+                {
+                    "label": "C",
+                    "text": "Autolaunched Flow (No Trigger)",
+                    "isCorrect": false,
+                    "explanation": "These run when called, not on record changes."
+                },
+                {
+                    "label": "D",
+                    "text": "Platform Event–Triggered Flow",
+                    "isCorrect": false,
+                    "explanation": "These fire on platform events, not record changes."
+                }
+            ],
+            "explanation": "Record-Triggered Flows respond to DML on a specific object.",
+            "citations": [
+                {
+                    "title": "Record-Triggered Flow",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.flow_concepts_trigger_record.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Defines the trigger type."
+                }
+            ]
+        },
+        {
+            "externalId": "FLOW-Q2",
+            "domain": "Performance",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Where should you place same-record field updates for the best performance in a Record-Triggered Flow?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "After-save with Update Records",
+                    "isCorrect": false,
+                    "explanation": "After-save causes a second DML; not as efficient."
+                },
+                {
+                    "label": "B",
+                    "text": "Before-save Fast Field Update",
+                    "isCorrect": true,
+                    "explanation": "Before-save updates occur in the same DML, no recursion."
+                },
+                {
+                    "label": "C",
+                    "text": "Scheduled Path 0 minutes after",
+                    "isCorrect": false,
+                    "explanation": "Scheduled paths run asynchronously."
+                },
+                {
+                    "label": "D",
+                    "text": "Subflow called from a Process Builder",
+                    "isCorrect": false,
+                    "explanation": "Process Builder is retired; not a performance choice."
+                }
+            ],
+            "explanation": "Before-save flows handle same-record updates in the same DML operation.",
+            "citations": [
+                {
+                    "title": "Before-Save vs After-Save",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.flow_concepts_trigger_before_save.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Performance comparison."
+                }
+            ]
+        },
+        {
+            "externalId": "FLOW-Q3",
+            "domain": "Decisions",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "What element in Flow Builder routes the flow down different paths based on conditions?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Assignment",
+                    "isCorrect": false,
+                    "explanation": "Assignment sets variable values."
+                },
+                {
+                    "label": "B",
+                    "text": "Decision",
+                    "isCorrect": true,
+                    "explanation": "Decision evaluates outcomes and branches accordingly."
+                },
+                {
+                    "label": "C",
+                    "text": "Get Records",
+                    "isCorrect": false,
+                    "explanation": "Get Records retrieves data only."
+                },
+                {
+                    "label": "D",
+                    "text": "Loop",
+                    "isCorrect": false,
+                    "explanation": "Loop iterates a collection."
+                }
+            ],
+            "explanation": "The Decision element implements branching logic.",
+            "citations": [
+                {
+                    "title": "Decision Element",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.flow_ref_elements_decision.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Element reference."
+                }
+            ]
+        },
+        {
+            "externalId": "FLOW-Q4",
+            "domain": "Debugging",
+            "difficulty": "Intermediate",
+            "questionType": "True False",
+            "question": "Flow debug mode can run a flow as a different user.",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "True",
+                    "isCorrect": true,
+                    "explanation": "Run-as user is supported in debug mode."
+                },
+                {
+                    "label": "B",
+                    "text": "False",
+                    "isCorrect": false,
+                    "explanation": "Run-as user is supported."
+                }
+            ],
+            "explanation": "Flow Debug allows you to run as another user to test sharing and permissions.",
+            "citations": [
+                {
+                    "title": "Debug a Flow",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.flow_debug.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Documents run-as functionality."
+                }
+            ]
+        },
+        {
+            "externalId": "FLOW-Q5",
+            "domain": "Bulkification",
+            "difficulty": "Advanced",
+            "questionType": "Single Select",
+            "question": "Which is the BEST practice for performing DML on multiple records inside a flow?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Loop the records and call Update Records inside the loop",
+                    "isCorrect": false,
+                    "explanation": "DML inside loops violates bulkification limits."
+                },
+                {
+                    "label": "B",
+                    "text": "Build a collection inside the loop, then Update Records once after the loop",
+                    "isCorrect": true,
+                    "explanation": "Collect into a variable and DML once after the loop."
+                },
+                {
+                    "label": "C",
+                    "text": "Call a Queueable Apex action for each record",
+                    "isCorrect": false,
+                    "explanation": "Per-record async invocations are inefficient."
+                },
+                {
+                    "label": "D",
+                    "text": "Use Scheduled Paths for each record separately",
+                    "isCorrect": false,
+                    "explanation": "Schedule per-record is unnecessary overhead."
+                }
+            ],
+            "explanation": "Build a collection variable in the loop and run one Update Records after.",
+            "citations": [
+                {
+                    "title": "Flow Best Practices",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.flow_best_practices.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Bulkification guidance."
+                }
+            ]
+        }
+    ]
 }

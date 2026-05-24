@@ -12,13 +12,13 @@ All outbound calls go through [`SlackApiClient`](apex.md#slackapiclient) using t
 `Slack_Bot` Named Credential. The endpoint is always
 `callout:Slack_Bot/<method>`.
 
-| Slack method | Caller | Purpose |
-| --- | --- | --- |
-| `chat.postMessage` | `CertGameSessionService`, `CertGameDuelService`, `CertGameNudgeScheduler`, finale callbacks. | Question / explanation / finale / nudge cards. |
-| `chat.postEphemeral` | `CertGameSlackRenderService` error envelopes. | Errors only visible to the invoking user. |
-| `views.open` | `CertGameStudyPlanService.openPlanModal`, `CertGameBillingService.openBillingModal`. | Open a modal in response to a `trigger_id`. |
-| `views.publish` | `CertGameAppHomeService.publishHome`. | Render the App Home tab. |
-| `users.info` | `CertGameTenantService.getOrCreatePlayer`. | Fetch display name to populate `Player__c`. |
+| Slack method         | Caller                                                                                       | Purpose                                        |
+| -------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `chat.postMessage`   | `CertGameSessionService`, `CertGameDuelService`, `CertGameNudgeScheduler`, finale callbacks. | Question / explanation / finale / nudge cards. |
+| `chat.postEphemeral` | `CertGameSlackRenderService` error envelopes.                                                | Errors only visible to the invoking user.      |
+| `views.open`         | `CertGameStudyPlanService.openPlanModal`, `CertGameBillingService.openBillingModal`.         | Open a modal in response to a `trigger_id`.    |
+| `views.publish`      | `CertGameAppHomeService.publishHome`.                                                        | Render the App Home tab.                       |
+| `users.info`         | `CertGameTenantService.getOrCreatePlayer`.                                                   | Fetch display name to populate `Player__c`.    |
 
 ### Outbound example
 
@@ -46,35 +46,35 @@ All Block Kit JSON is built inside `CertGameSlackRenderService`. Convention:
 
 Common surfaces:
 
-| Surface | Method |
-| --- | --- |
-| Help | `help()` |
-| Plain text reply | `text(String message, Boolean ephemeral)` |
-| Question card | `questionCard(session, round, question, choices)` |
-| Explanation card | `explanationCard(answer, question, choice, points)` |
-| Finale card | `finaleCard(session, players)` |
-| Debug log card | `debugLogBlocks(List<App_Log__c>)` |
-| Error envelope | `errorEnvelope(String sub, String correlationId, Exception e)` |
-| Duel challenge | `duelChallengeBlocks(...)` |
-| Duel started | `duelStartedBlocks(...)` |
-| Duel declined | `duelDeclinedBlocks(...)` |
-| Duel finale | `duelFinaleBlocks(...)` |
+| Surface          | Method                                                         |
+| ---------------- | -------------------------------------------------------------- |
+| Help             | `help()`                                                       |
+| Plain text reply | `text(String message, Boolean ephemeral)`                      |
+| Question card    | `questionCard(session, round, question, choices)`              |
+| Explanation card | `explanationCard(answer, question, choice, points)`            |
+| Finale card      | `finaleCard(session, players)`                                 |
+| Debug log card   | `debugLogBlocks(List<App_Log__c>)`                             |
+| Error envelope   | `errorEnvelope(String sub, String correlationId, Exception e)` |
+| Duel challenge   | `duelChallengeBlocks(...)`                                     |
+| Duel started     | `duelStartedBlocks(...)`                                       |
+| Duel declined    | `duelDeclinedBlocks(...)`                                      |
+| Duel finale      | `duelFinaleBlocks(...)`                                        |
 
 ## Slash command grammar
 
-| Subcommand | Form |
-| --- | --- |
-| `help` | `/certgame help` |
-| `play` | `/certgame play [CODE]` |
+| Subcommand           | Form                               |
+| -------------------- | ---------------------------------- |
+| `help`               | `/certgame help`                   |
+| `play`               | `/certgame play [CODE]`            |
 | `challenge` / `duel` | `/certgame challenge @user [CODE]` |
-| `games` | `/certgame games` |
-| `leaderboard` | `/certgame leaderboard [CODE]` |
-| `stats` | `/certgame stats` |
-| `plan` | `/certgame plan` |
-| `billing` | `/certgame billing` |
-| `debug` | `/certgame debug` |
-| `doctor` | `/certgame doctor` |
-| `notify-test` | `/certgame notify-test` |
+| `games`              | `/certgame games`                  |
+| `leaderboard`        | `/certgame leaderboard [CODE]`     |
+| `stats`              | `/certgame stats`                  |
+| `plan`               | `/certgame plan`                   |
+| `billing`            | `/certgame billing`                |
+| `debug`              | `/certgame debug`                  |
+| `doctor`             | `/certgame doctor`                 |
+| `notify-test`        | `/certgame notify-test`            |
 
 Full reference: [Slash Commands](../slack/commands.md).
 

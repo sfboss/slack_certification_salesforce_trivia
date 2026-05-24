@@ -11,23 +11,50 @@
 }
 
 /* KPI strip — matches Question Bank workspace tile style */
-.qrc-kpi-row { gap: 0.75rem; }
+.qrc-kpi-row {
+    gap: 0.75rem;
+}
 .qrc-kpi {
     flex: 1 1 140px;
     min-width: 140px;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     color: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    transition:
+        transform 0.08s ease,
+        box-shadow 0.08s ease;
 }
-.qrc-kpi:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-.qrc-kpi:focus { outline: 2px solid #1b96ff; outline-offset: 2px; }
-[data-tone="brand"].qrc-kpi { background: linear-gradient(135deg, #0176d3 0%, #1b96ff 100%); }
-[data-tone="info"].qrc-kpi { background: linear-gradient(135deg, #032d60 0%, #0b5cab 100%); }
-[data-tone="success"].qrc-kpi { background: linear-gradient(135deg, #2e844a 0%, #45c65a 100%); }
-[data-tone="warning"].qrc-kpi { background: linear-gradient(135deg, #ea7600 0%, #fe9339 100%); }
-[data-tone="muted"].qrc-kpi { background: linear-gradient(135deg, #4a5568 0%, #718096 100%); }
-.qrc-kpi-value { font-size: 1.75rem; font-weight: 700; line-height: 1.1; }
-.qrc-kpi-label { font-size: 0.78rem; opacity: 0.9; }
+.qrc-kpi:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.qrc-kpi:focus {
+    outline: 2px solid #1b96ff;
+    outline-offset: 2px;
+}
+[data-tone="brand"].qrc-kpi {
+    background: linear-gradient(135deg, #0176d3 0%, #1b96ff 100%);
+}
+[data-tone="info"].qrc-kpi {
+    background: linear-gradient(135deg, #032d60 0%, #0b5cab 100%);
+}
+[data-tone="success"].qrc-kpi {
+    background: linear-gradient(135deg, #2e844a 0%, #45c65a 100%);
+}
+[data-tone="warning"].qrc-kpi {
+    background: linear-gradient(135deg, #ea7600 0%, #fe9339 100%);
+}
+[data-tone="muted"].qrc-kpi {
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+}
+.qrc-kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+.qrc-kpi-label {
+    font-size: 0.78rem;
+    opacity: 0.9;
+}

@@ -17,15 +17,15 @@ Targets (per [AGENTS.md §0](https://github.com/sfboss/slack_certification_sales
 Current state recorded in
 [PROJECT_LOG.md](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/PROJECT_LOG.md):
 
-| Metric | Value |
-| --- | --- |
-| Tests run | 151 |
-| Pass rate | 100% |
-| Org-wide coverage | 90% |
-| `EntitlementGuard` | 96% |
-| `SlackSignatureVerifier` | 97% |
-| `CertGameScoringService` | 100% |
-| `StripeWebhookHandler` | 98% |
+| Metric                   | Value |
+| ------------------------ | ----- |
+| Tests run                | 151   |
+| Pass rate                | 100%  |
+| Org-wide coverage        | 90%   |
+| `EntitlementGuard`       | 96%   |
+| `SlackSignatureVerifier` | 97%   |
+| `CertGameScoringService` | 100%  |
+| `StripeWebhookHandler`   | 98%   |
 
 ### Run a single class
 

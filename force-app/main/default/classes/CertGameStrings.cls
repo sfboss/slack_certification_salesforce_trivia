@@ -26,5 +26,7 @@ public with sharing class CertGameStrings {
     public static final String ALREADY_ANSWERED = 'You already answered this round.';
     public static final String TOURNAMENT_NOT_FOUND = 'Tournament not found.';
 
-    public static String formatPoints(Integer pts) { return pts == null ? '0 pts' : pts + ' pts'; }
+    public static String formatPoints(Integer pts) {
+        return pts == null ? '0 pts' : pts + ' pts';
+    }
 }

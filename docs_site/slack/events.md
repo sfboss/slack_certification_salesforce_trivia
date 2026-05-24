@@ -8,10 +8,10 @@ Slack event subscriptions handled by the package. Event routing is in
 
 From [slack-app-manifest.yaml](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/slack-app-manifest.yaml):
 
-| Event | Purpose | Handler effect |
-| --- | --- | --- |
-| `app_home_opened` | User opens the bot DM / Home tab. | Calls `CertGameAppHomeService` → `views.publish` with the player's stats. |
-| `app_mention` | Bot is `@`-mentioned in a channel. | Currently logged for analytics. |
+| Event             | Purpose                            | Handler effect                                                            |
+| ----------------- | ---------------------------------- | ------------------------------------------------------------------------- |
+| `app_home_opened` | User opens the bot DM / Home tab.  | Calls `CertGameAppHomeService` → `views.publish` with the player's stats. |
+| `app_mention`     | Bot is `@`-mentioned in a channel. | Currently logged for analytics.                                           |
 
 The setup guide additionally recommends subscribing to `app_uninstalled` and
 `tokens_revoked` for production tenancy hygiene — see
@@ -52,14 +52,14 @@ for form-encoded bodies.
 
 Every dispatched payload is logged to `Slack_Event_Log__c`:
 
-| Field | Source |
-| --- | --- |
-| `Slack_Event_Id__c` *(External Id)* | Slack `event.event_id`, or SHA-256 of the body if absent. |
-| `Slack_Team_Id__c` | Inferred from payload. |
-| `Event_Type__c` | `slash_command`, `block_actions`, etc. |
-| `Payload_Hash__c` | SHA-256 of body. |
-| `Received_At__c` | `System.now()` at dispatch time. |
-| `Processed__c` | `true` once handler returns. |
+| Field                               | Source                                                    |
+| ----------------------------------- | --------------------------------------------------------- |
+| `Slack_Event_Id__c` _(External Id)_ | Slack `event.event_id`, or SHA-256 of the body if absent. |
+| `Slack_Team_Id__c`                  | Inferred from payload.                                    |
+| `Event_Type__c`                     | `slash_command`, `block_actions`, etc.                    |
+| `Payload_Hash__c`                   | SHA-256 of body.                                          |
+| `Received_At__c`                    | `System.now()` at dispatch time.                          |
+| `Processed__c`                      | `true` once handler returns.                              |
 
 A second arrival with the same `Slack_Event_Id__c` short-circuits with `200` and no
 side effects. The insert happens **after** dispatch so handlers that make Slack callouts

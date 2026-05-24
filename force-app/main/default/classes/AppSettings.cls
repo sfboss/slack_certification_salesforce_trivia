@@ -2,20 +2,30 @@ public with sharing class AppSettings {
     private static App_Setting__mdt cached;
 
     public static App_Setting__mdt get() {
-        if (cached != null) return cached;
+        if (cached != null)
+            return cached;
         List<App_Setting__mdt> rows = [
-            SELECT Default_Provider__c, Default_Model__c, Max_Questions_Per_Game__c,
-                   Max_Generation_Per_Day_Free__c, Max_Generation_Per_Day_Pro__c,
-                   Max_Games_Per_Day_Free__c,
-                   Slack_Signing_Secret__c,
-                   Slack_Verification_Token__c,
-                   Slack_Bot_Token__c,
-                   Slack_Signing_Secret_Named_Credential__c, Slack_Bot_Named_Credential__c,
-                   Stripe_Named_Credential__c, OpenAI_Named_Credential__c,
-                   Feature_Flag_Generation__c, Feature_Flag_Tournaments__c,
-                   Feature_Flag_Billing__c, Feature_Flag_Nudges__c,
-                   Slack_Timestamp_Skew_Seconds__c,
-                   Web_Google_Client_Id__c, Web_Session_Secret__c
+            SELECT
+                Default_Provider__c,
+                Default_Model__c,
+                Max_Questions_Per_Game__c,
+                Max_Generation_Per_Day_Free__c,
+                Max_Generation_Per_Day_Pro__c,
+                Max_Games_Per_Day_Free__c,
+                Slack_Signing_Secret__c,
+                Slack_Verification_Token__c,
+                Slack_Bot_Token__c,
+                Slack_Signing_Secret_Named_Credential__c,
+                Slack_Bot_Named_Credential__c,
+                Stripe_Named_Credential__c,
+                OpenAI_Named_Credential__c,
+                Feature_Flag_Generation__c,
+                Feature_Flag_Tournaments__c,
+                Feature_Flag_Billing__c,
+                Feature_Flag_Nudges__c,
+                Slack_Timestamp_Skew_Seconds__c,
+                Web_Google_Client_Id__c,
+                Web_Session_Secret__c
             FROM App_Setting__mdt
             WHERE DeveloperName = 'Default'
             LIMIT 1
@@ -45,5 +55,7 @@ public with sharing class AppSettings {
     }
 
     @TestVisible
-    private static void overrideSetting(App_Setting__mdt s) { cached = s; }
+    private static void overrideSetting(App_Setting__mdt s) {
+        cached = s;
+    }
 }

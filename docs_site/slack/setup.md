@@ -15,9 +15,9 @@ This page is the operational summary.
 5. Create.
 
 !!! tip "Same URL three times"
-    The slash command, Interactivity, and Event subscription URLs **must** all point at the
-    same Salesforce endpoint. Mismatched URLs are the #1 cause of "buttons don't do
-    anything."
+The slash command, Interactivity, and Event subscription URLs **must** all point at the
+same Salesforce endpoint. Mismatched URLs are the #1 cause of "buttons don't do
+anything."
 
 ## 2. Install to workspace
 
@@ -32,11 +32,11 @@ In the app config screen:
 Two places need the secrets — see [Authentication](../salesforce/authentication.md) for
 field-by-field guidance.
 
-| Where | Field | Value |
-| --- | --- | --- |
-| External Credential `Slack_Bot` | Principal header `Authorization` | `Bearer xoxb-…` |
-| `App_Setting__mdt.Default` | `Slack_Signing_Secret__c` | Signing secret |
-| `App_Setting__mdt.Default` | `Slack_Verification_Token__c` *(optional)* | Slack legacy verification token (used as a fallback for form-encoded slash commands) |
+| Where                           | Field                                      | Value                                                                                |
+| ------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------ |
+| External Credential `Slack_Bot` | Principal header `Authorization`           | `Bearer xoxb-…`                                                                      |
+| `App_Setting__mdt.Default`      | `Slack_Signing_Secret__c`                  | Signing secret                                                                       |
+| `App_Setting__mdt.Default`      | `Slack_Verification_Token__c` _(optional)_ | Slack legacy verification token (used as a fallback for form-encoded slash commands) |
 
 ## 4. Confirm the URL verification handshake
 

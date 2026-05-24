@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <chart>
         <backgroundColor1>#FFFFFF</backgroundColor1>
@@ -68,7 +68,8 @@
     <columns>
         <field>ACCOUNT_NAME</field>
     </columns>
-    <description>What opportunities are open from the last quarter?</description>
+    <description
+    >What opportunities are open from the last quarter?</description>
     <filter>
         <criteriaItems>
             <column>ROLLUP_DESCRIPTION</column>

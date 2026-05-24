@@ -5,11 +5,11 @@ packaging, see [Salesforce → Deployment](../salesforce/deployment.md).
 
 ## Environments
 
-| Env | Purpose |
-| --- | --- |
-| Scratch org (`certgame`) | Local development. |
-| Sandbox | Pre-prod integration testing with a real Slack workspace. |
-| Production / customer orgs | Released 2GP managed package. |
+| Env                        | Purpose                                                   |
+| -------------------------- | --------------------------------------------------------- |
+| Scratch org (`certgame`)   | Local development.                                        |
+| Sandbox                    | Pre-prod integration testing with a real Slack workspace. |
+| Production / customer orgs | Released 2GP managed package.                             |
 
 ## Standard release flow
 
@@ -72,15 +72,15 @@ remove the offending blob from history per
 From [AGENTS.md §3](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/AGENTS.md),
 phases must meet their exit criteria before proceeding:
 
-| Phase | Exit signal |
-| --- | --- |
-| 1 — Data model | Sample JSON validates, perm set group assigned. |
-| 2 — Import + review | Publishing flips status. |
-| 3 — Slack app shell | `/certgame help` returns content; retries don't double-fire. |
-| 4 — Single-game loop | End-to-end Solo game completes. |
-| 5 — App Home + nudges | App Home shows stats; nudge fires. |
-| 6 — Tournaments | Brackets generate and play. |
-| 7 — Dynamic generation | Queueable inserts drafts; live console works. |
-| 8 — Multi-tenant + billing | Stripe webhook updates `Tenant__c`. |
-| 9 — Quality + audit | Scanner High = 0; coverage targets met. |
-| 10 — Package + list | 2GP version published. |
+| Phase                      | Exit signal                                                  |
+| -------------------------- | ------------------------------------------------------------ |
+| 1 — Data model             | Sample JSON validates, perm set group assigned.              |
+| 2 — Import + review        | Publishing flips status.                                     |
+| 3 — Slack app shell        | `/certgame help` returns content; retries don't double-fire. |
+| 4 — Single-game loop       | End-to-end Solo game completes.                              |
+| 5 — App Home + nudges      | App Home shows stats; nudge fires.                           |
+| 6 — Tournaments            | Brackets generate and play.                                  |
+| 7 — Dynamic generation     | Queueable inserts drafts; live console works.                |
+| 8 — Multi-tenant + billing | Stripe webhook updates `Tenant__c`.                          |
+| 9 — Quality + audit        | Scanner High = 0; coverage targets met.                      |
+| 10 — Package + list        | 2GP version published.                                       |

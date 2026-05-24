@@ -1,0 +1,176 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "SF: Sync ← Org (absorb enrichment, get to 0/0)",
+            "detail": "Strip trailing newlines, then retrieve with --ignore-conflicts. Run after every deploy.",
+            "type": "shell",
+            "command": "node scripts/strip-trailing-newlines.js && sf project retrieve start -o certgame --ignore-conflicts",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true },
+            "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "SF: Deploy → Org",
+            "detail": "Deploy force-app to the certgame scratch org.",
+            "type": "shell",
+            "command": "sf project deploy start -o certgame -d force-app -w 30",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Deploy → Org (then Sync)",
+            "detail": "Deploy local changes and immediately retrieve to absorb any server enrichment.",
+            "type": "shell",
+            "command": "sf project deploy start -o certgame -d force-app -w 30 && node scripts/strip-trailing-newlines.js && sf project retrieve start -o certgame --ignore-conflicts",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Preview Deploy (local → org drift)",
+            "detail": "Shows what would be deployed if you pushed now.",
+            "type": "shell",
+            "command": "sf project deploy preview -o certgame",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Preview Retrieve (org → local drift)",
+            "detail": "Shows what the org has that local doesn't. This is what the VS Code footer indicator counts.",
+            "type": "shell",
+            "command": "sf project retrieve preview -o certgame",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Open Org",
+            "type": "shell",
+            "command": "sf org open -o certgame",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "silent" }
+        },
+        {
+            "label": "SF: Tail Apex Log",
+            "detail": "Stream debug logs while exercising Slack/web flows.",
+            "type": "shell",
+            "command": "sf apex tail log -o certgame",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Run Apex Tests (RunLocalTests)",
+            "detail": "Full org test run with code coverage.",
+            "type": "shell",
+            "command": "sf apex run test -o certgame -l RunLocalTests -w 60 -c -r human",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true },
+            "group": "test"
+        },
+        {
+            "label": "SF: Run One Apex Test Class",
+            "detail": "Prompts for a class name and runs that one.",
+            "type": "shell",
+            "command": "sf apex run test -o certgame -n ${input:apexClassName} -r human -w 20 --code-coverage",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: PMD Scan (severity ≥ 2)",
+            "type": "shell",
+            "command": "sf scanner run --target force-app --severity-threshold 2",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "LWC: Jest (all)",
+            "type": "shell",
+            "command": "npm test",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true },
+            "group": "test"
+        },
+        {
+            "label": "LWC: Jest Watch",
+            "type": "shell",
+            "command": "npm run test:unit:watch",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": { "panel": "dedicated", "reveal": "always" }
+        },
+        {
+            "label": "Lint (ESLint)",
+            "type": "shell",
+            "command": "npm run lint",
+            "problemMatcher": ["$eslint-stylish"],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "Prettier: Write + Strip Newlines",
+            "detail": "Format then strip trailing newlines so the result matches the org's canonical form.",
+            "type": "shell",
+            "command": "npm run prettier",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "Prettier: Verify (CI check)",
+            "type": "shell",
+            "command": "npm run prettier:verify",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Strip Trailing Newlines (only)",
+            "detail": "Idempotent. Run if drift creeps back from a non-prettier writer.",
+            "type": "shell",
+            "command": "npm run sf:strip-newlines",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Drift Report (typed counts)",
+            "detail": "Counts remote drift grouped by metadata type. Cheap diagnostic.",
+            "type": "shell",
+            "command": "sf project retrieve preview -o certgame --json | python3 -c \"import json,sys; from collections import Counter; d=json.load(sys.stdin); files=d['result'].get('toRetrieve',[]); print('Total remote drift:', len(files)); [print(f'  {n:>4} {t}') for t,n in Counter(f['type'] for f in files).most_common()]\"",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Validate Question Pack JSON",
+            "detail": "Prompts for a sample_data pack path and validates against the contract.",
+            "type": "shell",
+            "command": "python3 scripts/validate-question-json.py ${input:questionPackPath}",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Reset Source Tracking (nuclear)",
+            "detail": "Clears local and remote tracking state. Next deploy/retrieve treats current state as canonical. Use only when tracking is corrupted.",
+            "type": "shell",
+            "command": "sf project reset tracking -o certgame --no-prompt",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        },
+        {
+            "label": "SF: Bootstrap Scratch Org (destructive)",
+            "detail": "Creates a fresh certgame scratch org, deploys, assigns the permset group. Replaces any existing org by that alias.",
+            "type": "shell",
+            "command": "sf org create scratch -f config/project-scratch-def.json -a certgame -d -y 30 && sf project deploy start -o certgame -w 30 && sf org assign permsetgroup -n Cert_Game_All_Admin -o certgame",
+            "problemMatcher": [],
+            "presentation": { "panel": "dedicated", "reveal": "always", "clear": true }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "apexClassName",
+            "type": "promptString",
+            "description": "Apex test class name (e.g. CertGameDuelService_Test)"
+        },
+        {
+            "id": "questionPackPath",
+            "type": "promptString",
+            "description": "Path to question pack JSON",
+            "default": "sample_data/adm201-question-pack.sample.json"
+        }
+    ]
+}

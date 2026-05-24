@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Fact_Check_Passed__c</fullName>
     <defaultValue>false</defaultValue>
-    <description>First of the two-step publish gate: reviewer affirms question/answer/citation accuracy.</description>
+    <description
+    >First of the two-step publish gate: reviewer affirms question/answer/citation accuracy.</description>
     <externalId>false</externalId>
     <label>Fact Check Passed</label>
     <trackHistory>false</trackHistory>

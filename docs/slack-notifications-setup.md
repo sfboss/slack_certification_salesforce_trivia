@@ -26,9 +26,9 @@ The repository includes three GitHub Actions workflows with Slack notifications:
 4. Click **Create New App**
 5. Select **From scratch**
 6. Enter app details:
-   - **App Name**: `GitHub Actions Notifications` (or your preferred name)
-   - **Pick a workspace**: Select your workspace
-   - Click **Create App**
+    - **App Name**: `GitHub Actions Notifications` (or your preferred name)
+    - **Pick a workspace**: Select your workspace
+    - Click **Create App**
 
 7. In the left sidebar, click **Incoming Webhooks**
 8. Toggle **Activate Incoming Webhooks** to **On**
@@ -37,9 +37,10 @@ The repository includes three GitHub Actions workflows with Slack notifications:
 11. Click **Allow**
 
 12. Copy the **Webhook URL** - it will look like:
-   ```
-   https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX
-   ```
+
+```
+https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX
+```
 
 ### Option B: Using Legacy Incoming Webhooks App
 
@@ -60,29 +61,31 @@ The repository includes three GitHub Actions workflows with Slack notifications:
 4. Click **New repository secret**
 
 5. Enter the secret details:
-   - **Name**: `SLACK_WEBHOOK_URL`
-   - **Secret**: Paste the webhook URL you copied from Slack
-   - Click **Add secret**
+    - **Name**: `SLACK_WEBHOOK_URL`
+    - **Secret**: Paste the webhook URL you copied from Slack
+    - Click **Add secret**
 
 ## Step 3: (Optional) Add Salesforce Dev Hub Authentication
 
 For the CI workflow to create scratch orgs and run Apex tests, you need to add your Dev Hub authentication URL:
 
 1. Authenticate with your Dev Hub org locally:
-   ```bash
-   sf org login web --alias devhub --set-default-dev-hub
-   ```
+
+    ```bash
+    sf org login web --alias devhub --set-default-dev-hub
+    ```
 
 2. Generate the SFDX Auth URL:
-   ```bash
-   sf org display --verbose --json --target-org devhub
-   ```
 
-   Look for the `sfdxAuthUrl` in the output.
+    ```bash
+    sf org display --verbose --json --target-org devhub
+    ```
+
+    Look for the `sfdxAuthUrl` in the output.
 
 3. Add it as a GitHub secret:
-   - **Name**: `SFDX_AUTH_URL`
-   - **Secret**: The `sfdxAuthUrl` value
+    - **Name**: `SFDX_AUTH_URL`
+    - **Secret**: The `sfdxAuthUrl` value
 
 ## Step 4: Test the Setup
 
@@ -90,25 +93,25 @@ For the CI workflow to create scratch orgs and run Apex tests, you need to add y
 
 1. Make a small change to any file in the repository
 2. Commit and push to the `main` or `develop` branch:
-   ```bash
-   git add .
-   git commit -m "test: verify Slack notifications"
-   git push origin main
-   ```
+    ```bash
+    git add .
+    git commit -m "test: verify Slack notifications"
+    git push origin main
+    ```
 3. Check your Slack channel for the build notification
 
 ### Test PR Notifications
 
 1. Create a new branch:
-   ```bash
-   git checkout -b test/slack-notifications
-   ```
+    ```bash
+    git checkout -b test/slack-notifications
+    ```
 2. Make a small change and push:
-   ```bash
-   git add .
-   git commit -m "test: PR notification"
-   git push origin test/slack-notifications
-   ```
+    ```bash
+    git add .
+    git commit -m "test: PR notification"
+    git push origin test/slack-notifications
+    ```
 3. Create a pull request on GitHub
 4. Check your Slack channel for the PR notification
 
@@ -123,20 +126,25 @@ For the CI workflow to create scratch orgs and run Apex tests, you need to add y
 ## Notification Examples
 
 ### Success Notification
+
 When a build succeeds, you'll receive:
+
 - ✅ Green header with "CI Build Successful"
 - Repository, branch, commit, and author information
 - Commit message
 - Button to view the workflow run
 
 ### Failure Notification
+
 When a build fails, you'll receive:
+
 - ❌ Red header with "CI Build Failed"
 - Repository, branch, commit, and author information
 - Warning message
 - Button to view the failed workflow run
 
 ### PR Notifications
+
 - 🔔 New PR opened/reopened
 - ✅ PR merged
 - 🚫 PR closed without merging
@@ -147,11 +155,11 @@ When a build fails, you'll receive:
 
 1. **Check the secret name**: Ensure it's exactly `SLACK_WEBHOOK_URL` (case-sensitive)
 2. **Verify webhook URL**: Test the webhook manually:
-   ```bash
-   curl -X POST -H 'Content-type: application/json' \
-     --data '{"text":"Hello from GitHub Actions!"}' \
-     YOUR_WEBHOOK_URL
-   ```
+    ```bash
+    curl -X POST -H 'Content-type: application/json' \
+      --data '{"text":"Hello from GitHub Actions!"}' \
+      YOUR_WEBHOOK_URL
+    ```
 3. **Check workflow logs**: Look for Slack notification steps in the Actions tab
 4. **Verify channel permissions**: Ensure the Slack app has permission to post to the channel
 
@@ -183,6 +191,7 @@ To change which Slack channel receives notifications:
 ### Customizing Messages
 
 Edit the workflow files in `.github/workflows/` to customize:
+
 - Message content
 - Block Kit formatting
 - Which events trigger notifications
@@ -197,22 +206,22 @@ Create new workflow files in `.github/workflows/` and include the Slack notifica
   if: secrets.SLACK_WEBHOOK_URL != ''
   uses: slackapi/slack-github-action@v1.27.0
   with:
-    payload: |
-      {
-        "text": "Your notification message",
-        "blocks": [
+      payload: |
           {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "Your formatted message here"
-            }
+            "text": "Your notification message",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Your formatted message here"
+                }
+              }
+            ]
           }
-        ]
-      }
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 ```
 
 ## Security Best Practices
@@ -234,6 +243,7 @@ Create new workflow files in `.github/workflows/` and include the Slack notifica
 ## Support
 
 For issues or questions:
+
 - GitHub Actions issues: Check the Actions tab for workflow logs
 - Slack integration issues: Review Slack app settings and webhook logs
 - Repository issues: Open an issue in the GitHub repository

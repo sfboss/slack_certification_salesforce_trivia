@@ -7,13 +7,13 @@
  * Sharing: without sharing because guest user has no record sharing.
  */
 public without sharing class CertGameReadinessReportController {
-
     public String mergedHtml { get; private set; }
     public String errorMessage { get; private set; }
 
     public CertGameReadinessReportController() {
         try {
-            Map<String, String> params = ApexPages.currentPage().getParameters();
+            Map<String, String> params = ApexPages.currentPage()
+                .getParameters();
             String pid = params.get('p');
             String examId = params.get('e');
             String token = params.get('t');
@@ -22,7 +22,12 @@ public without sharing class CertGameReadinessReportController {
 
             Id playerId;
             if (String.isNotBlank(pid)) {
-                try { playerId = (Id) pid; } catch (Exception e) { errorMessage = 'Invalid player id.'; return; }
+                try {
+                    playerId = (Id) pid;
+                } catch (Exception e) {
+                    errorMessage = 'Invalid player id.';
+                    return;
+                }
             }
 
             // Demo mode renders the template with a freshly-found player so a logged-in
@@ -30,9 +35,13 @@ public without sharing class CertGameReadinessReportController {
             if (demo == '1') {
                 if (playerId == null) {
                     List<Player__c> ps = [SELECT Id FROM Player__c LIMIT 1];
-                    if (!ps.isEmpty()) playerId = ps[0].Id;
+                    if (!ps.isEmpty())
+                        playerId = ps[0].Id;
                 }
-                if (playerId == null) { errorMessage = 'No player records exist to preview.'; return; }
+                if (playerId == null) {
+                    errorMessage = 'No player records exist to preview.';
+                    return;
+                }
             } else {
                 WebSessionToken.TokenResult tr = WebSessionToken.verify(token);
                 if (!tr.valid || tr.playerId == null) {
@@ -44,12 +53,25 @@ public without sharing class CertGameReadinessReportController {
 
             Id eId;
             if (String.isNotBlank(examId)) {
-                try { eId = (Id) examId; } catch (Exception ignored) { eId = null; }
+                try {
+                    eId = (Id) examId;
+                } catch (Exception ignored) {
+                    eId = null;
+                }
             }
-            mergedHtml = CertGameReadinessReportService.renderHtml(playerId, eId, theme);
+            mergedHtml = CertGameReadinessReportService.renderHtml(
+                playerId,
+                eId,
+                theme
+            );
         } catch (Exception e) {
             errorMessage = 'Report failed to render: ' + e.getMessage();
-            AppLogger.error('CertGameReadinessReportController', 'ctor', e.getMessage(), e);
+            AppLogger.error(
+                'CertGameReadinessReportController',
+                'ctor',
+                e.getMessage(),
+                e
+            );
         }
     }
 
@@ -58,8 +80,13 @@ public without sharing class CertGameReadinessReportController {
         return mintReportUrl(playerId, examId, null);
     }
 
-    public static String mintReportUrl(Id playerId, Id examId, String themeKey) {
-        if (playerId == null) return null;
+    public static String mintReportUrl(
+        Id playerId,
+        Id examId,
+        String themeKey
+    ) {
+        if (playerId == null)
+            return null;
         String token = WebSessionToken.mint(playerId);
         String base = Site.getBaseSecureUrl();
         if (String.isBlank(base)) {
@@ -67,31 +94,61 @@ public without sharing class CertGameReadinessReportController {
             // resolve the public salesforce-sites.com host bound to the certgame site.
             base = resolveSiteBaseUrl();
         }
-        String url = base + '/CertGameReadinessReport?p=' + playerId + '&t=' + EncodingUtil.urlEncode(token, 'UTF-8');
-        if (examId != null) url += '&e=' + examId;
-        if (String.isNotBlank(themeKey)) url += '&theme=' + EncodingUtil.urlEncode(themeKey, 'UTF-8');
+        String url =
+            base +
+            '/CertGameReadinessReport?p=' +
+            playerId +
+            '&t=' +
+            EncodingUtil.urlEncode(token, 'UTF-8');
+        if (examId != null)
+            url += '&e=' + examId;
+        if (String.isNotBlank(themeKey))
+            url += '&theme=' + EncodingUtil.urlEncode(themeKey, 'UTF-8');
         return url;
     }
 
     private static String cachedSiteBaseUrl;
     private static String resolveSiteBaseUrl() {
-        if (cachedSiteBaseUrl != null) return cachedSiteBaseUrl;
+        if (cachedSiteBaseUrl != null)
+            return cachedSiteBaseUrl;
         try {
-            List<Site> sites = [SELECT Id, UrlPathPrefix FROM Site WHERE Status = 'Active' LIMIT 5];
+            List<Site> sites = [
+                SELECT Id, UrlPathPrefix
+                FROM Site
+                WHERE Status = 'Active'
+                LIMIT 5
+            ];
             for (Site s : sites) {
-                String prefix = String.isBlank(s.UrlPathPrefix) ? '' : '/' + s.UrlPathPrefix;
-                List<DomainSite> binds = [SELECT Domain.Domain FROM DomainSite WHERE SiteId = :s.Id LIMIT 5];
+                String prefix = String.isBlank(s.UrlPathPrefix)
+                    ? ''
+                    : '/' + s.UrlPathPrefix;
+                List<DomainSite> binds = [
+                    SELECT Domain.Domain
+                    FROM DomainSite
+                    WHERE SiteId = :s.Id
+                    LIMIT 5
+                ];
                 for (DomainSite b : binds) {
-                    if (b.Domain != null && String.isNotBlank(b.Domain.Domain)) {
-                        cachedSiteBaseUrl = 'https://' + b.Domain.Domain + prefix;
+                    if (
+                        b.Domain != null && String.isNotBlank(b.Domain.Domain)
+                    ) {
+                        cachedSiteBaseUrl =
+                            'https://' +
+                            b.Domain.Domain +
+                            prefix;
                         return cachedSiteBaseUrl;
                     }
                 }
             }
         } catch (Exception e) {
-            AppLogger.warn('CertGameReadinessReportController', 'resolveSiteBaseUrl', e.getMessage());
+            AppLogger.warn(
+                'CertGameReadinessReportController',
+                'resolveSiteBaseUrl',
+                e.getMessage()
+            );
         }
-        cachedSiteBaseUrl = URL.getOrgDomainUrl().toExternalForm() + '/certgame';
+        cachedSiteBaseUrl =
+            URL.getOrgDomainUrl().toExternalForm() + '/certgame';
         return cachedSiteBaseUrl;
     }
 }

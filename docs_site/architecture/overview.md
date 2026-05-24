@@ -85,17 +85,17 @@ flowchart TB
 
 ## Layer responsibilities
 
-| Layer | Responsibility | Rule |
-| --- | --- | --- |
-| **Ingress** | Receive HTTP from Slack/Stripe. | `without sharing` only here; verify signature immediately. |
-| **Verification** | HMAC + timestamp window. | No DML. `@TestVisible` secret override. |
-| **Routing** | Idempotency + payload-type dispatch. | One `Slack_Event_Log__c` per inbound event. |
-| **Handlers** | Translate Slack payload → service call. | No SOQL in loops, no inline Block Kit. |
-| **Services** | Business logic. Bulk-first APIs. | `with sharing` unless explicit reason. |
-| **Render** | Build Block Kit JSON. | All JSON lives in `CertGameSlackRenderService`. |
-| **Guards** | Plan/quota checks. | `EntitlementGuard` is the single answer to "can this happen?". |
-| **Data** | 27 custom objects. | Idempotency keys on every external boundary. |
-| **Async** | Generation, nudges, citation auditing. | Queueable / Schedulable, never blocks the Slack ack. |
+| Layer            | Responsibility                          | Rule                                                           |
+| ---------------- | --------------------------------------- | -------------------------------------------------------------- |
+| **Ingress**      | Receive HTTP from Slack/Stripe.         | `without sharing` only here; verify signature immediately.     |
+| **Verification** | HMAC + timestamp window.                | No DML. `@TestVisible` secret override.                        |
+| **Routing**      | Idempotency + payload-type dispatch.    | One `Slack_Event_Log__c` per inbound event.                    |
+| **Handlers**     | Translate Slack payload → service call. | No SOQL in loops, no inline Block Kit.                         |
+| **Services**     | Business logic. Bulk-first APIs.        | `with sharing` unless explicit reason.                         |
+| **Render**       | Build Block Kit JSON.                   | All JSON lives in `CertGameSlackRenderService`.                |
+| **Guards**       | Plan/quota checks.                      | `EntitlementGuard` is the single answer to "can this happen?". |
+| **Data**         | 27 custom objects.                      | Idempotency keys on every external boundary.                   |
+| **Async**        | Generation, nudges, citation auditing.  | Queueable / Schedulable, never blocks the Slack ack.           |
 
 ## Design rules (from AGENTS.md)
 
@@ -150,16 +150,16 @@ sequenceDiagram
 
 ## Where to look in code
 
-| Concern | Class |
-| --- | --- |
-| HTTP entry | `SlackEventsRestResource`, `StripeWebhookHandler` |
-| Verification | `SlackSignatureVerifier`, `StripeSignatureVerifier` |
-| Routing | `SlackRequestRouter` |
-| Game loop | `CertGameSessionService`, `CertGameScoringService` |
-| Tenancy | `CertGameTenantService`, `Tenant__c` |
-| Entitlements | `EntitlementGuard`, `Usage_Metric__c`, `App_Setting__mdt` |
-| Billing | `CertGameBillingService`, `StripeWebhookHandler`, `License_Event__c` |
-| Rendering | `CertGameSlackRenderService`, `CertGameStrings` |
-| Outbound | `SlackApiClient` |
-| Async | `CertGameGenerationJobQueueable`, `CertGameNudgeScheduler` |
-| Import | `CertGameImportService`, `QuestionJsonValidator`, `QuestionDuplicateDetector` |
+| Concern      | Class                                                                         |
+| ------------ | ----------------------------------------------------------------------------- |
+| HTTP entry   | `SlackEventsRestResource`, `StripeWebhookHandler`                             |
+| Verification | `SlackSignatureVerifier`, `StripeSignatureVerifier`                           |
+| Routing      | `SlackRequestRouter`                                                          |
+| Game loop    | `CertGameSessionService`, `CertGameScoringService`                            |
+| Tenancy      | `CertGameTenantService`, `Tenant__c`                                          |
+| Entitlements | `EntitlementGuard`, `Usage_Metric__c`, `App_Setting__mdt`                     |
+| Billing      | `CertGameBillingService`, `StripeWebhookHandler`, `License_Event__c`          |
+| Rendering    | `CertGameSlackRenderService`, `CertGameStrings`                               |
+| Outbound     | `SlackApiClient`                                                              |
+| Async        | `CertGameGenerationJobQueueable`, `CertGameNudgeScheduler`                    |
+| Import       | `CertGameImportService`, `QuestionJsonValidator`, `QuestionDuplicateDetector` |

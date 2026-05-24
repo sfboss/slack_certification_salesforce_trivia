@@ -16,27 +16,48 @@ global without sharing class SlackEventsRestResource {
         RestRequest req = RestContext.request;
         RestResponse resp = RestContext.response;
         try {
-            Map<String, String> headers = req.headers == null ? new Map<String, String>() : req.headers;
+            Map<String, String> headers = req.headers == null
+                ? new Map<String, String>()
+                : req.headers;
             Blob rawBlob = req.requestBody;
             String body = rawBlob == null ? '' : rawBlob.toString();
-            String contentType = headers.containsKey('Content-Type') ? headers.get('Content-Type')
-                              : headers.containsKey('content-type') ? headers.get('content-type') : '';
+            String contentType = headers.containsKey('Content-Type')
+                ? headers.get('Content-Type')
+                : headers.containsKey('content-type')
+                      ? headers.get('content-type')
+                      : '';
 
             // Salesforce Sites consumes application/x-www-form-urlencoded bodies
             // into RestRequest.params before Apex REST sees the raw bytes. Rebuild
             // the body in Slack's canonical slash-command/interaction key order so
             // HMAC signature verification can succeed.
-            if (String.isBlank(body) && req.params != null && !req.params.isEmpty()
-                    && contentType != null && contentType.startsWithIgnoreCase('application/x-www-form-urlencoded')) {
+            if (
+                String.isBlank(body) &&
+                req.params != null &&
+                !req.params.isEmpty() &&
+                contentType != null &&
+                contentType.startsWithIgnoreCase(
+                    'application/x-www-form-urlencoded'
+                )
+            ) {
                 body = reconstructFormBody(req.params);
             }
 
-            SlackRequestRouter.RouterResult r = SlackRequestRouter.dispatch(headers, body, contentType);
+            SlackRequestRouter.RouterResult r = SlackRequestRouter.dispatch(
+                headers,
+                body,
+                contentType
+            );
             resp.statusCode = r.statusCode;
             resp.addHeader('Content-Type', 'application/json; charset=utf-8');
             resp.responseBody = Blob.valueOf(r.body == null ? '' : r.body);
         } catch (Exception e) {
-            AppLogger.error('SlackEventsRestResource', 'doPost', 'Unhandled Slack endpoint error', e);
+            AppLogger.error(
+                'SlackEventsRestResource',
+                'doPost',
+                'Unhandled Slack endpoint error',
+                e
+            );
             resp.statusCode = 200;
             resp.responseBody = Blob.valueOf('');
         }
@@ -46,9 +67,22 @@ global without sharing class SlackEventsRestResource {
     // x-www-form-urlencoded body in that order so HMAC verification matches.
     // Any keys not in the canonical list are appended sorted alphabetically.
     private static final List<String> SLACK_CANONICAL_ORDER = new List<String>{
-        'token','team_id','team_domain','enterprise_id','enterprise_name',
-        'is_enterprise_install','channel_id','channel_name','user_id','user_name',
-        'command','text','api_app_id','response_url','trigger_id','payload'
+        'token',
+        'team_id',
+        'team_domain',
+        'enterprise_id',
+        'enterprise_name',
+        'is_enterprise_install',
+        'channel_id',
+        'channel_name',
+        'user_id',
+        'user_name',
+        'command',
+        'text',
+        'api_app_id',
+        'response_url',
+        'trigger_id',
+        'payload'
     };
 
     @TestVisible
@@ -63,14 +97,18 @@ global without sharing class SlackEventsRestResource {
         }
         List<String> remaining = new List<String>();
         for (String k : params.keySet()) {
-            if (!seen.contains(k)) remaining.add(k);
+            if (!seen.contains(k))
+                remaining.add(k);
         }
         remaining.sort();
-        for (String k : remaining) parts.add(encodePair(k, params.get(k)));
+        for (String k : remaining)
+            parts.add(encodePair(k, params.get(k)));
         return String.join(parts, '&');
     }
 
     private static String encodePair(String k, String v) {
-        return EncodingUtil.urlEncode(k, 'UTF-8') + '=' + EncodingUtil.urlEncode(v == null ? '' : v, 'UTF-8');
+        return EncodingUtil.urlEncode(k, 'UTF-8') +
+            '=' +
+            EncodingUtil.urlEncode(v == null ? '' : v, 'UTF-8');
     }
 }

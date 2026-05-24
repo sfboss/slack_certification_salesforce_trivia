@@ -1,33 +1,54 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <name>Game Sessions Last 30 Days</name>
-    <description>All game sessions started in the last 30 days, grouped by mode (Solo, Duel, Tournament) and status. Use to monitor engagement velocity.</description>
-    <reportType>CertGame_Sessions_With_Answers__c</reportType>
+    <columns>
+        <field>Game_Session__c$Name</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Certification_Exam__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Tenant__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Total_Questions__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Timer_Seconds__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Started_At__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Completed_At__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c$Started_By_Slack_User_Id__c</field>
+    </columns>
+    <description
+    >All game sessions started in the last 30 days, grouped by mode (Solo, Duel, Tournament) and status. Use to monitor engagement velocity.</description>
     <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Game_Session__c$Mode__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Game_Session__c$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Game Sessions Last 30 Days</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CertGame_Sessions_With_Answers__c</reportType>
     <scope>organization</scope>
     <showDetails>true</showDetails>
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
-    <columns><field>Game_Session__c$Name</field></columns>
-    <columns><field>Game_Session__c$Certification_Exam__c</field></columns>
-    <columns><field>Game_Session__c$Tenant__c</field></columns>
-    <columns><field>Game_Session__c$Total_Questions__c</field></columns>
-    <columns><field>Game_Session__c$Timer_Seconds__c</field></columns>
-    <columns><field>Game_Session__c$Started_At__c</field></columns>
-    <columns><field>Game_Session__c$Completed_At__c</field></columns>
-    <columns><field>Game_Session__c$Started_By_Slack_User_Id__c</field></columns>
     <timeFrameFilter>
         <dateColumn>Game_Session__c$Started_At__c</dateColumn>
         <interval>INTERVAL_LAST30</interval>
     </timeFrameFilter>
-    <groupingsDown>
-        <field>Game_Session__c$Mode__c</field>
-        <sortOrder>Asc</sortOrder>
-        <dateGranularity>Day</dateGranularity>
-    </groupingsDown>
-    <groupingsDown>
-        <field>Game_Session__c$Status__c</field>
-        <sortOrder>Asc</sortOrder>
-        <dateGranularity>Day</dateGranularity>
-    </groupingsDown>
 </Report>

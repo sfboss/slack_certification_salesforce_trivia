@@ -1,97 +1,226 @@
 {
-  "exam": { "name": "Salesforce Integration Essentials", "code": "CRT-INT", "vendor": "Salesforce" },
-  "questionBank": {
-    "name": "Integration Essentials Pack",
-    "version": "1.0.0",
-    "sourceType": "Manual",
-    "status": "Draft",
-    "externalId": "BANK-INT-001"
-  },
-  "questions": [
-    {
-      "externalId": "INT-Q1",
-      "domain": "APIs",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which Salesforce API is best suited for loading millions of records efficiently?",
-      "choices": [
-        { "label": "A", "text": "REST API", "isCorrect": false, "explanation": "REST is great for small/medium volumes." },
-        { "label": "B", "text": "SOAP API", "isCorrect": false, "explanation": "SOAP API is record-oriented, not bulk-optimized." },
-        { "label": "C", "text": "Bulk API 2.0", "isCorrect": true, "explanation": "Bulk API 2.0 is purpose-built for large data volume." },
-        { "label": "D", "text": "Streaming API", "isCorrect": false, "explanation": "Streaming pushes events, not bulk loads." }
-      ],
-      "explanation": "Bulk API 2.0 is optimized for high-volume asynchronous record operations.",
-      "citations": [
-        { "title": "Bulk API 2.0", "url": "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_intro.htm", "sourceType": "Salesforce Help", "relevanceNote": "Bulk API reference." }
-      ]
+    "exam": {
+        "name": "Salesforce Integration Essentials",
+        "code": "CRT-INT",
+        "vendor": "Salesforce"
     },
-    {
-      "externalId": "INT-Q2",
-      "domain": "Outbound Callouts",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which Salesforce feature centralizes endpoint URL + auth for outbound callouts?",
-      "choices": [
-        { "label": "A", "text": "Remote Site Settings", "isCorrect": false, "explanation": "Remote Site only whitelists the host." },
-        { "label": "B", "text": "Named Credential (with External Credential)", "isCorrect": true, "explanation": "Named Credentials bundle URL and auth, simplifying Apex callouts." },
-        { "label": "C", "text": "Connected App", "isCorrect": false, "explanation": "Connected Apps are inbound auth definitions." },
-        { "label": "D", "text": "Custom Setting", "isCorrect": false, "explanation": "Custom Settings store config but don't handle auth." }
-      ],
-      "explanation": "Named Credentials are the modern best practice for outbound auth.",
-      "citations": [
-        { "title": "Named Credentials", "url": "https://help.salesforce.com/s/articleView?id=sf.named_credentials_about.htm", "sourceType": "Salesforce Help", "relevanceNote": "Named Credential reference." }
-      ]
+    "questionBank": {
+        "name": "Integration Essentials Pack",
+        "version": "1.0.0",
+        "sourceType": "Manual",
+        "status": "Draft",
+        "externalId": "BANK-INT-001"
     },
-    {
-      "externalId": "INT-Q3",
-      "domain": "Inbound Auth",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which Salesforce object configures how external systems authenticate INTO Salesforce via OAuth?",
-      "choices": [
-        { "label": "A", "text": "Connected App", "isCorrect": true, "explanation": "Connected Apps define OAuth client credentials for inbound auth." },
-        { "label": "B", "text": "Named Credential", "isCorrect": false, "explanation": "Named Credentials are for outbound." },
-        { "label": "C", "text": "Permission Set", "isCorrect": false, "explanation": "Perm Sets handle user permissions, not OAuth client setup." },
-        { "label": "D", "text": "Auth Provider", "isCorrect": false, "explanation": "Auth Providers configure external IdPs for inbound SSO, distinct from Connected Apps for inbound API auth." }
-      ],
-      "explanation": "Connected Apps are the inbound OAuth client configuration.",
-      "citations": [
-        { "title": "Connected Apps", "url": "https://help.salesforce.com/s/articleView?id=sf.connected_app_overview.htm", "sourceType": "Salesforce Help", "relevanceNote": "Connected App reference." }
-      ]
-    },
-    {
-      "externalId": "INT-Q4",
-      "domain": "Events",
-      "difficulty": "Advanced",
-      "questionType": "Single Select",
-      "question": "Which mechanism is best for fire-and-forget pub/sub messaging between Salesforce and external apps?",
-      "choices": [
-        { "label": "A", "text": "Outbound Messages", "isCorrect": false, "explanation": "Outbound messages are point-to-point and tied to workflow." },
-        { "label": "B", "text": "Platform Events", "isCorrect": true, "explanation": "Platform Events are pub/sub messages over the event bus." },
-        { "label": "C", "text": "Apex Triggers", "isCorrect": false, "explanation": "Triggers run in-org, not pub/sub messaging." },
-        { "label": "D", "text": "REST API polling", "isCorrect": false, "explanation": "Polling is inefficient compared to pub/sub." }
-      ],
-      "explanation": "Platform Events power pub/sub via the Salesforce event bus.",
-      "citations": [
-        { "title": "Platform Events", "url": "https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_intro.htm", "sourceType": "Salesforce Help", "relevanceNote": "Platform Events reference." }
-      ]
-    },
-    {
-      "externalId": "INT-Q5",
-      "domain": "Limits",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "What is the synchronous callout time limit for an Apex transaction?",
-      "choices": [
-        { "label": "A", "text": "10 seconds", "isCorrect": false, "explanation": "Below the actual limit." },
-        { "label": "B", "text": "60 seconds total / 120 seconds for queueable", "isCorrect": false, "explanation": "These numbers are not the documented values." },
-        { "label": "C", "text": "120 seconds total per transaction (synchronous)", "isCorrect": true, "explanation": "Cumulative callout time limit is 120 seconds in synchronous Apex." },
-        { "label": "D", "text": "Unlimited", "isCorrect": false, "explanation": "Callouts have time limits." }
-      ],
-      "explanation": "Synchronous Apex allows up to 120 seconds total callout time per transaction.",
-      "citations": [
-        { "title": "Apex Governor Limits — Callouts", "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm", "sourceType": "Salesforce Help", "relevanceNote": "Callout limit values." }
-      ]
-    }
-  ]
+    "questions": [
+        {
+            "externalId": "INT-Q1",
+            "domain": "APIs",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which Salesforce API is best suited for loading millions of records efficiently?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "REST API",
+                    "isCorrect": false,
+                    "explanation": "REST is great for small/medium volumes."
+                },
+                {
+                    "label": "B",
+                    "text": "SOAP API",
+                    "isCorrect": false,
+                    "explanation": "SOAP API is record-oriented, not bulk-optimized."
+                },
+                {
+                    "label": "C",
+                    "text": "Bulk API 2.0",
+                    "isCorrect": true,
+                    "explanation": "Bulk API 2.0 is purpose-built for large data volume."
+                },
+                {
+                    "label": "D",
+                    "text": "Streaming API",
+                    "isCorrect": false,
+                    "explanation": "Streaming pushes events, not bulk loads."
+                }
+            ],
+            "explanation": "Bulk API 2.0 is optimized for high-volume asynchronous record operations.",
+            "citations": [
+                {
+                    "title": "Bulk API 2.0",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_intro.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Bulk API reference."
+                }
+            ]
+        },
+        {
+            "externalId": "INT-Q2",
+            "domain": "Outbound Callouts",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which Salesforce feature centralizes endpoint URL + auth for outbound callouts?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Remote Site Settings",
+                    "isCorrect": false,
+                    "explanation": "Remote Site only whitelists the host."
+                },
+                {
+                    "label": "B",
+                    "text": "Named Credential (with External Credential)",
+                    "isCorrect": true,
+                    "explanation": "Named Credentials bundle URL and auth, simplifying Apex callouts."
+                },
+                {
+                    "label": "C",
+                    "text": "Connected App",
+                    "isCorrect": false,
+                    "explanation": "Connected Apps are inbound auth definitions."
+                },
+                {
+                    "label": "D",
+                    "text": "Custom Setting",
+                    "isCorrect": false,
+                    "explanation": "Custom Settings store config but don't handle auth."
+                }
+            ],
+            "explanation": "Named Credentials are the modern best practice for outbound auth.",
+            "citations": [
+                {
+                    "title": "Named Credentials",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.named_credentials_about.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Named Credential reference."
+                }
+            ]
+        },
+        {
+            "externalId": "INT-Q3",
+            "domain": "Inbound Auth",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which Salesforce object configures how external systems authenticate INTO Salesforce via OAuth?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Connected App",
+                    "isCorrect": true,
+                    "explanation": "Connected Apps define OAuth client credentials for inbound auth."
+                },
+                {
+                    "label": "B",
+                    "text": "Named Credential",
+                    "isCorrect": false,
+                    "explanation": "Named Credentials are for outbound."
+                },
+                {
+                    "label": "C",
+                    "text": "Permission Set",
+                    "isCorrect": false,
+                    "explanation": "Perm Sets handle user permissions, not OAuth client setup."
+                },
+                {
+                    "label": "D",
+                    "text": "Auth Provider",
+                    "isCorrect": false,
+                    "explanation": "Auth Providers configure external IdPs for inbound SSO, distinct from Connected Apps for inbound API auth."
+                }
+            ],
+            "explanation": "Connected Apps are the inbound OAuth client configuration.",
+            "citations": [
+                {
+                    "title": "Connected Apps",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.connected_app_overview.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Connected App reference."
+                }
+            ]
+        },
+        {
+            "externalId": "INT-Q4",
+            "domain": "Events",
+            "difficulty": "Advanced",
+            "questionType": "Single Select",
+            "question": "Which mechanism is best for fire-and-forget pub/sub messaging between Salesforce and external apps?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Outbound Messages",
+                    "isCorrect": false,
+                    "explanation": "Outbound messages are point-to-point and tied to workflow."
+                },
+                {
+                    "label": "B",
+                    "text": "Platform Events",
+                    "isCorrect": true,
+                    "explanation": "Platform Events are pub/sub messages over the event bus."
+                },
+                {
+                    "label": "C",
+                    "text": "Apex Triggers",
+                    "isCorrect": false,
+                    "explanation": "Triggers run in-org, not pub/sub messaging."
+                },
+                {
+                    "label": "D",
+                    "text": "REST API polling",
+                    "isCorrect": false,
+                    "explanation": "Polling is inefficient compared to pub/sub."
+                }
+            ],
+            "explanation": "Platform Events power pub/sub via the Salesforce event bus.",
+            "citations": [
+                {
+                    "title": "Platform Events",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/platform_events_intro.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Platform Events reference."
+                }
+            ]
+        },
+        {
+            "externalId": "INT-Q5",
+            "domain": "Limits",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "What is the synchronous callout time limit for an Apex transaction?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "10 seconds",
+                    "isCorrect": false,
+                    "explanation": "Below the actual limit."
+                },
+                {
+                    "label": "B",
+                    "text": "60 seconds total / 120 seconds for queueable",
+                    "isCorrect": false,
+                    "explanation": "These numbers are not the documented values."
+                },
+                {
+                    "label": "C",
+                    "text": "120 seconds total per transaction (synchronous)",
+                    "isCorrect": true,
+                    "explanation": "Cumulative callout time limit is 120 seconds in synchronous Apex."
+                },
+                {
+                    "label": "D",
+                    "text": "Unlimited",
+                    "isCorrect": false,
+                    "explanation": "Callouts have time limits."
+                }
+            ],
+            "explanation": "Synchronous Apex allows up to 120 seconds total callout time per transaction.",
+            "citations": [
+                {
+                    "title": "Apex Governor Limits — Callouts",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Callout limit values."
+                }
+            ]
+        }
+    ]
 }

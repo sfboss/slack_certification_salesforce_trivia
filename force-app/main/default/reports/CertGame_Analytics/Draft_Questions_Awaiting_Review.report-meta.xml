@@ -1,20 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <name>Draft Questions Awaiting Review</name>
-    <description>Trivia questions still in Draft status that need human review before they can be published.</description>
-    <reportType>CertGame_Questions_With_Citations__c</reportType>
-    <format>Tabular</format>
-    <scope>organization</scope>
-    <showDetails>true</showDetails>
-    <showGrandTotal>true</showGrandTotal>
-    <showSubTotals>true</showSubTotals>
-    <columns><field>Trivia_Question__c$Name</field></columns>
-    <columns><field>Trivia_Question__c$Certification_Exam__c</field></columns>
-    <columns><field>Trivia_Question__c$Question_Type__c</field></columns>
-    <columns><field>Trivia_Question__c$Difficulty__c</field></columns>
-    <columns><field>Trivia_Question__c$Fact_Check_Passed__c</field></columns>
-    <columns><field>Trivia_Question__c$CreatedDate</field></columns>
-    <columns><field>Trivia_Question__c$CreatedBy</field></columns>
+    <columns>
+        <field>Trivia_Question__c$Name</field>
+    </columns>
+    <columns>
+        <field>Trivia_Question__c$Certification_Exam__c</field>
+    </columns>
+    <columns>
+        <field>Trivia_Question__c$Question_Type__c</field>
+    </columns>
+    <columns>
+        <field>Trivia_Question__c$Difficulty__c</field>
+    </columns>
+    <columns>
+        <field>Trivia_Question__c$Fact_Check_Passed__c</field>
+    </columns>
+    <columns>
+        <field>Trivia_Question__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Trivia_Question__c$CreatedBy</field>
+    </columns>
+    <description
+    >Trivia questions still in Draft status that need human review before they can be published.</description>
     <filter>
         <criteriaItems>
             <column>Trivia_Question__c$Status__c</column>
@@ -24,6 +32,21 @@
             <value>Draft</value>
         </criteriaItems>
     </filter>
+    <format>Tabular</format>
+    <name>Draft Questions Awaiting Review</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CertGame_Questions_With_Citations__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
     <sortColumn>Trivia_Question__c$CreatedDate</sortColumn>
     <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Trivia_Question__c$Last_Verified_Date__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
 </Report>

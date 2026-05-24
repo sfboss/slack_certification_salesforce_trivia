@@ -97,15 +97,15 @@ flowchart LR
 
 ## What's in the box
 
-| Surface | Owner | Where to look |
-| --- | --- | --- |
-| **Slack `/certgame` command** | Players | [Slash commands](slack/commands.md) |
-| **Cert Game Manager Lightning app** | Admins | [User guide → features](user-guide/features.md) |
-| **27 custom objects** | Salesforce | [Data model](salesforce/data-model.md) |
-| **REST endpoints** | Slack & Stripe | [Salesforce APIs](salesforce/apis.md) |
-| **10 Lightning Web Components** | Admins | [LWC reference](api-reference/lwc.md) |
-| **Question generation pipeline** | Reviewers | [Workflows](user-guide/workflows.md) |
-| **Stripe billing webhook** | Tenants | [API reference](api-reference/salesforce-api.md) |
+| Surface                             | Owner          | Where to look                                    |
+| ----------------------------------- | -------------- | ------------------------------------------------ |
+| **Slack `/certgame` command**       | Players        | [Slash commands](slack/commands.md)              |
+| **Cert Game Manager Lightning app** | Admins         | [User guide → features](user-guide/features.md)  |
+| **27 custom objects**               | Salesforce     | [Data model](salesforce/data-model.md)           |
+| **REST endpoints**                  | Slack & Stripe | [Salesforce APIs](salesforce/apis.md)            |
+| **10 Lightning Web Components**     | Admins         | [LWC reference](api-reference/lwc.md)            |
+| **Question generation pipeline**    | Reviewers      | [Workflows](user-guide/workflows.md)             |
+| **Stripe billing webhook**          | Tenants        | [API reference](api-reference/salesforce-api.md) |
 
 ---
 

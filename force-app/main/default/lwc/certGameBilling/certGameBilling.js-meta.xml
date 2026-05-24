@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>60.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Cert Game Billing</masterLabel>
-    <description>Plan, quotas, usage, and Stripe Customer Portal access for a tenant.</description>
+    <description
+    >Plan, quotas, usage, and Stripe Customer Portal access for a tenant.</description>
     <targets>
         <target>lightning__RecordPage</target>
         <target>lightning__AppPage</target>
@@ -16,7 +17,12 @@
             </objects>
         </targetConfig>
         <targetConfig targets="lightning__AppPage">
-            <property name="tenantId" type="String" label="Tenant Id" description="Tenant__c Id to show. Required when not on a record page."/>
+            <property
+                name="tenantId"
+                type="String"
+                label="Tenant Id"
+                description="Tenant__c Id to show. Required when not on a record page."
+            />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

@@ -3,6 +3,7 @@
 ## TL;DR - 5 Minute Setup
 
 ### 1. Create Slack Webhook (2 minutes)
+
 ```
 1. Go to: https://api.slack.com/apps
 2. Click "Create New App" → "From scratch"
@@ -14,6 +15,7 @@
 ```
 
 ### 2. Add to GitHub Secrets (1 minute)
+
 ```
 1. Go to: https://github.com/sfboss/slack_certification_salesforce_trivia/settings/secrets/actions
 2. Click "New repository secret"
@@ -23,6 +25,7 @@
 ```
 
 ### 3. Test (2 minutes)
+
 ```bash
 # Push a commit to trigger CI
 git add .
@@ -35,6 +38,7 @@ git push origin main
 ## Your Webhook URL Format
 
 Your webhook URL should look like this:
+
 ```
 https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX
 ```

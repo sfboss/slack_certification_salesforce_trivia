@@ -5,19 +5,19 @@ Every interaction with the bot starts with `/certgame <subcommand>`. The dispatc
 
 ## Command reference
 
-| Subcommand | Args | Behavior | Handler |
-| --- | --- | --- | --- |
-| `help` *(default)* | — | Render the help block. | `CertGameSlackRenderService.help` |
-| `play [CODE]` | Certification code or blank | Start a Solo game; auto-picks an active exam if no code. | `CertGameSessionService.startQuickGameFromSlack` |
-| `challenge @user [CODE]` | Mention + optional code | Open a duel challenge card in the current channel. Alias: `duel`. | `CertGameDuelService.openChallengeFromSlack` |
-| `games` | — | List configured exams. | `CertGameExamCatalogService.renderForSlack` |
-| `leaderboard [CODE]` | Optional code | Top players, optionally scoped to a cert. | `CertGameLeaderboardService.renderLeaderboard` |
-| `stats` | — | Personal stats (accuracy, streak). | `CertGameLeaderboardService.renderStats` |
-| `plan` | — | Open the Study Plan modal. | `CertGameStudyPlanService.openPlanModal` |
-| `billing` | — | Open the Billing modal (Pro/Enterprise admins). | `CertGameBillingService.openBillingModal` |
-| `debug` | — | Render the last hour of `App_Log__c` entries (for diagnostics). | `SlackCertGameCommandHandler.renderDebug` |
-| `doctor` | — | Run the self-diagnostic suite (named credentials, custom metadata, etc.). | `CertGameDoctorService.run` |
-| `notify-test` | — | Post a sample notification card to confirm the outbound Slack pipeline. | `CertGameNotificationTestService.run` |
+| Subcommand               | Args                        | Behavior                                                                  | Handler                                          |
+| ------------------------ | --------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------ |
+| `help` _(default)_       | —                           | Render the help block.                                                    | `CertGameSlackRenderService.help`                |
+| `play [CODE]`            | Certification code or blank | Start a Solo game; auto-picks an active exam if no code.                  | `CertGameSessionService.startQuickGameFromSlack` |
+| `challenge @user [CODE]` | Mention + optional code     | Open a duel challenge card in the current channel. Alias: `duel`.         | `CertGameDuelService.openChallengeFromSlack`     |
+| `games`                  | —                           | List configured exams.                                                    | `CertGameExamCatalogService.renderForSlack`      |
+| `leaderboard [CODE]`     | Optional code               | Top players, optionally scoped to a cert.                                 | `CertGameLeaderboardService.renderLeaderboard`   |
+| `stats`                  | —                           | Personal stats (accuracy, streak).                                        | `CertGameLeaderboardService.renderStats`         |
+| `plan`                   | —                           | Open the Study Plan modal.                                                | `CertGameStudyPlanService.openPlanModal`         |
+| `billing`                | —                           | Open the Billing modal (Pro/Enterprise admins).                           | `CertGameBillingService.openBillingModal`        |
+| `debug`                  | —                           | Render the last hour of `App_Log__c` entries (for diagnostics).           | `SlackCertGameCommandHandler.renderDebug`        |
+| `doctor`                 | —                           | Run the self-diagnostic suite (named credentials, custom metadata, etc.). | `CertGameDoctorService.run`                      |
+| `notify-test`            | —                           | Post a sample notification card to confirm the outbound Slack pipeline.   | `CertGameNotificationTestService.run`            |
 
 Anything else: returns `CertGameStrings.UNKNOWN_COMMAND` as an ephemeral message.
 

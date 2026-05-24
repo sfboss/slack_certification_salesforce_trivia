@@ -80,12 +80,12 @@ Full Slack-side walkthrough: [Slack setup](../slack/setup.md).
 
 The package ships these Named Credentials (no-auth shells; secrets bound at install):
 
-| Named Credential | Header |
-| --- | --- |
-| `Slack_Bot` | `Authorization: Bearer <xoxb-…>` |
-| `Slack_Signing` | stores the signing secret as a custom header (also mirrored to `App_Setting__mdt.Slack_Signing_Secret__c` for the verifier) |
-| `OpenAI` | `Authorization: Bearer <sk-…>` |
-| `Stripe` | `Authorization: Bearer <sk_live_…>` |
+| Named Credential | Header                                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `Slack_Bot`      | `Authorization: Bearer <xoxb-…>`                                                                                            |
+| `Slack_Signing`  | stores the signing secret as a custom header (also mirrored to `App_Setting__mdt.Slack_Signing_Secret__c` for the verifier) |
+| `OpenAI`         | `Authorization: Bearer <sk-…>`                                                                                              |
+| `Stripe`         | `Authorization: Bearer <sk_live_…>`                                                                                         |
 
 Setup:
 

@@ -2,11 +2,11 @@
 
 ## Targets
 
-| Target | When | Command |
-| --- | --- | --- |
-| **Scratch org** | Local dev | `sf org create scratch -f config/project-scratch-def.json -a certgame -d -y 30` |
-| **Sandbox** | Pre-prod | `sf project deploy start -o <sandbox> --ignore-conflicts` |
-| **Production (managed package)** | Customers | Install the published 2GP managed package URL. |
+| Target                           | When      | Command                                                                         |
+| -------------------------------- | --------- | ------------------------------------------------------------------------------- |
+| **Scratch org**                  | Local dev | `sf org create scratch -f config/project-scratch-def.json -a certgame -d -y 30` |
+| **Sandbox**                      | Pre-prod  | `sf project deploy start -o <sandbox> --ignore-conflicts`                       |
+| **Production (managed package)** | Customers | Install the published 2GP managed package URL.                                  |
 
 ## Source deploy
 

@@ -6,17 +6,17 @@ Salesforce data through Block Kit JSON produced by
 
 ## Surfaces
 
-| Surface | Triggered by | Rendered by |
-| --- | --- | --- |
-| **Slash command response** | `/certgame ...` | `SlackCertGameCommandHandler` → render service. |
-| **Question card** | `play` + each round | `CertGameSessionService.renderRound`. |
-| **Explanation card** | After answer | `CertGameSessionService.recordAnswerFromSlack`. |
-| **Finale card** | Last round of a session | `CertGameSessionService.finalize`. |
-| **Duel cards** (Challenge / Accepted / Finale) | `/certgame challenge @user` | `CertGameDuelService`. |
-| **Study plan modal** | `/certgame plan` | `CertGameStudyPlanService.openPlanModal`. |
-| **Billing modal** | `/certgame billing` | `CertGameBillingService.openBillingModal`. |
-| **App Home tab** | `app_home_opened` event | `CertGameAppHomeService` → `views.publish`. |
-| **Nudge DMs** | `CertGameNudgeScheduler` | Render service → `chat.postMessage`. |
+| Surface                                        | Triggered by                | Rendered by                                     |
+| ---------------------------------------------- | --------------------------- | ----------------------------------------------- |
+| **Slash command response**                     | `/certgame ...`             | `SlackCertGameCommandHandler` → render service. |
+| **Question card**                              | `play` + each round         | `CertGameSessionService.renderRound`.           |
+| **Explanation card**                           | After answer                | `CertGameSessionService.recordAnswerFromSlack`. |
+| **Finale card**                                | Last round of a session     | `CertGameSessionService.finalize`.              |
+| **Duel cards** (Challenge / Accepted / Finale) | `/certgame challenge @user` | `CertGameDuelService`.                          |
+| **Study plan modal**                           | `/certgame plan`            | `CertGameStudyPlanService.openPlanModal`.       |
+| **Billing modal**                              | `/certgame billing`         | `CertGameBillingService.openBillingModal`.      |
+| **App Home tab**                               | `app_home_opened` event     | `CertGameAppHomeService` → `views.publish`.     |
+| **Nudge DMs**                                  | `CertGameNudgeScheduler`    | Render service → `chat.postMessage`.            |
 
 ## Outbound calls
 
@@ -71,15 +71,15 @@ to the correct handler.
 All interactive component `action_id` values follow `domain:verb:resourceId`. Examples
 observed in [`CertGameSlackRenderService`](../api-reference/apex.md#certgameslackrenderservice):
 
-| `action_id` | Owner |
-| --- | --- |
+| `action_id`              | Owner                                              |
+| ------------------------ | -------------------------------------------------- |
 | `game:answer:<choiceId>` | Question card → `SlackCertGameInteractionHandler`. |
-| `game:stop:<sessionId>` | Question card. |
-| `duel:accept:<groupId>` | Duel challenge card. |
-| `duel:decline:<groupId>` | Duel challenge card. |
-| `duel:rematch:<groupId>` | Duel finale card. |
-| `plan:save` | Study plan modal submit. |
-| `billing:upgrade:<plan>` | Billing modal. |
+| `game:stop:<sessionId>`  | Question card.                                     |
+| `duel:accept:<groupId>`  | Duel challenge card.                               |
+| `duel:decline:<groupId>` | Duel challenge card.                               |
+| `duel:rematch:<groupId>` | Duel finale card.                                  |
+| `plan:save`              | Study plan modal submit.                           |
+| `billing:upgrade:<plan>` | Billing modal.                                     |
 
 This naming is enforced by convention — see
 [AGENTS.md §4 Slack rendering](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/AGENTS.md).

@@ -3,18 +3,24 @@
  * All methods accept a verified playerId from WebApiRestResource (token-authenticated).
  */
 public without sharing class WebPlayService {
-
-    public class PlayException extends Exception {}
+    public class PlayException extends Exception {
+    }
 
     public class ExamDTO {
-        public String id; public String code; public String name;
+        public String id;
+        public String code;
+        public String name;
         public ExamDTO(Certification_Exam__c e) {
-            this.id = e.Id; this.code = e.Certification_Code__c; this.name = e.Name;
+            this.id = e.Id;
+            this.code = e.Certification_Code__c;
+            this.name = e.Name;
         }
     }
 
     public class ChoiceDTO {
-        public String id; public String label; public String text;
+        public String id;
+        public String label;
+        public String text;
     }
 
     public class RoundDTO {
@@ -72,7 +78,7 @@ public without sharing class WebPlayService {
         for (Certification_Exam__c e : [
             SELECT Id, Name, Certification_Code__c
             FROM Certification_Exam__c
-            WHERE Active__c = true
+            WHERE Active__c = TRUE
             ORDER BY Name
             LIMIT 200
         ]) {
@@ -81,27 +87,38 @@ public without sharing class WebPlayService {
         return out;
     }
 
-    public static RoundDTO startSession(Id playerId, Id examId, Integer numQuestions) {
-        if (numQuestions == null || numQuestions < 1) numQuestions = 5;
-        if (numQuestions > 25) numQuestions = 25;
+    public static RoundDTO startSession(
+        Id playerId,
+        Id examId,
+        Integer numQuestions
+    ) {
+        if (numQuestions == null || numQuestions < 1)
+            numQuestions = 5;
+        if (numQuestions > 25)
+            numQuestions = 25;
 
         List<Trivia_Question__c> pool = [
             SELECT Id
             FROM Trivia_Question__c
             WHERE Certification_Exam__c = :examId AND Status__c = 'Published'
         ];
-        if (pool.isEmpty()) throw new PlayException('No published questions for this exam.');
+        if (pool.isEmpty())
+            throw new PlayException('No published questions for this exam.');
 
         // Shuffle (simple Fisher–Yates with Math.random)
         List<Id> ids = new List<Id>();
-        for (Trivia_Question__c q : pool) ids.add(q.Id);
+        for (Trivia_Question__c q : pool)
+            ids.add(q.Id);
         for (Integer i = ids.size() - 1; i > 0; i--) {
             Integer j = Math.mod(Math.abs(Crypto.getRandomInteger()), i + 1);
-            Id tmp = ids[i]; ids[i] = ids[j]; ids[j] = tmp;
+            Id tmp = ids[i];
+            ids[i] = ids[j];
+            ids[j] = tmp;
         }
         Integer pick = Math.min(numQuestions, ids.size());
         List<Id> chosen = new List<Id>();
-        for (Integer i = 0; i < pick; i++) chosen.add(ids[i]);
+        for (Integer i = 0; i < pick; i++)
+            chosen.add(ids[i]);
 
         Game_Session__c sess = new Game_Session__c(
             Certification_Exam__c = examId,
@@ -117,13 +134,15 @@ public without sharing class WebPlayService {
 
         List<Game_Round__c> rounds = new List<Game_Round__c>();
         for (Integer i = 0; i < chosen.size(); i++) {
-            rounds.add(new Game_Round__c(
-                Game_Session__c = sess.Id,
-                Trivia_Question__c = chosen[i],
-                Round_Number__c = i + 1,
-                Status__c = 'Posted',
-                Started_At__c = System.now()
-            ));
+            rounds.add(
+                new Game_Round__c(
+                    Game_Session__c = sess.Id,
+                    Trivia_Question__c = chosen[i],
+                    Round_Number__c = i + 1,
+                    Status__c = 'Posted',
+                    Started_At__c = System.now()
+                )
+            );
         }
         insert as system rounds;
 
@@ -137,7 +156,9 @@ public without sharing class WebPlayService {
     private static RoundDTO buildRoundDTO(Id sessionId, Id playerId) {
         Game_Session__c sess = [
             SELECT Id, Total_Questions__c, Current_Question_Index__c, Status__c
-            FROM Game_Session__c WHERE Id = :sessionId LIMIT 1
+            FROM Game_Session__c
+            WHERE Id = :sessionId
+            LIMIT 1
         ];
         List<Game_Round__c> rounds = [
             SELECT Id, Round_Number__c, Trivia_Question__c, Status__c
@@ -147,13 +168,18 @@ public without sharing class WebPlayService {
         ];
         Set<Id> answeredRoundIds = new Set<Id>();
         for (Player_Answer__c a : [
-            SELECT Id, Game_Round__c FROM Player_Answer__c
+            SELECT Id, Game_Round__c
+            FROM Player_Answer__c
             WHERE Game_Session__c = :sessionId AND Player__c = :playerId
-        ]) answeredRoundIds.add(a.Game_Round__c);
+        ])
+            answeredRoundIds.add(a.Game_Round__c);
 
         Game_Round__c nextR;
         for (Game_Round__c r : rounds) {
-            if (!answeredRoundIds.contains(r.Id)) { nextR = r; break; }
+            if (!answeredRoundIds.contains(r.Id)) {
+                nextR = r;
+                break;
+            }
         }
         RoundDTO dto = new RoundDTO();
         dto.sessionId = sessionId;
@@ -163,12 +189,16 @@ public without sharing class WebPlayService {
             return dto;
         }
         dto.roundId = nextR.Id;
-        dto.roundNumber = nextR.Round_Number__c == null ? 0 : nextR.Round_Number__c.intValue();
+        dto.roundNumber = nextR.Round_Number__c == null
+            ? 0
+            : nextR.Round_Number__c.intValue();
         dto.finished = false;
 
         Trivia_Question__c q = [
             SELECT Id, Question_Text__c, Scenario_Text__c, Difficulty__c
-            FROM Trivia_Question__c WHERE Id = :nextR.Trivia_Question__c LIMIT 1
+            FROM Trivia_Question__c
+            WHERE Id = :nextR.Trivia_Question__c
+            LIMIT 1
         ];
         dto.questionText = q.Question_Text__c;
         dto.scenarioText = q.Scenario_Text__c;
@@ -183,7 +213,9 @@ public without sharing class WebPlayService {
         dto.choices = new List<ChoiceDTO>();
         for (Trivia_Answer_Choice__c c : choices) {
             ChoiceDTO cd = new ChoiceDTO();
-            cd.id = c.Id; cd.label = c.Choice_Label__c; cd.text = c.Choice_Text__c;
+            cd.id = c.Id;
+            cd.label = c.Choice_Label__c;
+            cd.text = c.Choice_Text__c;
             dto.choices.add(cd);
         }
         return dto;
@@ -192,7 +224,9 @@ public without sharing class WebPlayService {
     public static AnswerDTO submitAnswer(Id playerId, Id roundId, Id choiceId) {
         Game_Round__c round = [
             SELECT Id, Game_Session__c, Trivia_Question__c, Round_Number__c
-            FROM Game_Round__c WHERE Id = :roundId LIMIT 1
+            FROM Game_Round__c
+            WHERE Id = :roundId
+            LIMIT 1
         ];
         List<Trivia_Answer_Choice__c> choices = [
             SELECT Id, Choice_Label__c, Choice_Text__c, Is_Correct__c
@@ -202,10 +236,13 @@ public without sharing class WebPlayService {
         Trivia_Answer_Choice__c picked;
         Trivia_Answer_Choice__c correct;
         for (Trivia_Answer_Choice__c c : choices) {
-            if (c.Id == choiceId) picked = c;
-            if (c.Is_Correct__c) correct = c;
+            if (c.Id == choiceId)
+                picked = c;
+            if (c.Is_Correct__c)
+                correct = c;
         }
-        if (picked == null) throw new PlayException('Choice does not belong to this question.');
+        if (picked == null)
+            throw new PlayException('Choice does not belong to this question.');
 
         String uniqueKey = roundId + ':' + playerId;
         Player_Answer__c pa = new Player_Answer__c(
@@ -220,13 +257,20 @@ public without sharing class WebPlayService {
             Response_Time_Ms__c = 0,
             Unique_Key__c = uniqueKey
         );
-        Database.UpsertResult ur = Database.upsert(pa, Player_Answer__c.Unique_Key__c, false, AccessLevel.SYSTEM_MODE);
+        Database.UpsertResult ur = Database.upsert(
+            pa,
+            Player_Answer__c.Unique_Key__c,
+            false,
+            AccessLevel.SYSTEM_MODE
+        );
         if (!ur.isSuccess()) {
             Boolean dup = false;
             for (Database.Error e : ur.getErrors()) {
-                if (e.getStatusCode() == StatusCode.DUPLICATE_VALUE) dup = true;
+                if (e.getStatusCode() == StatusCode.DUPLICATE_VALUE)
+                    dup = true;
             }
-            if (!dup) throw new PlayException('Could not record answer.');
+            if (!dup)
+                throw new PlayException('Could not record answer.');
         }
 
         // Update player rollups (simple counters; defer expensive recalc to background).
@@ -235,38 +279,70 @@ public without sharing class WebPlayService {
         AnswerDTO out = new AnswerDTO();
         out.correct = picked.Is_Correct__c;
         out.correctChoiceId = correct == null ? null : correct.Id;
-        out.correctChoiceLabel = correct == null ? null : correct.Choice_Label__c;
+        out.correctChoiceLabel = correct == null
+            ? null
+            : correct.Choice_Label__c;
         out.pointsAwarded = picked.Is_Correct__c ? 10 : 0;
-        Trivia_Question__c q = [SELECT Id, Explanation__c FROM Trivia_Question__c WHERE Id = :round.Trivia_Question__c LIMIT 1];
+        Trivia_Question__c q = [
+            SELECT Id, Explanation__c
+            FROM Trivia_Question__c
+            WHERE Id = :round.Trivia_Question__c
+            LIMIT 1
+        ];
         out.explanation = q.Explanation__c;
 
         RoundDTO nxt = buildRoundDTO(round.Game_Session__c, playerId);
         if (nxt.finished) {
             // Finalize session
-            Game_Session__c sess = new Game_Session__c(Id = round.Game_Session__c, Status__c = 'Complete', Completed_At__c = System.now());
+            Game_Session__c sess = new Game_Session__c(
+                Id = round.Game_Session__c,
+                Status__c = 'Complete',
+                Completed_At__c = System.now()
+            );
             update as system sess;
 
             AggregateResult ar = [
                 SELECT COUNT(Id) cnt, SUM(Points_Awarded__c) pts
                 FROM Player_Answer__c
-                WHERE Game_Session__c = :round.Game_Session__c AND Player__c = :playerId
+                WHERE
+                    Game_Session__c = :round.Game_Session__c
+                    AND Player__c = :playerId
             ];
             Integer corCnt = [
-                SELECT COUNT() FROM Player_Answer__c
-                WHERE Game_Session__c = :round.Game_Session__c AND Player__c = :playerId AND Is_Correct__c = true
+                SELECT COUNT()
+                FROM Player_Answer__c
+                WHERE
+                    Game_Session__c = :round.Game_Session__c
+                    AND Player__c = :playerId
+                    AND Is_Correct__c = TRUE
             ];
             SessionSummaryDTO s = new SessionSummaryDTO();
             s.sessionId = round.Game_Session__c;
             s.totalAnswered = (Integer) ar.get('cnt');
             s.totalCorrect = corCnt;
-            s.totalPoints = ar.get('pts') == null ? 0 : ((Decimal) ar.get('pts')).intValue();
-            s.accuracy = s.totalAnswered == 0 ? 0 : (Decimal.valueOf(s.totalCorrect) / s.totalAnswered);
+            s.totalPoints = ar.get('pts') == null
+                ? 0
+                : ((Decimal) ar.get('pts')).intValue();
+            s.accuracy = s.totalAnswered == 0
+                ? 0
+                : (Decimal.valueOf(s.totalCorrect) / s.totalAnswered);
             out.summary = s;
             out.next = nxt;
 
             // Tournament rollup hook (no-op if session is not tied to a tournament).
-            try { WebTournamentService.onSessionComplete(playerId, round.Game_Session__c); }
-            catch (Exception ex) { AppLogger.error('WebPlayService', 'submitAnswer', 'tournament_rollup', ex); }
+            try {
+                WebTournamentService.onSessionComplete(
+                    playerId,
+                    round.Game_Session__c
+                );
+            } catch (Exception ex) {
+                AppLogger.error(
+                    'WebPlayService',
+                    'submitAnswer',
+                    'tournament_rollup',
+                    ex
+                );
+            }
         } else {
             out.next = nxt;
         }
@@ -275,37 +351,65 @@ public without sharing class WebPlayService {
 
     public static PlayerStatsDTO getStats(Id playerId) {
         Player__c p = [
-            SELECT Id, Display_Name__c, Google_Email__c, Google_Name__c, Google_Picture_URL__c,
-                   Total_Points__c, Total_Games__c, Last_Played_At__c
-            FROM Player__c WHERE Id = :playerId LIMIT 1
+            SELECT
+                Id,
+                Display_Name__c,
+                Google_Email__c,
+                Google_Name__c,
+                Google_Picture_URL__c,
+                Total_Points__c,
+                Total_Games__c,
+                Last_Played_At__c
+            FROM Player__c
+            WHERE Id = :playerId
+            LIMIT 1
         ];
         PlayerStatsDTO d = new PlayerStatsDTO();
         d.playerId = p.Id;
-        d.name = String.isBlank(p.Google_Name__c) ? p.Display_Name__c : p.Google_Name__c;
+        d.name = String.isBlank(p.Google_Name__c)
+            ? p.Display_Name__c
+            : p.Google_Name__c;
         d.email = p.Google_Email__c;
         d.pictureUrl = p.Google_Picture_URL__c;
-        d.totalPoints = p.Total_Points__c == null ? 0 : p.Total_Points__c.intValue();
+        d.totalPoints = p.Total_Points__c == null
+            ? 0
+            : p.Total_Points__c.intValue();
         d.lastPlayedAt = p.Last_Played_At__c;
 
-        Integer totalCnt = [SELECT COUNT() FROM Player_Answer__c WHERE Player__c = :playerId];
-        Integer corCnt = [SELECT COUNT() FROM Player_Answer__c WHERE Player__c = :playerId AND Is_Correct__c = true];
+        Integer totalCnt = [
+            SELECT COUNT()
+            FROM Player_Answer__c
+            WHERE Player__c = :playerId
+        ];
+        Integer corCnt = [
+            SELECT COUNT()
+            FROM Player_Answer__c
+            WHERE Player__c = :playerId AND Is_Correct__c = TRUE
+        ];
         d.totalAnswers = totalCnt;
         d.totalCorrect = corCnt;
-        d.accuracy = d.totalAnswers == 0 ? 0 : (Decimal.valueOf(d.totalCorrect) / d.totalAnswers);
+        d.accuracy = d.totalAnswers == 0
+            ? 0
+            : (Decimal.valueOf(d.totalCorrect) / d.totalAnswers);
 
         // Wrong-answer frequency by question
         List<AggregateResult> wrong = [
             SELECT Trivia_Question__c qid, COUNT(Id) wrong
             FROM Player_Answer__c
-            WHERE Player__c = :playerId AND Is_Correct__c = false
+            WHERE Player__c = :playerId AND Is_Correct__c = FALSE
             GROUP BY Trivia_Question__c
             ORDER BY COUNT(Id) DESC
             LIMIT 10
         ];
         Set<Id> qIds = new Set<Id>();
-        for (AggregateResult a : wrong) qIds.add((Id) a.get('qid'));
+        for (AggregateResult a : wrong)
+            qIds.add((Id) a.get('qid'));
         Map<Id, Trivia_Question__c> qMap = new Map<Id, Trivia_Question__c>(
-            [SELECT Id, Question_Text__c FROM Trivia_Question__c WHERE Id IN :qIds]
+            [
+                SELECT Id, Question_Text__c
+                FROM Trivia_Question__c
+                WHERE Id IN :qIds
+            ]
         );
         d.weakSpots = new List<WeakSpotDTO>();
         Map<Id, Integer> attemptsByQ = new Map<Id, Integer>();
@@ -325,7 +429,9 @@ public without sharing class WebPlayService {
             Trivia_Question__c q = qMap.get(w.questionId);
             w.questionText = q == null ? null : q.Question_Text__c;
             w.wrongCount = ((Integer) a.get('wrong'));
-            w.totalAttempts = attemptsByQ.containsKey(w.questionId) ? attemptsByQ.get(w.questionId) : w.wrongCount;
+            w.totalAttempts = attemptsByQ.containsKey(w.questionId)
+                ? attemptsByQ.get(w.questionId)
+                : w.wrongCount;
             d.weakSpots.add(w);
         }
         return d;
@@ -333,15 +439,21 @@ public without sharing class WebPlayService {
 
     private static void updatePlayerRollups(Id playerId) {
         AggregateResult ar = [
-            SELECT SUM(Points_Awarded__c) pts,
-                   COUNT_DISTINCT(Game_Session__c) games,
-                   MAX(Answered_At__c) lastAnsweredAt
-            FROM Player_Answer__c WHERE Player__c = :playerId
+            SELECT
+                SUM(Points_Awarded__c) pts,
+                COUNT_DISTINCT(Game_Session__c) games,
+                MAX(Answered_At__c) lastAnsweredAt
+            FROM Player_Answer__c
+            WHERE Player__c = :playerId
         ];
         Player__c p = new Player__c(
             Id = playerId,
-            Total_Points__c = ar.get('pts') == null ? 0 : ((Decimal) ar.get('pts')),
-            Total_Games__c = ar.get('games') == null ? 0 : ((Integer) ar.get('games')),
+            Total_Points__c = ar.get('pts') == null
+                ? 0
+                : ((Decimal) ar.get('pts')),
+            Total_Games__c = ar.get('games') == null
+                ? 0
+                : ((Integer) ar.get('games')),
             Last_Played_At__c = (DateTime) ar.get('lastAnsweredAt')
         );
         update as system p;

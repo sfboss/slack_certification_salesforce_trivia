@@ -60,17 +60,17 @@ flowchart TB
 
 ## What lives where
 
-| Surface | Files |
-| --- | --- |
-| **REST ingress** | [`SlackEventsRestResource`](../api-reference/apex.md#slackeventsrestresource), [`SlackRequestRouter`](../api-reference/apex.md#slackrequestrouter) |
-| **Verifiers** | [`SlackSignatureVerifier`](../api-reference/apex.md#slacksignatureverifier), [`StripeSignatureVerifier`](../api-reference/apex.md#stripesignatureverifier) |
-| **Handlers** | `SlackCertGame*Handler` classes |
-| **Services** | `CertGame*Service` classes |
-| **Render** | [`CertGameSlackRenderService`](../api-reference/apex.md#certgameslackrenderservice) — single owner of all Block Kit JSON |
-| **Strings** | `CertGameStrings` — single owner of user-facing strings |
-| **Guards** | [`EntitlementGuard`](../api-reference/apex.md#entitlementguard) — plan/quota checks |
-| **Logging** | `AppLogger` (`App_Log__c`), `AuditLogger` (`Audit_Log__c`) |
-| **Settings** | `App_Setting__mdt` (custom metadata) |
+| Surface          | Files                                                                                                                                                      |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **REST ingress** | [`SlackEventsRestResource`](../api-reference/apex.md#slackeventsrestresource), [`SlackRequestRouter`](../api-reference/apex.md#slackrequestrouter)         |
+| **Verifiers**    | [`SlackSignatureVerifier`](../api-reference/apex.md#slacksignatureverifier), [`StripeSignatureVerifier`](../api-reference/apex.md#stripesignatureverifier) |
+| **Handlers**     | `SlackCertGame*Handler` classes                                                                                                                            |
+| **Services**     | `CertGame*Service` classes                                                                                                                                 |
+| **Render**       | [`CertGameSlackRenderService`](../api-reference/apex.md#certgameslackrenderservice) — single owner of all Block Kit JSON                                   |
+| **Strings**      | `CertGameStrings` — single owner of user-facing strings                                                                                                    |
+| **Guards**       | [`EntitlementGuard`](../api-reference/apex.md#entitlementguard) — plan/quota checks                                                                        |
+| **Logging**      | `AppLogger` (`App_Log__c`), `AuditLogger` (`Audit_Log__c`)                                                                                                 |
+| **Settings**     | `App_Setting__mdt` (custom metadata)                                                                                                                       |
 
 ## Multi-tenancy
 
@@ -82,11 +82,11 @@ Plans (`Free`, `Pro`, `Enterprise`) live on `Tenant__c.Plan__c` and feed `Entitl
 
 ## Background jobs
 
-| Job | Class | Cadence |
-| --- | --- | --- |
-| Citation auditor | `verify-citations.py` + scheduled Apex | Daily |
-| Nudge dispatcher | `CertGameNudgeScheduler` | Hourly |
-| Question generation | `CertGameGenerationJobQueueable` | On-demand (Queueable) |
+| Job                 | Class                                  | Cadence               |
+| ------------------- | -------------------------------------- | --------------------- |
+| Citation auditor    | `verify-citations.py` + scheduled Apex | Daily                 |
+| Nudge dispatcher    | `CertGameNudgeScheduler`               | Hourly                |
+| Question generation | `CertGameGenerationJobQueueable`       | On-demand (Queueable) |
 
 ## Read next
 

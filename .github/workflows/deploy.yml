@@ -1,361 +1,361 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main]
-  release:
-    types: [published]
-  workflow_dispatch:
-    inputs:
-      target_alias:
-        description: Alias to assign to the resolved target org for this run.
-        required: false
-        default: production-target
+    push:
+        branches: [main]
+    release:
+        types: [published]
+    workflow_dispatch:
+        inputs:
+            target_alias:
+                description: Alias to assign to the resolved target org for this run.
+                required: false
+                default: production-target
 
 concurrency:
-  group: deploy-${{ github.ref }}
-  cancel-in-progress: false
+    group: deploy-${{ github.ref }}
+    cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Deploy to target org
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    environment: ${{ github.event_name == 'release' && 'production' || 'main' }}
+    deploy:
+        name: Deploy to target org
+        runs-on: ubuntu-latest
+        timeout-minutes: 60
+        environment: ${{ github.event_name == 'release' && 'production' || 'main' }}
 
-    env:
-      TARGET_ALIAS: ${{ github.event.inputs.target_alias || format('ci-ephemeral-{0}', github.run_id) }}
-      DEVHUB_ALIAS: devhub-ci
-
-    outputs:
-      scratchCreated: ${{ steps.org.outputs.scratchCreated }}
-
-    steps:
-      - name: Preflight — required secrets present
         env:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          missing=""
-          [ -z "${SFDX_AUTH_URL:-}" ] && missing="$missing SFDX_AUTH_URL"
-          [ -z "${SLACK_WEBHOOK_URL:-}" ] && missing="$missing SLACK_WEBHOOK_URL"
-          if [ -n "$missing" ]; then
-            echo "::error::Missing required secrets:$missing"
-            if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
-              curl -sS -X POST -H 'Content-Type: application/json' \
-                --data "{\"text\":\"❌ deploy aborted: missing secrets$missing\"}" \
-                "$SLACK_WEBHOOK_URL" || true
-            fi
-            exit 1
-          fi
+            TARGET_ALIAS: ${{ github.event.inputs.target_alias || format('ci-ephemeral-{0}', github.run_id) }}
+            DEVHUB_ALIAS: devhub-ci
 
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        outputs:
+            scratchCreated: ${{ steps.org.outputs.scratchCreated }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+        steps:
+            - name: Preflight — required secrets present
+              env:
+                  SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              run: |
+                  set -euo pipefail
+                  missing=""
+                  [ -z "${SFDX_AUTH_URL:-}" ] && missing="$missing SFDX_AUTH_URL"
+                  [ -z "${SLACK_WEBHOOK_URL:-}" ] && missing="$missing SLACK_WEBHOOK_URL"
+                  if [ -n "$missing" ]; then
+                    echo "::error::Missing required secrets:$missing"
+                    if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
+                      curl -sS -X POST -H 'Content-Type: application/json' \
+                        --data "{\"text\":\"❌ deploy aborted: missing secrets$missing\"}" \
+                        "$SLACK_WEBHOOK_URL" || true
+                    fi
+                    exit 1
+                  fi
 
-      - name: Install Salesforce CLI
-        run: |
-          set -euo pipefail
-          npm install --global @salesforce/cli
-          sf --version
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - name: Count changed files (informational)
-        id: diff
-        run: |
-          set -euo pipefail
-          BEFORE='${{ github.event.before }}'
-          AFTER='${{ github.sha }}'
-          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            COUNT="$(git ls-files | wc -l | tr -d ' ')"
-          else
-            COUNT="$(git diff --name-only "$BEFORE" "$AFTER" 2>/dev/null | wc -l | tr -d ' ' || echo 0)"
-          fi
-          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
 
-      - name: Notify Slack — start
-        uses: ./.github/actions/slack-notify
-        with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: start
-          title: Production deploy
-          workflow_label: deploy / deploy
-          extra_fields: |
-            [
-              { "label": "Environment", "value": "${{ github.event_name == 'release' && 'production' || 'main' }}" },
-              { "label": "Target",      "value": "${{ secrets.SFDX_AUTH_URL_SCRATCH != '' && 'pre-provisioned org' || 'ephemeral scratch' }}" },
-              { "label": "Files changed", "value": "${{ steps.diff.outputs.count }}" }
-            ]
+            - name: Install Salesforce CLI
+              run: |
+                  set -euo pipefail
+                  npm install --global @salesforce/cli
+                  sf --version
 
-      - name: Authorize Dev Hub
-        env:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-        run: |
-          set -euo pipefail
-          printf '%s' "$SFDX_AUTH_URL" > ./DEVHUB_AUTH.txt
-          sf org login sfdx-url -f ./DEVHUB_AUTH.txt -a "$DEVHUB_ALIAS" -d
-          rm -f ./DEVHUB_AUTH.txt
+            - name: Count changed files (informational)
+              id: diff
+              run: |
+                  set -euo pipefail
+                  BEFORE='${{ github.event.before }}'
+                  AFTER='${{ github.sha }}'
+                  if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+                    COUNT="$(git ls-files | wc -l | tr -d ' ')"
+                  else
+                    COUNT="$(git diff --name-only "$BEFORE" "$AFTER" 2>/dev/null | wc -l | tr -d ' ' || echo 0)"
+                  fi
+                  echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
-      - name: Resolve target org
-        id: org
-        env:
-          SFDX_AUTH_URL_SCRATCH: ${{ secrets.SFDX_AUTH_URL_SCRATCH }}
-        run: |
-          set -euo pipefail
-          if [ -n "${SFDX_AUTH_URL_SCRATCH:-}" ]; then
-            printf '%s' "$SFDX_AUTH_URL_SCRATCH" > ./TARGET_AUTH.txt
-            sf org login sfdx-url -f ./TARGET_AUTH.txt -a "$TARGET_ALIAS"
-            rm -f ./TARGET_AUTH.txt
-            echo "scratchCreated=false" >> "$GITHUB_OUTPUT"
-          else
-            sf org create scratch \
-              -f config/project-scratch-def.json \
-              -a "$TARGET_ALIAS" \
-              -y 1 \
-              -w 30
-            echo "scratchCreated=true" >> "$GITHUB_OUTPUT"
-          fi
-          TARGET_USER="$(sf org display -o "$TARGET_ALIAS" --json | jq -r '.result.username // empty')"
-          echo "username=$TARGET_USER" >> "$GITHUB_OUTPUT"
+            - name: Notify Slack — start
+              uses: ./.github/actions/slack-notify
+              with:
+                  webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  status: start
+                  title: Production deploy
+                  workflow_label: deploy / deploy
+                  extra_fields: |
+                      [
+                        { "label": "Environment", "value": "${{ github.event_name == 'release' && 'production' || 'main' }}" },
+                        { "label": "Target",      "value": "${{ secrets.SFDX_AUTH_URL_SCRATCH != '' && 'pre-provisioned org' || 'ephemeral scratch' }}" },
+                        { "label": "Files changed", "value": "${{ steps.diff.outputs.count }}" }
+                      ]
 
-      - name: Deploy source
-        id: deploy
-        run: |
-          set -euo pipefail
-          mkdir -p reports
-          set +e
-          sf project deploy start \
-            -o "$TARGET_ALIAS" \
-            -w 90 \
-            --verbose \
-            --json > reports/deploy.json 2> reports/deploy.err
-          DEPLOY_EXIT=$?
-          set -e
-          DEPLOY_ID="$(jq -r '.result.id // .result.deployId // empty' reports/deploy.json 2>/dev/null || echo '')"
-          DEPLOY_STATE="$(jq -r '.result.status // .status // "unknown"' reports/deploy.json 2>/dev/null || echo 'unknown')"
-          DEPLOY_COMP_ERR="$(jq -r '.result.numberComponentErrors // 0' reports/deploy.json 2>/dev/null || echo 0)"
-          DEPLOY_TEST_ERR="$(jq -r '.result.numberTestErrors // 0' reports/deploy.json 2>/dev/null || echo 0)"
+            - name: Authorize Dev Hub
+              env:
+                  SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+              run: |
+                  set -euo pipefail
+                  printf '%s' "$SFDX_AUTH_URL" > ./DEVHUB_AUTH.txt
+                  sf org login sfdx-url -f ./DEVHUB_AUTH.txt -a "$DEVHUB_ALIAS" -d
+                  rm -f ./DEVHUB_AUTH.txt
 
-          # Defensive guard: some CLI paths can report structured failures while returning exit 0.
-          if [ "${DEPLOY_EXIT}" = "0" ]; then
-            if [ "${DEPLOY_STATE}" != "Succeeded" ] || [ "${DEPLOY_COMP_ERR}" != "0" ] || [ "${DEPLOY_TEST_ERR}" != "0" ]; then
-              echo "::error::Deploy reported failure in JSON (state=${DEPLOY_STATE}, componentErrors=${DEPLOY_COMP_ERR}, testErrors=${DEPLOY_TEST_ERR})"
-              DEPLOY_EXIT=1
-            fi
-          fi
+            - name: Resolve target org
+              id: org
+              env:
+                  SFDX_AUTH_URL_SCRATCH: ${{ secrets.SFDX_AUTH_URL_SCRATCH }}
+              run: |
+                  set -euo pipefail
+                  if [ -n "${SFDX_AUTH_URL_SCRATCH:-}" ]; then
+                    printf '%s' "$SFDX_AUTH_URL_SCRATCH" > ./TARGET_AUTH.txt
+                    sf org login sfdx-url -f ./TARGET_AUTH.txt -a "$TARGET_ALIAS"
+                    rm -f ./TARGET_AUTH.txt
+                    echo "scratchCreated=false" >> "$GITHUB_OUTPUT"
+                  else
+                    sf org create scratch \
+                      -f config/project-scratch-def.json \
+                      -a "$TARGET_ALIAS" \
+                      -y 1 \
+                      -w 30
+                    echo "scratchCreated=true" >> "$GITHUB_OUTPUT"
+                  fi
+                  TARGET_USER="$(sf org display -o "$TARGET_ALIAS" --json | jq -r '.result.username // empty')"
+                  echo "username=$TARGET_USER" >> "$GITHUB_OUTPUT"
 
-          echo "deployId=$DEPLOY_ID" >> "$GITHUB_OUTPUT"
-          echo "exitCode=$DEPLOY_EXIT" >> "$GITHUB_OUTPUT"
-          tail -n 80 reports/deploy.json 2>/dev/null || true
-          exit $DEPLOY_EXIT
+            - name: Deploy source
+              id: deploy
+              run: |
+                  set -euo pipefail
+                  mkdir -p reports
+                  set +e
+                  sf project deploy start \
+                    -o "$TARGET_ALIAS" \
+                    -w 90 \
+                    --verbose \
+                    --json > reports/deploy.json 2> reports/deploy.err
+                  DEPLOY_EXIT=$?
+                  set -e
+                  DEPLOY_ID="$(jq -r '.result.id // .result.deployId // empty' reports/deploy.json 2>/dev/null || echo '')"
+                  DEPLOY_STATE="$(jq -r '.result.status // .status // "unknown"' reports/deploy.json 2>/dev/null || echo 'unknown')"
+                  DEPLOY_COMP_ERR="$(jq -r '.result.numberComponentErrors // 0' reports/deploy.json 2>/dev/null || echo 0)"
+                  DEPLOY_TEST_ERR="$(jq -r '.result.numberTestErrors // 0' reports/deploy.json 2>/dev/null || echo 0)"
 
-      - name: Summarize deploy result
-        if: always() && hashFiles('reports/deploy.json') != ''
-        id: deploysum
-        shell: bash
-        continue-on-error: true
-        run: |
-          set +e
-          F=reports/deploy.json
-          NUM_COMP_ERR="$(jq -r '.result.numberComponentErrors // 0' "$F" 2>/dev/null)"
-          NUM_TEST_ERR="$(jq -r '.result.numberTestErrors // 0' "$F" 2>/dev/null)"
-          NUM_COMP_DEPLOYED="$(jq -r '.result.numberComponentsDeployed // 0' "$F" 2>/dev/null)"
-          NUM_COMP_TOTAL="$(jq -r '.result.numberComponentsTotal // 0' "$F" 2>/dev/null)"
-          STATE="$(jq -r '.result.status // .status // "unknown"' "$F" 2>/dev/null)"
-          : "${NUM_COMP_ERR:=0}"; : "${NUM_TEST_ERR:=0}"
-          echo "numComponentErrors=$NUM_COMP_ERR"   >> "$GITHUB_OUTPUT"
-          echo "numTestErrors=$NUM_TEST_ERR"        >> "$GITHUB_OUTPUT"
-          echo "numComponentsDeployed=$NUM_COMP_DEPLOYED" >> "$GITHUB_OUTPUT"
-          echo "numComponentsTotal=$NUM_COMP_TOTAL" >> "$GITHUB_OUTPUT"
-          echo "state=$STATE"                       >> "$GITHUB_OUTPUT"
+                  # Defensive guard: some CLI paths can report structured failures while returning exit 0.
+                  if [ "${DEPLOY_EXIT}" = "0" ]; then
+                    if [ "${DEPLOY_STATE}" != "Succeeded" ] || [ "${DEPLOY_COMP_ERR}" != "0" ] || [ "${DEPLOY_TEST_ERR}" != "0" ]; then
+                      echo "::error::Deploy reported failure in JSON (state=${DEPLOY_STATE}, componentErrors=${DEPLOY_COMP_ERR}, testErrors=${DEPLOY_TEST_ERR})"
+                      DEPLOY_EXIT=1
+                    fi
+                  fi
 
-          # Build a human-readable failure summary that fits in Slack.
-          {
-            echo "Deploy status: $STATE  |  Component errors: $NUM_COMP_ERR  |  Test errors: $NUM_TEST_ERR  |  Components: ${NUM_COMP_DEPLOYED}/${NUM_COMP_TOTAL}"
-            echo
-            echo "----- Top component failures -----"
-            jq -r '
-              (.result.details.componentFailures // [])
-              | unique_by(.fullName + "|" + (.problem // ""))
-              | .[0:15]
-              | .[]
-              | "- [\(.componentType // "?")] \(.fullName // "?"): \((.problem // "") | gsub("\\s+"; " ") | .[0:240])"
-            ' "$F" 2>/dev/null || echo "(no component failures parsed)"
+                  echo "deployId=$DEPLOY_ID" >> "$GITHUB_OUTPUT"
+                  echo "exitCode=$DEPLOY_EXIT" >> "$GITHUB_OUTPUT"
+                  tail -n 80 reports/deploy.json 2>/dev/null || true
+                  exit $DEPLOY_EXIT
 
-            REMAINING="$(jq -r '((.result.details.componentFailures // []) | unique_by(.fullName + "|" + (.problem // "")) | length) - 15' "$F" 2>/dev/null || echo 0)"
-            if [ "${REMAINING:-0}" -gt 0 ] 2>/dev/null; then
-              echo "(+ $REMAINING more — see deploy.json artifact)"
-            fi
+            - name: Summarize deploy result
+              if: always() && hashFiles('reports/deploy.json') != ''
+              id: deploysum
+              shell: bash
+              continue-on-error: true
+              run: |
+                  set +e
+                  F=reports/deploy.json
+                  NUM_COMP_ERR="$(jq -r '.result.numberComponentErrors // 0' "$F" 2>/dev/null)"
+                  NUM_TEST_ERR="$(jq -r '.result.numberTestErrors // 0' "$F" 2>/dev/null)"
+                  NUM_COMP_DEPLOYED="$(jq -r '.result.numberComponentsDeployed // 0' "$F" 2>/dev/null)"
+                  NUM_COMP_TOTAL="$(jq -r '.result.numberComponentsTotal // 0' "$F" 2>/dev/null)"
+                  STATE="$(jq -r '.result.status // .status // "unknown"' "$F" 2>/dev/null)"
+                  : "${NUM_COMP_ERR:=0}"; : "${NUM_TEST_ERR:=0}"
+                  echo "numComponentErrors=$NUM_COMP_ERR"   >> "$GITHUB_OUTPUT"
+                  echo "numTestErrors=$NUM_TEST_ERR"        >> "$GITHUB_OUTPUT"
+                  echo "numComponentsDeployed=$NUM_COMP_DEPLOYED" >> "$GITHUB_OUTPUT"
+                  echo "numComponentsTotal=$NUM_COMP_TOTAL" >> "$GITHUB_OUTPUT"
+                  echo "state=$STATE"                       >> "$GITHUB_OUTPUT"
 
-            echo
-            echo "----- Apex test failures (from deploy) -----"
-            jq -r '
-              (.result.details.runTestResult.failures // [])
-              | .[0:10]
-              | .[]
-              | "- \(.namespace // "")\((.namespace // "") != "" | if . then "." else "" end)\(.name // "?").\(.methodName // "?"): \((.message // "") | gsub("\\s+"; " ") | .[0:240])"
-            ' "$F" 2>/dev/null || echo "(no test failures parsed)"
+                  # Build a human-readable failure summary that fits in Slack.
+                  {
+                    echo "Deploy status: $STATE  |  Component errors: $NUM_COMP_ERR  |  Test errors: $NUM_TEST_ERR  |  Components: ${NUM_COMP_DEPLOYED}/${NUM_COMP_TOTAL}"
+                    echo
+                    echo "----- Top component failures -----"
+                    jq -r '
+                      (.result.details.componentFailures // [])
+                      | unique_by(.fullName + "|" + (.problem // ""))
+                      | .[0:15]
+                      | .[]
+                      | "- [\(.componentType // "?")] \(.fullName // "?"): \((.problem // "") | gsub("\\s+"; " ") | .[0:240])"
+                    ' "$F" 2>/dev/null || echo "(no component failures parsed)"
 
-            echo
-            echo "----- deploy stderr (tail) -----"
-            tail -n 20 reports/deploy.err 2>/dev/null || echo "(no deploy.err)"
-          } > reports/failure_summary.txt 2>&1
+                    REMAINING="$(jq -r '((.result.details.componentFailures // []) | unique_by(.fullName + "|" + (.problem // "")) | length) - 15' "$F" 2>/dev/null || echo 0)"
+                    if [ "${REMAINING:-0}" -gt 0 ] 2>/dev/null; then
+                      echo "(+ $REMAINING more — see deploy.json artifact)"
+                    fi
 
-          # Emit as a multi-line step output using a random delimiter to avoid EOF collisions.
-          DELIM="EOF_$(date +%s%N)_$RANDOM"
-          {
-            echo "summary<<${DELIM}"
-            tail -c 3500 reports/failure_summary.txt
-            echo
-            echo "${DELIM}"
-          } >> "$GITHUB_OUTPUT"
+                    echo
+                    echo "----- Apex test failures (from deploy) -----"
+                    jq -r '
+                      (.result.details.runTestResult.failures // [])
+                      | .[0:10]
+                      | .[]
+                      | "- \(.namespace // "")\((.namespace // "") != "" | if . then "." else "" end)\(.name // "?").\(.methodName // "?"): \((.message // "") | gsub("\\s+"; " ") | .[0:240])"
+                    ' "$F" 2>/dev/null || echo "(no test failures parsed)"
 
-          # Echo to log for forensics in the Actions UI.
-          echo "===== reports/failure_summary.txt ====="
-          cat reports/failure_summary.txt || true
-          exit 0
+                    echo
+                    echo "----- deploy stderr (tail) -----"
+                    tail -n 20 reports/deploy.err 2>/dev/null || echo "(no deploy.err)"
+                  } > reports/failure_summary.txt 2>&1
 
-      - name: Run Apex tests
-        id: tests
-        run: |
-          set -euo pipefail
-          mkdir -p reports
-          sf apex run test \
-            -o "$TARGET_ALIAS" \
-            -l RunLocalTests \
-            -w 60 \
-            -c \
-            -r human || true
-          sf apex run test \
-            -o "$TARGET_ALIAS" \
-            -l RunLocalTests \
-            -w 60 \
-            -c \
-            -r json > reports/tests.json || true
-          PASS="$(jq -r '.result.summary.passing // 0' reports/tests.json)"
-          FAIL="$(jq -r '.result.summary.failing // 0' reports/tests.json)"
-          COV="$(jq -r '.result.summary.testRunCoverage // .result.summary.orgWideCoverage // "n/a"' reports/tests.json)"
-          echo "pass=$PASS" >> "$GITHUB_OUTPUT"
-          echo "fail=$FAIL" >> "$GITHUB_OUTPUT"
-          echo "coverage=$COV" >> "$GITHUB_OUTPUT"
-          if [ "$FAIL" != "0" ]; then
-            echo "::error::$FAIL Apex tests failed"
-            exit 1
-          fi
+                  # Emit as a multi-line step output using a random delimiter to avoid EOF collisions.
+                  DELIM="EOF_$(date +%s%N)_$RANDOM"
+                  {
+                    echo "summary<<${DELIM}"
+                    tail -c 3500 reports/failure_summary.txt
+                    echo
+                    echo "${DELIM}"
+                  } >> "$GITHUB_OUTPUT"
 
-      - name: Upload reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-reports-${{ github.run_id }}
-          path: reports/
-          if-no-files-found: ignore
+                  # Echo to log for forensics in the Actions UI.
+                  echo "===== reports/failure_summary.txt ====="
+                  cat reports/failure_summary.txt || true
+                  exit 0
 
-      - name: Notify Slack — success
-        if: success()
-        uses: ./.github/actions/slack-notify
-        with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: success
-          title: Production deploy
-          workflow_label: deploy / deploy
-          extra_fields: |
-            [
-              { "label": "Environment",  "value": "${{ github.event_name == 'release' && 'production' || 'main' }}" },
-              { "label": "Target org",   "value": "${{ env.TARGET_ALIAS }}" },
-              { "label": "Target user",  "value": "${{ steps.org.outputs.username || 'n/a' }}" },
-              { "label": "Deploy ID",    "value": "${{ steps.deploy.outputs.deployId || 'n/a' }}" },
-              { "label": "Tests",        "value": "${{ steps.tests.outputs.pass }} passed / ${{ steps.tests.outputs.fail }} failed" },
-              { "label": "Coverage",     "value": "${{ steps.tests.outputs.coverage }}" },
-              { "label": "Files changed","value": "${{ steps.diff.outputs.count }}" }
-            ]
+            - name: Run Apex tests
+              id: tests
+              run: |
+                  set -euo pipefail
+                  mkdir -p reports
+                  sf apex run test \
+                    -o "$TARGET_ALIAS" \
+                    -l RunLocalTests \
+                    -w 60 \
+                    -c \
+                    -r human || true
+                  sf apex run test \
+                    -o "$TARGET_ALIAS" \
+                    -l RunLocalTests \
+                    -w 60 \
+                    -c \
+                    -r json > reports/tests.json || true
+                  PASS="$(jq -r '.result.summary.passing // 0' reports/tests.json)"
+                  FAIL="$(jq -r '.result.summary.failing // 0' reports/tests.json)"
+                  COV="$(jq -r '.result.summary.testRunCoverage // .result.summary.orgWideCoverage // "n/a"' reports/tests.json)"
+                  echo "pass=$PASS" >> "$GITHUB_OUTPUT"
+                  echo "fail=$FAIL" >> "$GITHUB_OUTPUT"
+                  echo "coverage=$COV" >> "$GITHUB_OUTPUT"
+                  if [ "$FAIL" != "0" ]; then
+                    echo "::error::$FAIL Apex tests failed"
+                    exit 1
+                  fi
 
-      - name: Capture failure log tail
-        if: failure()
-        id: failtail
-        shell: bash
-        continue-on-error: true
-        run: |
-          set +e
-          # Prefer the structured summary produced by the summarize step.
-          if [ -s reports/failure_summary.txt ]; then
-            SRC=reports/failure_summary.txt
-          else
-            SRC=reports/_fallback_tail.txt
-            {
-              echo "----- deploy stderr (tail) -----"
-              tail -n 50 reports/deploy.err 2>/dev/null || echo "(no deploy.err)"
-              echo
-              echo "----- deploy.json component failures -----"
-              jq -r '.result.details.componentFailures[]? | "- [\(.componentType)] \(.fullName): \(.problem)"' reports/deploy.json 2>/dev/null | head -n 30 || echo "(no component failures parsed)"
-              echo
-              echo "----- Apex test failures (deploy) -----"
-              jq -r '.result.details.runTestResult.failures[]? | "- \(.name).\(.methodName): \(.message)"' reports/deploy.json 2>/dev/null | head -n 20 || echo "(none)"
-              echo
-              echo "----- Apex test failures (tests.json) -----"
-              jq -r '.result.tests[]? | select(.Outcome=="Fail") | "- \(.FullName): \(.Message)"' reports/tests.json 2>/dev/null | head -n 20 || echo "(none)"
-            } > "$SRC"
-          fi
-          DELIM="EOF_$(date +%s%N)_$RANDOM"
-          {
-            echo "tail<<${DELIM}"
-            tail -c 3500 "$SRC"
-            echo
-            echo "${DELIM}"
-          } >> "$GITHUB_OUTPUT"
-          exit 0
+            - name: Upload reports
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: deploy-reports-${{ github.run_id }}
+                  path: reports/
+                  if-no-files-found: ignore
 
-      - name: Notify Slack — failure
-        if: failure()
-        uses: ./.github/actions/slack-notify
-        with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: failure
-          title: Production deploy
-          workflow_label: deploy / deploy
-          extra_fields: |
-            [
-              { "label": "Environment",       "value": "${{ github.event_name == 'release' && 'production' || 'main' }}" },
-              { "label": "Target org",        "value": "${{ env.TARGET_ALIAS }}" },
-              { "label": "Deploy ID",         "value": "${{ steps.deploy.outputs.deployId || 'n/a' }}" },
-              { "label": "Deploy state",      "value": "${{ steps.deploysum.outputs.state || 'failed' }}" },
-              { "label": "Component errors",  "value": "${{ steps.deploysum.outputs.numComponentErrors || 'n/a' }}" },
-              { "label": "Test errors (deploy)","value": "${{ steps.deploysum.outputs.numTestErrors || 'n/a' }}" },
-              { "label": "Components",        "value": "${{ steps.deploysum.outputs.numComponentsDeployed || '0' }} / ${{ steps.deploysum.outputs.numComponentsTotal || '0' }}" },
-              { "label": "Apex tests",        "value": "${{ steps.tests.outputs.pass || '0' }} passed / ${{ steps.tests.outputs.fail || '?' }} failed" },
-              { "label": "Coverage",          "value": "${{ steps.tests.outputs.coverage || 'n/a' }}" }
-            ]
-          log_tail: ${{ steps.failtail.outputs.tail }}
+            - name: Notify Slack — success
+              if: success()
+              uses: ./.github/actions/slack-notify
+              with:
+                  webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  status: success
+                  title: Production deploy
+                  workflow_label: deploy / deploy
+                  extra_fields: |
+                      [
+                        { "label": "Environment",  "value": "${{ github.event_name == 'release' && 'production' || 'main' }}" },
+                        { "label": "Target org",   "value": "${{ env.TARGET_ALIAS }}" },
+                        { "label": "Target user",  "value": "${{ steps.org.outputs.username || 'n/a' }}" },
+                        { "label": "Deploy ID",    "value": "${{ steps.deploy.outputs.deployId || 'n/a' }}" },
+                        { "label": "Tests",        "value": "${{ steps.tests.outputs.pass }} passed / ${{ steps.tests.outputs.fail }} failed" },
+                        { "label": "Coverage",     "value": "${{ steps.tests.outputs.coverage }}" },
+                        { "label": "Files changed","value": "${{ steps.diff.outputs.count }}" }
+                      ]
 
-      - name: Cleanup — delete ephemeral scratch org
-        if: always() && steps.org.outputs.scratchCreated == 'true'
-        id: cleanup
-        run: |
-          set -euo pipefail
-          if sf org delete scratch -o "$TARGET_ALIAS" -p; then
-            echo "deleted=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "deleted=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Failed to delete scratch org $TARGET_ALIAS"
-          fi
+            - name: Capture failure log tail
+              if: failure()
+              id: failtail
+              shell: bash
+              continue-on-error: true
+              run: |
+                  set +e
+                  # Prefer the structured summary produced by the summarize step.
+                  if [ -s reports/failure_summary.txt ]; then
+                    SRC=reports/failure_summary.txt
+                  else
+                    SRC=reports/_fallback_tail.txt
+                    {
+                      echo "----- deploy stderr (tail) -----"
+                      tail -n 50 reports/deploy.err 2>/dev/null || echo "(no deploy.err)"
+                      echo
+                      echo "----- deploy.json component failures -----"
+                      jq -r '.result.details.componentFailures[]? | "- [\(.componentType)] \(.fullName): \(.problem)"' reports/deploy.json 2>/dev/null | head -n 30 || echo "(no component failures parsed)"
+                      echo
+                      echo "----- Apex test failures (deploy) -----"
+                      jq -r '.result.details.runTestResult.failures[]? | "- \(.name).\(.methodName): \(.message)"' reports/deploy.json 2>/dev/null | head -n 20 || echo "(none)"
+                      echo
+                      echo "----- Apex test failures (tests.json) -----"
+                      jq -r '.result.tests[]? | select(.Outcome=="Fail") | "- \(.FullName): \(.Message)"' reports/tests.json 2>/dev/null | head -n 20 || echo "(none)"
+                    } > "$SRC"
+                  fi
+                  DELIM="EOF_$(date +%s%N)_$RANDOM"
+                  {
+                    echo "tail<<${DELIM}"
+                    tail -c 3500 "$SRC"
+                    echo
+                    echo "${DELIM}"
+                  } >> "$GITHUB_OUTPUT"
+                  exit 0
 
-      - name: Notify Slack — cleanup
-        if: always() && steps.org.outputs.scratchCreated == 'true'
-        uses: ./.github/actions/slack-notify
-        with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: cleanup
-          title: Scratch org cleanup
-          workflow_label: deploy / cleanup
-          extra_fields: |
-            [
-              { "label": "Org",     "value": "${{ env.TARGET_ALIAS }}" },
-              { "label": "Deleted", "value": "${{ steps.cleanup.outputs.deleted || 'false' }}" }
-            ]
+            - name: Notify Slack — failure
+              if: failure()
+              uses: ./.github/actions/slack-notify
+              with:
+                  webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  status: failure
+                  title: Production deploy
+                  workflow_label: deploy / deploy
+                  extra_fields: |
+                      [
+                        { "label": "Environment",       "value": "${{ github.event_name == 'release' && 'production' || 'main' }}" },
+                        { "label": "Target org",        "value": "${{ env.TARGET_ALIAS }}" },
+                        { "label": "Deploy ID",         "value": "${{ steps.deploy.outputs.deployId || 'n/a' }}" },
+                        { "label": "Deploy state",      "value": "${{ steps.deploysum.outputs.state || 'failed' }}" },
+                        { "label": "Component errors",  "value": "${{ steps.deploysum.outputs.numComponentErrors || 'n/a' }}" },
+                        { "label": "Test errors (deploy)","value": "${{ steps.deploysum.outputs.numTestErrors || 'n/a' }}" },
+                        { "label": "Components",        "value": "${{ steps.deploysum.outputs.numComponentsDeployed || '0' }} / ${{ steps.deploysum.outputs.numComponentsTotal || '0' }}" },
+                        { "label": "Apex tests",        "value": "${{ steps.tests.outputs.pass || '0' }} passed / ${{ steps.tests.outputs.fail || '?' }} failed" },
+                        { "label": "Coverage",          "value": "${{ steps.tests.outputs.coverage || 'n/a' }}" }
+                      ]
+                  log_tail: ${{ steps.failtail.outputs.tail }}
+
+            - name: Cleanup — delete ephemeral scratch org
+              if: always() && steps.org.outputs.scratchCreated == 'true'
+              id: cleanup
+              run: |
+                  set -euo pipefail
+                  if sf org delete scratch -o "$TARGET_ALIAS" -p; then
+                    echo "deleted=true" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "deleted=false" >> "$GITHUB_OUTPUT"
+                    echo "::warning::Failed to delete scratch org $TARGET_ALIAS"
+                  fi
+
+            - name: Notify Slack — cleanup
+              if: always() && steps.org.outputs.scratchCreated == 'true'
+              uses: ./.github/actions/slack-notify
+              with:
+                  webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  status: cleanup
+                  title: Scratch org cleanup
+                  workflow_label: deploy / cleanup
+                  extra_fields: |
+                      [
+                        { "label": "Org",     "value": "${{ env.TARGET_ALIAS }}" },
+                        { "label": "Deleted", "value": "${{ steps.cleanup.outputs.deleted || 'false' }}" }
+                      ]

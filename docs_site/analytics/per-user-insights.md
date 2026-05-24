@@ -28,14 +28,14 @@ composite external id `Topic_Key__c = PlayerId|Type|lower(value)`.
 
 ## Topic types
 
-| Topic_Type__c | Source | Use |
-| ------------- | ------ | --- |
-| `Keyword` | `Trivia_Question__c.Keywords__c` (semicolon list) | Word cloud, weakness ranking. |
-| `Tag` | `Trivia_Question__c.Tags__c` (semicolon list) | Curated taxonomy; study-plan filters. |
-| `Entity` | `Trivia_Question__c.Named_Entities__c` (`[{type,value}]`) | Knowledge-graph nodes. |
-| `Domain` | `Exam_Domain__r.Name` | Exam-blueprint coverage. |
-| `Difficulty` | `Trivia_Question__c.Difficulty__c` | Calibrates next-question difficulty. |
-| `Misconception` | `Trivia_Answer_Choice__c.Misconception_Tag__c` (only on wrong picks) | Targeted remediation. |
+| Topic_Type\_\_c | Source                                                               | Use                                   |
+| --------------- | -------------------------------------------------------------------- | ------------------------------------- |
+| `Keyword`       | `Trivia_Question__c.Keywords__c` (semicolon list)                    | Word cloud, weakness ranking.         |
+| `Tag`           | `Trivia_Question__c.Tags__c` (semicolon list)                        | Curated taxonomy; study-plan filters. |
+| `Entity`        | `Trivia_Question__c.Named_Entities__c` (`[{type,value}]`)            | Knowledge-graph nodes.                |
+| `Domain`        | `Exam_Domain__r.Name`                                                | Exam-blueprint coverage.              |
+| `Difficulty`    | `Trivia_Question__c.Difficulty__c`                                   | Calibrates next-question difficulty.  |
+| `Misconception` | `Trivia_Answer_Choice__c.Misconception_Tag__c` (only on wrong picks) | Targeted remediation.                 |
 
 ## Caddy behavior on the result card
 
@@ -93,7 +93,7 @@ this query. A study-session planner can then:
 
 1. Pick the top N weakest topics.
 2. Use `Trivia_Question__c WHERE Keywords__c LIKE '%topic%' OR Tags__c LIKE
-   '%topic%'` to select 5–10 published questions emphasizing those topics.
+'%topic%'` to select 5–10 published questions emphasizing those topics.
 3. Hand that list to `CertGameQuestionService.pickQuestions` (filter by
    `questionIds`) to start a focused session.
 

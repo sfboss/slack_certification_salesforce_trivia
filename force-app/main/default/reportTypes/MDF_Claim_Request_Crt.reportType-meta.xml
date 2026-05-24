@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
     <baseObject>PartnerFundRequest</baseObject>
     <category>other</category>
     <deployed>true</deployed>
-    <description>Report on market development fund requests and fund claims from partners.</description>
+    <description
+    >Report on market development fund requests and fund claims from partners.</description>
     <join>
         <outerJoin>false</outerJoin>
         <relationship>PartnerFundClaims</relationship>

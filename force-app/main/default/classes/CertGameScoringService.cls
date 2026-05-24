@@ -10,13 +10,12 @@
  *   final = round(base + timeBonus + streakBonus) when correct, else penalty (or 0)
  */
 public with sharing class CertGameScoringService {
-
     public class Input {
         public Boolean correct;
-        public String difficulty;       // Easy | Medium | Hard
+        public String difficulty; // Easy | Medium | Hard
         public Integer timeRemainingSec;
         public Integer timeLimitSec;
-        public Integer streakLength;    // consecutive prior corrects, before this answer
+        public Integer streakLength; // consecutive prior corrects, before this answer
         public Boolean penaltyEnabled;
     }
 
@@ -34,11 +33,18 @@ public with sharing class CertGameScoringService {
         Integer base = baseFor(inp.difficulty);
         o.basePoints = base;
         if (inp.correct == true) {
-            Decimal tr = inp.timeRemainingSec == null ? 0 : inp.timeRemainingSec;
-            Decimal tl = inp.timeLimitSec == null || inp.timeLimitSec == 0 ? 1 : inp.timeLimitSec;
+            Decimal tr = inp.timeRemainingSec == null
+                ? 0
+                : inp.timeRemainingSec;
+            Decimal tl = inp.timeLimitSec == null ||
+                inp.timeLimitSec == 0
+                ? 1
+                : inp.timeLimitSec;
             Decimal ratio = tr / tl;
-            if (ratio < 0) ratio = 0;
-            if (ratio > 1) ratio = 1;
+            if (ratio < 0)
+                ratio = 0;
+            if (ratio > 1)
+                ratio = 1;
             o.timeBonus = (Integer) Math.floor((Decimal) base * ratio * 0.5);
             Integer streak = inp.streakLength == null ? 0 : inp.streakLength;
             o.streakBonus = Math.min(streak * 2, 20);
@@ -57,15 +63,19 @@ public with sharing class CertGameScoringService {
 
     public static List<Output> scoreAll(List<Input> ins) {
         List<Output> out = new List<Output>();
-        for (Input i : ins) out.add(score(i));
+        for (Input i : ins)
+            out.add(score(i));
         return out;
     }
 
     public static Integer baseFor(String difficulty) {
-        if (difficulty == null) return 20;
+        if (difficulty == null)
+            return 20;
         String d = difficulty.toLowerCase();
-        if (d == 'easy') return 10;
-        if (d == 'hard') return 30;
+        if (d == 'easy')
+            return 10;
+        if (d == 'hard')
+            return 30;
         return 20; // medium / default
     }
 }

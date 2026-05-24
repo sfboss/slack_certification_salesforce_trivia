@@ -1,24 +1,49 @@
 <template>
     <lightning-card title="Tournament Builder" icon-name="standard:event">
         <div class="slds-p-around_medium">
-            <lightning-input label="Name" value={name} onchange={handleName}></lightning-input>
-            <lightning-combobox label="Certification exam" value={examId}
-                                options={examOptions} onchange={handleExam}
-                                placeholder="Select an exam"></lightning-combobox>
-            <lightning-combobox label="Bracket type" value={bracketType}
-                                options={typeOptions} onchange={handleType}></lightning-combobox>
-            <lightning-button label="Create tournament" variant="brand"
-                              class="slds-m-top_small" onclick={handleCreate}></lightning-button>
+            <lightning-input
+                label="Name"
+                value={name}
+                onchange={handleName}
+            ></lightning-input>
+            <lightning-combobox
+                label="Certification exam"
+                value={examId}
+                options={examOptions}
+                onchange={handleExam}
+                placeholder="Select an exam"
+            ></lightning-combobox>
+            <lightning-combobox
+                label="Bracket type"
+                value={bracketType}
+                options={typeOptions}
+                onchange={handleType}
+            ></lightning-combobox>
+            <lightning-button
+                label="Create tournament"
+                variant="brand"
+                class="slds-m-top_small"
+                onclick={handleCreate}
+            ></lightning-button>
             <template if:true={tournamentId}>
-                <hr/>
+                <hr />
                 <p>Tournament Id: <code>{tournamentId}</code></p>
-                <lightning-textarea label="Player Ids (comma separated)"
-                                    value={playerIdsCsv} onchange={handlePlayers}></lightning-textarea>
-                <lightning-button label="Build bracket" variant="brand"
-                                  class="slds-m-top_small" onclick={handleBuild}></lightning-button>
+                <lightning-textarea
+                    label="Player Ids (comma separated)"
+                    value={playerIdsCsv}
+                    onchange={handlePlayers}
+                ></lightning-textarea>
+                <lightning-button
+                    label="Build bracket"
+                    variant="brand"
+                    class="slds-m-top_small"
+                    onclick={handleBuild}
+                ></lightning-button>
             </template>
             <template if:true={bracketJson}>
-                <pre class="slds-m-top_medium slds-box slds-box_x-small">{bracketJson}</pre>
+                <pre class="slds-m-top_medium slds-box slds-box_x-small">
+{bracketJson}</pre
+                >
             </template>
         </div>
     </lightning-card>

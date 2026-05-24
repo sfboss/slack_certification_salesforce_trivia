@@ -1,19 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <name>Misconception Hotspots</name>
-    <description>Wrong answers grouped by misconception tag and question domain. Surfaces the most common mistakes for content remediation and study guidance.</description>
-    <reportType>CertGame_Sessions_With_Answers__c</reportType>
-    <format>Summary</format>
-    <scope>organization</scope>
-    <showDetails>true</showDetails>
-    <showGrandTotal>true</showGrandTotal>
-    <showSubTotals>true</showSubTotals>
-    <columns><field>Game_Session__c$Certification_Exam__c</field></columns>
-    <columns><field>Game_Session__c.Answers__r$Trivia_Question__c</field></columns>
-    <columns><field>Game_Session__c.Answers__r$Player__c</field></columns>
-    <columns><field>Game_Session__c.Answers__r$Selected_Choice_Labels__c</field></columns>
-    <columns><field>Game_Session__c.Answers__r$Response_Time_Ms__c</field></columns>
-    <columns><field>Game_Session__c.Answers__r$Answered_At__c</field></columns>
+    <columns>
+        <field>Game_Session__c$Certification_Exam__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c.Answers__r$Trivia_Question__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c.Answers__r$Player__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c.Answers__r$Selected_Choice_Labels__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c.Answers__r$Response_Time_Ms__c</field>
+    </columns>
+    <columns>
+        <field>Game_Session__c.Answers__r$Answered_At__c</field>
+    </columns>
+    <description
+    >Wrong answers grouped by misconception tag and question domain. Surfaces the most common mistakes for content remediation and study guidance.</description>
     <filter>
         <criteriaItems>
             <column>Game_Session__c.Answers__r$Is_Correct__c</column>
@@ -23,14 +29,29 @@
             <value>0</value>
         </criteriaItems>
     </filter>
+    <format>Summary</format>
     <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
         <field>Game_Session__c.Answers__r$Question_Domain__c</field>
         <sortOrder>Asc</sortOrder>
-        <dateGranularity>Day</dateGranularity>
     </groupingsDown>
     <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
         <field>Game_Session__c.Answers__r$Misconception_Tag__c</field>
         <sortOrder>Asc</sortOrder>
-        <dateGranularity>Day</dateGranularity>
     </groupingsDown>
+    <name>Misconception Hotspots</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CertGame_Sessions_With_Answers__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Game_Session__c$Started_At__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
 </Report>

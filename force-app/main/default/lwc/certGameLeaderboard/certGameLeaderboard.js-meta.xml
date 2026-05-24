@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>60.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Cert Game Leaderboard</masterLabel>
-    <description>Top players by points, optionally scoped to an exam or tenant.</description>
+    <description
+    >Top players by points, optionally scoped to an exam or tenant.</description>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__HomePage</target>
@@ -17,8 +18,17 @@
             </objects>
         </targetConfig>
         <targetConfig targets="lightning__AppPage,lightning__HomePage">
-            <property name="tenantId" type="String" label="Tenant Id (optional)"/>
-            <property name="defaultLimit" type="Integer" label="Max rows" default="25"/>
+            <property
+                name="tenantId"
+                type="String"
+                label="Tenant Id (optional)"
+            />
+            <property
+                name="defaultLimit"
+                type="Integer"
+                label="Max rows"
+                default="25"
+            />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
     <baseObject>PartnerMarketingBudget</baseObject>
     <category>other</category>
     <deployed>true</deployed>
-    <description>Report on your partner marketing budgets, including budget amounts per partner account, and date when the budget is no longer available.</description>
+    <description
+    >Report on your partner marketing budgets, including budget amounts per partner account, and date when the budget is no longer available.</description>
     <label>Partner Marketing Budgets</label>
     <sections>
         <columns>

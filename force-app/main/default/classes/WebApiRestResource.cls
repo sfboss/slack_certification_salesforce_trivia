@@ -16,48 +16,86 @@
  */
 @RestResource(urlMapping='/web/*')
 global without sharing class WebApiRestResource {
-
     @HttpGet
     global static void doGet() {
         try {
             String path = pathAfterBase();
-            if (path == '/me') { requireAuth(); writeJson(WebPlayService.getStats(currentPlayerId())); return; }
-            if (path == '/exams') { requireAuth(); writeJson(WebPlayService.listExams()); return; }
-            if (path != null && path.startsWith('/session/') && path.endsWith('/next')) {
+            if (path == '/me') {
                 requireAuth();
-                String sid = path.substringBetween('/session/', '/next');
-                writeJson(WebPlayService.nextRound(currentPlayerId(), (Id) sid));
+                writeJson(WebPlayService.getStats(currentPlayerId()));
                 return;
             }
-            if (path == '/health') { writeJson(new Map<String,Object>{ 'ok' => true, 'ts' => System.now() }); return; }
+            if (path == '/exams') {
+                requireAuth();
+                writeJson(WebPlayService.listExams());
+                return;
+            }
+            if (
+                path != null &&
+                path.startsWith('/session/') &&
+                path.endsWith('/next')
+            ) {
+                requireAuth();
+                String sid = path.substringBetween('/session/', '/next');
+                writeJson(
+                    WebPlayService.nextRound(currentPlayerId(), (Id) sid)
+                );
+                return;
+            }
+            if (path == '/health') {
+                writeJson(
+                    new Map<String, Object>{
+                        'ok' => true,
+                        'ts' => System.now()
+                    }
+                );
+                return;
+            }
             if (path == '/config') {
-                writeJson(new Map<String,Object>{
-                    'googleClientId' => AppSettings.get().Web_Google_Client_Id__c,
-                    'orgId' => UserInfo.getOrganizationId()
-                });
+                writeJson(
+                    new Map<String, Object>{
+                        'googleClientId' => AppSettings.get()
+                            .Web_Google_Client_Id__c,
+                        'orgId' => UserInfo.getOrganizationId()
+                    }
+                );
                 return;
             }
             if (path == '/tournaments') {
                 requireAuth();
-                writeJson(WebTournamentService.listOpenTournaments(currentPlayerId()));
+                writeJson(
+                    WebTournamentService.listOpenTournaments(currentPlayerId())
+                );
                 return;
             }
             if (path != null && path.startsWith('/tournament/')) {
                 String token = path.substring('/tournament/'.length());
-                if (token.endsWith('/')) token = token.substring(0, token.length() - 1);
+                if (token.endsWith('/'))
+                    token = token.substring(0, token.length() - 1);
                 // No path components beyond token on GET
                 if (!token.contains('/')) {
                     requireAuth();
-                    writeJson(WebTournamentService.getTournamentByToken(currentPlayerId(), token));
+                    writeJson(
+                        WebTournamentService.getTournamentByToken(
+                            currentPlayerId(),
+                            token
+                        )
+                    );
                     return;
                 }
             }
             notFound(path);
         } catch (AuthException ae) {
-            writeStatus(401, new Map<String,Object>{ 'error' => ae.getMessage() });
+            writeStatus(
+                401,
+                new Map<String, Object>{ 'error' => ae.getMessage() }
+            );
         } catch (Exception e) {
             AppLogger.error('WebApiRestResource', 'doGet', 'unhandled', e);
-            writeStatus(500, new Map<String,Object>{ 'error' => e.getMessage() });
+            writeStatus(
+                500,
+                new Map<String, Object>{ 'error' => e.getMessage() }
+            );
         }
     }
 
@@ -65,110 +103,190 @@ global without sharing class WebApiRestResource {
     global static void doPost() {
         try {
             String path = pathAfterBase();
-            String body = RestContext.request.requestBody == null ? '' : RestContext.request.requestBody.toString();
-            Map<String, Object> json = String.isBlank(body) ? new Map<String, Object>() : (Map<String, Object>) JSON.deserializeUntyped(body);
+            String body = RestContext.request.requestBody == null
+                ? ''
+                : RestContext.request.requestBody.toString();
+            Map<String, Object> json = String.isBlank(body)
+                ? new Map<String, Object>()
+                : (Map<String, Object>) JSON.deserializeUntyped(body);
 
             if (path == '/auth/google') {
                 String credential = (String) json.get('credential');
-                if (String.isBlank(credential)) credential = (String) json.get('id_token');
-                WebAuthService.AuthResult r = WebAuthService.signInWithGoogleIdToken(credential);
-                if (!r.ok) { writeStatus(401, new Map<String,Object>{ 'error' => r.error }); return; }
-                writeJson(new Map<String,Object>{
-                    'sessionToken' => r.sessionToken,
-                    'expiresAt' => r.expiresAt,
-                    'player' => new Map<String,Object>{
-                        'id' => r.playerId, 'name' => r.name, 'email' => r.email, 'pictureUrl' => r.pictureUrl
+                if (String.isBlank(credential))
+                    credential = (String) json.get('id_token');
+                WebAuthService.AuthResult r = WebAuthService.signInWithGoogleIdToken(
+                    credential
+                );
+                if (!r.ok) {
+                    writeStatus(
+                        401,
+                        new Map<String, Object>{ 'error' => r.error }
+                    );
+                    return;
+                }
+                writeJson(
+                    new Map<String, Object>{
+                        'sessionToken' => r.sessionToken,
+                        'expiresAt' => r.expiresAt,
+                        'player' => new Map<String, Object>{
+                            'id' => r.playerId,
+                            'name' => r.name,
+                            'email' => r.email,
+                            'pictureUrl' => r.pictureUrl
+                        }
                     }
-                });
+                );
                 return;
             }
             if (path == '/session/start') {
                 requireAuth();
                 String examId = (String) json.get('examId');
                 Object nq = json.get('numQuestions');
-                Integer n = nq == null ? 5 : Integer.valueOf(String.valueOf(nq));
-                writeJson(WebPlayService.startSession(currentPlayerId(), (Id) examId, n));
+                Integer n = nq == null
+                    ? 5
+                    : Integer.valueOf(String.valueOf(nq));
+                writeJson(
+                    WebPlayService.startSession(
+                        currentPlayerId(),
+                        (Id) examId,
+                        n
+                    )
+                );
                 return;
             }
             if (path == '/answer') {
                 requireAuth();
                 String roundId = (String) json.get('roundId');
                 String choiceId = (String) json.get('choiceId');
-                writeJson(WebPlayService.submitAnswer(currentPlayerId(), (Id) roundId, (Id) choiceId));
+                writeJson(
+                    WebPlayService.submitAnswer(
+                        currentPlayerId(),
+                        (Id) roundId,
+                        (Id) choiceId
+                    )
+                );
                 return;
             }
             if (path != null && path.startsWith('/tournament/')) {
                 String tail = path.substring('/tournament/'.length());
                 if (tail.endsWith('/join')) {
                     requireAuth();
-                    String token = tail.substring(0, tail.length() - '/join'.length());
-                    writeJson(WebTournamentService.join(currentPlayerId(), token));
+                    String token = tail.substring(
+                        0,
+                        tail.length() - '/join'.length()
+                    );
+                    writeJson(
+                        WebTournamentService.join(currentPlayerId(), token)
+                    );
                     return;
                 }
                 if (tail.endsWith('/start')) {
                     requireAuth();
-                    String token = tail.substring(0, tail.length() - '/start'.length());
-                    writeJson(WebTournamentService.startTournamentSession(currentPlayerId(), token));
+                    String token = tail.substring(
+                        0,
+                        tail.length() - '/start'.length()
+                    );
+                    writeJson(
+                        WebTournamentService.startTournamentSession(
+                            currentPlayerId(),
+                            token
+                        )
+                    );
                     return;
                 }
             }
             notFound(path);
         } catch (AuthException ae) {
-            writeStatus(401, new Map<String,Object>{ 'error' => ae.getMessage() });
+            writeStatus(
+                401,
+                new Map<String, Object>{ 'error' => ae.getMessage() }
+            );
         } catch (WebPlayService.PlayException pe) {
-            writeStatus(400, new Map<String,Object>{ 'error' => pe.getMessage() });
+            writeStatus(
+                400,
+                new Map<String, Object>{ 'error' => pe.getMessage() }
+            );
         } catch (Exception e) {
             AppLogger.error('WebApiRestResource', 'doPost', 'unhandled', e);
-            writeStatus(500, new Map<String,Object>{ 'error' => e.getMessage() });
+            writeStatus(
+                500,
+                new Map<String, Object>{ 'error' => e.getMessage() }
+            );
         }
     }
 
     // ---- helpers ----
 
-    public class AuthException extends Exception {}
+    public class AuthException extends Exception {
+    }
 
     private static Id currentPlayerIdValue;
-    private static Id currentPlayerId() { return currentPlayerIdValue; }
+    private static Id currentPlayerId() {
+        return currentPlayerIdValue;
+    }
 
     private static void requireAuth() {
-        Map<String,String> headers = RestContext.request.headers == null ? new Map<String,String>() : RestContext.request.headers;
+        Map<String, String> headers = RestContext.request.headers == null
+            ? new Map<String, String>()
+            : RestContext.request.headers;
         String tok = headers.get('Authorization');
-        if (tok == null) tok = headers.get('authorization');
-        if (tok != null && tok.startsWithIgnoreCase('Bearer ')) tok = tok.substring(7);
-        if (String.isBlank(tok)) tok = headers.get('X-Web-Session-Token');
+        if (tok == null)
+            tok = headers.get('authorization');
+        if (tok != null && tok.startsWithIgnoreCase('Bearer '))
+            tok = tok.substring(7);
+        if (String.isBlank(tok))
+            tok = headers.get('X-Web-Session-Token');
         if (String.isBlank(tok) && RestContext.request.params != null) {
             tok = RestContext.request.params.get('session');
         }
         WebSessionToken.TokenResult tr = WebSessionToken.verify(tok);
-        if (!tr.valid) throw new AuthException('unauthorized:' + tr.reason);
+        if (!tr.valid)
+            throw new AuthException('unauthorized:' + tr.reason);
         currentPlayerIdValue = tr.playerId;
     }
 
     private static String pathAfterBase() {
         String uri = RestContext.request.requestURI;
-        if (uri == null) return null;
+        if (uri == null)
+            return null;
         Integer idx = uri.indexOf('/web');
-        if (idx < 0) return uri;
+        if (idx < 0)
+            return uri;
         String rest = uri.substring(idx + 4);
-        if (String.isBlank(rest)) rest = '/';
+        if (String.isBlank(rest))
+            rest = '/';
         // Trim trailing slash (except root)
-        if (rest.length() > 1 && rest.endsWith('/')) rest = rest.substring(0, rest.length() - 1);
+        if (rest.length() > 1 && rest.endsWith('/'))
+            rest = rest.substring(0, rest.length() - 1);
         return rest;
     }
 
     private static void writeJson(Object payload) {
         RestContext.response.statusCode = 200;
-        RestContext.response.addHeader('Content-Type', 'application/json; charset=utf-8');
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(payload, true));
+        RestContext.response.addHeader(
+            'Content-Type',
+            'application/json; charset=utf-8'
+        );
+        RestContext.response.responseBody = Blob.valueOf(
+            JSON.serialize(payload, true)
+        );
     }
 
     private static void writeStatus(Integer code, Object payload) {
         RestContext.response.statusCode = code;
-        RestContext.response.addHeader('Content-Type', 'application/json; charset=utf-8');
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(payload, true));
+        RestContext.response.addHeader(
+            'Content-Type',
+            'application/json; charset=utf-8'
+        );
+        RestContext.response.responseBody = Blob.valueOf(
+            JSON.serialize(payload, true)
+        );
     }
 
     private static void notFound(String path) {
-        writeStatus(404, new Map<String,Object>{ 'error' => 'not_found', 'path' => path });
+        writeStatus(
+            404,
+            new Map<String, Object>{ 'error' => 'not_found', 'path' => path }
+        );
     }
 }

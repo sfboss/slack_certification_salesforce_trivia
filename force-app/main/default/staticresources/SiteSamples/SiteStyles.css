@@ -1,6 +1,6 @@
 .topPanelContainer {
-	text-align:left;
-	border:1px solid #ccc;
+    text-align: left;
+    border: 1px solid #ccc;
 }
 
 .topPanel {
@@ -19,8 +19,8 @@
 }
 
 .poweredByImage {
-	vertical-align: middle;
-	margin:12px 8px 8px 0;
+    vertical-align: middle;
+    margin: 12px 8px 8px 0;
 }
 
 img {

@@ -1,4 +1,5 @@
 # SOQL Query Reference Guide
+
 ## 1000 Diagnostic and Documentation Queries for Salesforce Administrators
 
 > **Last Updated:** May 2026  
@@ -159,7 +160,7 @@ ORDER BY AssignedDate DESC
 
 ```sql
 -- Query 16: System permissions in permission sets
-SELECT Parent.Label, PermissionsApiEnabled, PermissionsModifyAllData, 
+SELECT Parent.Label, PermissionsApiEnabled, PermissionsModifyAllData,
        PermissionsViewAllData, PermissionsManageUsers
 FROM PermissionSet
 WHERE IsOwnedByProfile = false
@@ -169,7 +170,7 @@ ORDER BY Parent.Label
 
 ```sql
 -- Query 17: Object permissions by permission set
-SELECT Parent.Label, SobjectType, PermissionsCreate, PermissionsRead, 
+SELECT Parent.Label, SobjectType, PermissionsCreate, PermissionsRead,
        PermissionsEdit, PermissionsDelete, PermissionsViewAllRecords
 FROM ObjectPermissions
 WHERE ParentId IN (SELECT Id FROM PermissionSet WHERE IsOwnedByProfile = false)
@@ -332,7 +333,7 @@ ORDER BY CreatedDate DESC
 
 ```sql
 -- Query 35: Count users by 2FA status
-SELECT 
+SELECT
   (SELECT COUNT() FROM User WHERE IsActive = true) TotalActive,
   (SELECT COUNT() FROM TwoFactorInfo) With2FA,
   (SELECT COUNT() FROM User WHERE IsActive = true AND Id NOT IN (SELECT UserId FROM TwoFactorInfo)) Without2FA
@@ -962,8 +963,8 @@ ORDER BY LastLoginDate NULLS FIRST
 
 ```sql
 -- Query 108: Users by login frequency bracket
-SELECT 
-  CASE 
+SELECT
+  CASE
     WHEN LastLoginDate = TODAY THEN 'Today'
     WHEN LastLoginDate = LAST_N_DAYS:7 THEN 'This Week'
     WHEN LastLoginDate = LAST_N_DAYS:30 THEN 'This Month'
@@ -972,8 +973,8 @@ SELECT
   COUNT(Id) UserCount
 FROM User
 WHERE IsActive = true
-GROUP BY 
-  CASE 
+GROUP BY
+  CASE
     WHEN LastLoginDate = TODAY THEN 'Today'
     WHEN LastLoginDate = LAST_N_DAYS:7 THEN 'This Week'
     WHEN LastLoginDate = LAST_N_DAYS:30 THEN 'This Month'
@@ -1069,7 +1070,7 @@ ORDER BY Parent.Label, CustomPermission.DeveloperName
 SELECT Assignee.Name, PermissionSet.Label
 FROM PermissionSetAssignment
 WHERE PermissionSetId IN (
-  SELECT ParentId FROM SetupEntityAccess 
+  SELECT ParentId FROM SetupEntityAccess
   WHERE SetupEntityId IN (
     SELECT Id FROM CustomPermission WHERE DeveloperName = 'Your_Custom_Permission'
   )
@@ -1163,16 +1164,16 @@ ORDER BY COUNT(Id) DESC
 
 ```sql
 -- Query 128: Desktop vs mobile usage
-SELECT 
-  CASE 
+SELECT
+  CASE
     WHEN Platform LIKE '%Mobile%' THEN 'Mobile'
     ELSE 'Desktop'
   END DeviceType,
   COUNT(Id) LoginCount
 FROM LoginHistory
 WHERE LoginTime = LAST_N_DAYS:30
-GROUP BY 
-  CASE 
+GROUP BY
+  CASE
     WHEN Platform LIKE '%Mobile%' THEN 'Mobile'
     ELSE 'Desktop'
   END
@@ -1214,7 +1215,7 @@ ORDER BY COUNT(Id) DESC
 -- Query 132: Users with dangerous permissions
 SELECT Name, Username, Profile.Name
 FROM User
-WHERE (Profile.PermissionsModifyAllData = true 
+WHERE (Profile.PermissionsModifyAllData = true
    OR Profile.PermissionsViewAllData = true)
 AND IsActive = true
 ORDER BY Profile.Name, Name
@@ -2026,16 +2027,16 @@ FROM Account
 
 ```sql
 -- Query 222: Contact quality score distribution
-SELECT 
-  CASE 
+SELECT
+  CASE
     WHEN (Email != null AND Phone != null AND Title != null) THEN 'High Quality'
     WHEN (Email != null OR Phone != null) THEN 'Medium Quality'
     ELSE 'Low Quality'
   END QualityBracket,
   COUNT(Id) ContactCount
 FROM Contact
-GROUP BY 
-  CASE 
+GROUP BY
+  CASE
     WHEN (Email != null AND Phone != null AND Title != null) THEN 'High Quality'
     WHEN (Email != null OR Phone != null) THEN 'Medium Quality'
     ELSE 'Low Quality'
@@ -2219,7 +2220,7 @@ ORDER BY CreatedDate DESC
 
 ```sql
 -- Query 241: Accounts vs opportunities mismatch
-SELECT Id, Name, Type, 
+SELECT Id, Name, Type,
   (SELECT COUNT() FROM Opportunities) OpportunityCount
 FROM Account
 WHERE Type = 'Customer'
@@ -2385,3 +2386,4 @@ SELECT Id, Name, StageName, CloseDate, NextStep
 FROM Opportunity
 WHERE NextStep = null
 AND
+```

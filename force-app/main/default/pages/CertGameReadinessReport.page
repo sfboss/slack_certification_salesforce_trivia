@@ -1,10 +1,44 @@
-<apex:page controller="CertGameReadinessReportController"
-           showHeader="false" sidebar="false" standardStylesheets="false"
-           applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" cache="false">
-<apex:outputPanel rendered="{!NOT(ISBLANK(errorMessage))}" layout="block">
-<html lang="en"><head><meta charset="utf-8"/><title>Readiness Report</title>
-<style>body{font-family:-apple-system,sans-serif;background:#f5f1e8;color:#1a1714;padding:48px;max-width:640px;margin:0 auto}h1{font-weight:300}p{line-height:1.5}</style>
-</head><body><h1>Report unavailable</h1><p><apex:outputText value="{!errorMessage}" escape="true"/></p></body></html>
-</apex:outputPanel>
-<apex:outputText rendered="{!ISBLANK(errorMessage)}" value="{!mergedHtml}" escape="false"/>
+<apex:page
+    controller="CertGameReadinessReportController"
+    showHeader="false"
+    sidebar="false"
+    standardStylesheets="false"
+    applyHtmlTag="false"
+    applyBodyTag="false"
+    docType="html-5.0"
+    cache="false"
+>
+    <apex:outputPanel rendered="{!NOT(ISBLANK(errorMessage))}" layout="block">
+        <html lang="en">
+            <head>
+                <meta charset="utf-8" />
+                <title>Readiness Report</title>
+                <style>
+                    body {
+                        font-family: -apple-system, sans-serif;
+                        background: #f5f1e8;
+                        color: #1a1714;
+                        padding: 48px;
+                        max-width: 640px;
+                        margin: 0 auto;
+                    }
+                    h1 {
+                        font-weight: 300;
+                    }
+                    p {
+                        line-height: 1.5;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Report unavailable</h1>
+                <p><apex:outputText value="{!errorMessage}" escape="true" /></p>
+            </body>
+        </html>
+    </apex:outputPanel>
+    <apex:outputText
+        rendered="{!ISBLANK(errorMessage)}"
+        value="{!mergedHtml}"
+        escape="false"
+    />
 </apex:page>

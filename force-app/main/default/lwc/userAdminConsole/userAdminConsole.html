@@ -1,33 +1,53 @@
 <template>
     <lightning-card title="Users" icon-name="standard:user">
         <div slot="actions">
-            <lightning-button label="Refresh" icon-name="utility:refresh" onclick={handleRefresh}></lightning-button>
+            <lightning-button
+                label="Refresh"
+                icon-name="utility:refresh"
+                onclick={handleRefresh}
+            ></lightning-button>
         </div>
 
         <div class="slds-p-horizontal_medium">
             <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_small">
                 <div class="slds-col slds-size_1-of-4">
-                    <div class="slds-box slds-box_xx-small slds-text-align_center">
+                    <div
+                        class="slds-box slds-box_xx-small slds-text-align_center"
+                    >
                         <p class="slds-text-title">Players</p>
-                        <p class="slds-text-heading_medium">{summaryRow.players}</p>
+                        <p class="slds-text-heading_medium">
+                            {summaryRow.players}
+                        </p>
                     </div>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <div class="slds-box slds-box_xx-small slds-text-align_center">
+                    <div
+                        class="slds-box slds-box_xx-small slds-text-align_center"
+                    >
                         <p class="slds-text-title">Google linked</p>
-                        <p class="slds-text-heading_medium">{summaryRow.googleLinked}</p>
+                        <p class="slds-text-heading_medium">
+                            {summaryRow.googleLinked}
+                        </p>
                     </div>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <div class="slds-box slds-box_xx-small slds-text-align_center">
+                    <div
+                        class="slds-box slds-box_xx-small slds-text-align_center"
+                    >
                         <p class="slds-text-title">Slack linked</p>
-                        <p class="slds-text-heading_medium">{summaryRow.slackLinked}</p>
+                        <p class="slds-text-heading_medium">
+                            {summaryRow.slackLinked}
+                        </p>
                     </div>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <div class="slds-box slds-box_xx-small slds-text-align_center">
+                    <div
+                        class="slds-box slds-box_xx-small slds-text-align_center"
+                    >
                         <p class="slds-text-title">Tenants</p>
-                        <p class="slds-text-heading_medium">{summaryRow.tenants}</p>
+                        <p class="slds-text-heading_medium">
+                            {summaryRow.tenants}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -39,27 +59,36 @@
                 placeholder="Filter by name, email, Slack user, or tenant"
                 value={filter}
                 onchange={handleFilterChange}
-                class="slds-m-bottom_small">
+                class="slds-m-bottom_small"
+            >
             </lightning-input>
 
             <template if:true={isLoading}>
                 <div class="slds-align_absolute-center slds-p-around_large">
-                    <lightning-spinner alternative-text="Loading users" size="small"></lightning-spinner>
+                    <lightning-spinner
+                        alternative-text="Loading users"
+                        size="small"
+                    ></lightning-spinner>
                 </div>
             </template>
 
             <template if:true={loadError}>
-                <div class="slds-text-color_error slds-p-around_medium">{loadError}</div>
+                <div class="slds-text-color_error slds-p-around_medium">
+                    {loadError}
+                </div>
             </template>
 
             <template if:false={isLoading}>
-                <p class="slds-text-body_small slds-m-bottom_x-small">{rowCount} shown</p>
+                <p class="slds-text-body_small slds-m-bottom_x-small">
+                    {rowCount} shown
+                </p>
                 <lightning-datatable
                     key-field="playerId"
                     data={rows}
                     columns={columns}
                     hide-checkbox-column
-                    column-widths-mode="auto">
+                    column-widths-mode="auto"
+                >
                 </lightning-datatable>
             </template>
         </div>

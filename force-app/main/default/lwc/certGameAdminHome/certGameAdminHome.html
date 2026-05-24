@@ -1,9 +1,14 @@
 <template>
     <div class="admin-home slds-p-around_medium">
-        <div class="slds-page-header slds-page-header_record-home admin-page-header">
+        <div
+            class="slds-page-header slds-page-header_record-home admin-page-header"
+        >
             <template if:true={loading}>
                 <div class="slds-spinner_container admin-spinner-shell">
-                    <div class="slds-spinner slds-spinner_brand slds-spinner_small" role="status">
+                    <div
+                        class="slds-spinner slds-spinner_brand slds-spinner_small"
+                        role="status"
+                    >
                         <span class="slds-assistive-text">Loading</span>
                         <div class="slds-spinner__dot-a"></div>
                         <div class="slds-spinner__dot-b"></div>
@@ -11,46 +16,117 @@
                 </div>
             </template>
 
-            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-wrap">
+            <div
+                class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-wrap"
+            >
                 <div class="slds-col slds-grow slds-p-right_medium">
                     <div class="slds-media slds-no-space slds-grow">
                         <div class="slds-media__figure">
-                            <lightning-icon icon-name="standard:knowledge" size="medium" alternative-text="Cert Game Admin Console" title="Cert Game Admin Console"></lightning-icon>
+                            <lightning-icon
+                                icon-name="standard:knowledge"
+                                size="medium"
+                                alternative-text="Cert Game Admin Console"
+                                title="Cert Game Admin Console"
+                            ></lightning-icon>
                         </div>
                         <div class="slds-media__body">
                             <div class="slds-page-header__name">
                                 <div class="slds-page-header__name-title">
                                     <h1>
-                                        <span class="slds-page-header__title slds-truncate" title="Cert Game Admin Console">Cert Game Admin Console</span>
+                                        <span
+                                            class="slds-page-header__title slds-truncate"
+                                            title="Cert Game Admin Console"
+                                            >Cert Game Admin Console</span
+                                        >
                                     </h1>
                                 </div>
                             </div>
-                            <p class="slds-page-header__name-meta admin-subtitle">Certification trivia management</p>
-                            <p class="slds-text-body_small slds-text-color_weak admin-context-line">{tenantContext}</p>
+                            <p
+                                class="slds-page-header__name-meta admin-subtitle"
+                            >
+                                Certification trivia management
+                            </p>
+                            <p
+                                class="slds-text-body_small slds-text-color_weak admin-context-line"
+                            >
+                                {tenantContext}
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="slds-col slds-no-flex admin-actions">
                     <div class="slds-button-group" role="group">
-                        <button class="slds-button slds-button_brand" data-action="gen" onclick={handleActionClick}>Run Generation Job</button>
-                        <button class="slds-button slds-button_neutral" data-action="tournaments" onclick={handleActionClick}>New Tournament</button>
+                        <button
+                            class="slds-button slds-button_brand"
+                            data-action="gen"
+                            onclick={handleActionClick}
+                        >
+                            Run Generation Job
+                        </button>
+                        <button
+                            class="slds-button slds-button_neutral"
+                            data-action="tournaments"
+                            onclick={handleActionClick}
+                        >
+                            New Tournament
+                        </button>
                         <div class={headerMenuClass}>
-                            <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="More actions" onclick={handleOverflowToggle}>
-                                <lightning-icon icon-name="utility:down" size="x-small" alternative-text="More actions"></lightning-icon>
-                                <span class="slds-assistive-text">More actions</span>
+                            <button
+                                class="slds-button slds-button_icon slds-button_icon-border-filled"
+                                title="More actions"
+                                onclick={handleOverflowToggle}
+                            >
+                                <lightning-icon
+                                    icon-name="utility:down"
+                                    size="x-small"
+                                    alternative-text="More actions"
+                                ></lightning-icon>
+                                <span class="slds-assistive-text"
+                                    >More actions</span
+                                >
                             </button>
                             <template if:true={headerMenuOpen}>
                                 <div class="slds-dropdown slds-dropdown_right">
                                     <ul class="slds-dropdown__list" role="menu">
-                                        <li class="slds-dropdown__item" role="presentation">
-                                            <button class="slds-button slds-button_reset slds-dropdown__item-action" role="menuitem" data-action="refresh" onclick={handleOverflowAction}>Refresh</button>
+                                        <li
+                                            class="slds-dropdown__item"
+                                            role="presentation"
+                                        >
+                                            <button
+                                                class="slds-button slds-button_reset slds-dropdown__item-action"
+                                                role="menuitem"
+                                                data-action="refresh"
+                                                onclick={handleOverflowAction}
+                                            >
+                                                Refresh
+                                            </button>
                                         </li>
-                                        <li class="slds-dropdown__item" role="presentation">
-                                            <button class="slds-button slds-button_reset slds-dropdown__item-action" role="menuitem" data-action="export" onclick={handleOverflowAction}>Export</button>
+                                        <li
+                                            class="slds-dropdown__item"
+                                            role="presentation"
+                                        >
+                                            <button
+                                                class="slds-button slds-button_reset slds-dropdown__item-action"
+                                                role="menuitem"
+                                                data-action="export"
+                                                onclick={handleOverflowAction}
+                                            >
+                                                Export
+                                            </button>
                                         </li>
-                                        <li class="slds-dropdown__item" role="presentation">
-                                            <button class="slds-button slds-button_reset slds-dropdown__item-action" role="menuitem" data-action="settings" onclick={handleOverflowAction}>Settings</button>
+                                        <li
+                                            class="slds-dropdown__item"
+                                            role="presentation"
+                                        >
+                                            <button
+                                                class="slds-button slds-button_reset slds-dropdown__item-action"
+                                                role="menuitem"
+                                                data-action="settings"
+                                                onclick={handleOverflowAction}
+                                            >
+                                                Settings
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>
@@ -64,9 +140,19 @@
                 <div class="slds-page-header__col-details">
                     <ul class="slds-page-header__detail-list">
                         <template for:each={metadataItems} for:item="item">
-                            <li key={item.key} class="slds-page-header__detail-block">
-                                <div class="slds-text-title_caps">{item.label}</div>
-                                <div class="slds-text-body_regular slds-truncate" title={item.value}>{item.value}</div>
+                            <li
+                                key={item.key}
+                                class="slds-page-header__detail-block"
+                            >
+                                <div class="slds-text-title_caps">
+                                    {item.label}
+                                </div>
+                                <div
+                                    class="slds-text-body_regular slds-truncate"
+                                    title={item.value}
+                                >
+                                    {item.value}
+                                </div>
                             </li>
                         </template>
                     </ul>
@@ -79,7 +165,10 @@
         </div>
 
         <template if:true={error}>
-            <div class="slds-notify slds-notify_alert slds-alert_error slds-m-top_medium" role="alert">
+            <div
+                class="slds-notify slds-notify_alert slds-alert_error slds-m-top_medium"
+                role="alert"
+            >
                 <span class="slds-assistive-text">Error</span>
                 <h2>{error}</h2>
             </div>
@@ -88,7 +177,12 @@
         <div class="slds-tabs_default slds-m-top_medium admin-tabs">
             <ul class="slds-tabs_default__nav" role="tablist">
                 <template for:each={tabs} for:item="tab">
-                    <li key={tab.key} class={tab.itemClass} title={tab.label} role="presentation">
+                    <li
+                        key={tab.key}
+                        class={tab.itemClass}
+                        title={tab.label}
+                        role="presentation"
+                    >
                         <a
                             class="slds-tabs_default__link"
                             href="#"
@@ -99,13 +193,22 @@
                             onclick={handleTabClick}
                         >
                             <span class="tab-label-wrap">
-                                <lightning-icon icon-name={tab.iconName} size="x-small" alternative-text={tab.label} class="tab-icon"></lightning-icon>
+                                <lightning-icon
+                                    icon-name={tab.iconName}
+                                    size="x-small"
+                                    alternative-text={tab.label}
+                                    class="tab-icon"
+                                ></lightning-icon>
                                 <span class="tab-copy">{tab.label}</span>
                                 <template if:true={tab.countLabel}>
-                                    <span class={tab.badgeClass}>{tab.countLabel}</span>
+                                    <span class={tab.badgeClass}
+                                        >{tab.countLabel}</span
+                                    >
                                 </template>
                                 <template if:true={tab.attentionCount}>
-                                    <span class="slds-notification-badge">{tab.attentionCount}</span>
+                                    <span class="slds-notification-badge"
+                                        >{tab.attentionCount}</span
+                                    >
                                 </template>
                             </span>
                         </a>
@@ -113,9 +216,16 @@
                 </template>
             </ul>
 
-            <div class="slds-tabs_default__content slds-show admin-tab-body" role="tabpanel">
+            <div
+                class="slds-tabs_default__content slds-show admin-tab-body"
+                role="tabpanel"
+            >
                 <div class={dashboardTabClass}>
-                    <c-cert-game-admin-dashboard tenant-id={tenantId} onhealthaction={handleHealthAction} onnavigate={handleDashboardNavigate}></c-cert-game-admin-dashboard>
+                    <c-cert-game-admin-dashboard
+                        tenant-id={tenantId}
+                        onhealthaction={handleHealthAction}
+                        onnavigate={handleDashboardNavigate}
+                    ></c-cert-game-admin-dashboard>
                 </div>
                 <div class={leaderboardTabClass}>
                     <c-cert-game-leaderboard></c-cert-game-leaderboard>

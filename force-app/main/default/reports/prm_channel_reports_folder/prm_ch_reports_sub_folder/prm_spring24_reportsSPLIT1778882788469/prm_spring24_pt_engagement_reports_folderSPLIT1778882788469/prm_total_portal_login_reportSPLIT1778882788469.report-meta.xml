@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Network.NetworkMembers$Email</field>
@@ -6,7 +6,8 @@
     <columns>
         <field>Network.NetworkMembers.LoginHistory$LoginTime</field>
     </columns>
-    <description>What&apos;s the login history for each of my partner sites last week?</description>
+    <description
+    >What&apos;s the login history for each of my partner sites last week?</description>
     <filter>
         <criteriaItems>
             <column>Network.NetworkMembers.LoginHistory$Status</column>

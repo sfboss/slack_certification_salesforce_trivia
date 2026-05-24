@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Salesforce stores metadata source files without a trailing newline.
+# Match that to keep `sf project retrieve preview` from perma-flagging drift.
+[*.{cls,trigger,page,component,cmp}]
+insert_final_newline = false
+
+[*.{xml,object-meta.xml,field-meta.xml}]
+insert_final_newline = false

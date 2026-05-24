@@ -1,97 +1,226 @@
 {
-  "exam": { "name": "Lightning Web Components Basics", "code": "CRT-LWC", "vendor": "Salesforce" },
-  "questionBank": {
-    "name": "LWC Basics Pack",
-    "version": "1.0.0",
-    "sourceType": "Manual",
-    "status": "Draft",
-    "externalId": "BANK-LWC-001"
-  },
-  "questions": [
-    {
-      "externalId": "LWC-Q1",
-      "domain": "Component Authoring",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which file extension is used for the JavaScript class of an LWC?",
-      "choices": [
-        { "label": "A", "text": ".cmp", "isCorrect": false, "explanation": "That's an Aura component file." },
-        { "label": "B", "text": ".html", "isCorrect": false, "explanation": "That's the template file." },
-        { "label": "C", "text": ".js", "isCorrect": true, "explanation": "LWC JavaScript modules use the .js extension." },
-        { "label": "D", "text": ".lwc", "isCorrect": false, "explanation": "There is no .lwc extension." }
-      ],
-      "explanation": "LWC modules export an ES6 class from a .js file.",
-      "citations": [
-        { "title": "LWC Anatomy", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_introduction", "sourceType": "Salesforce Help", "relevanceNote": "Component file structure." }
-      ]
+    "exam": {
+        "name": "Lightning Web Components Basics",
+        "code": "CRT-LWC",
+        "vendor": "Salesforce"
     },
-    {
-      "externalId": "LWC-Q2",
-      "domain": "Reactivity",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which decorator makes a property reactive when it changes from inside the component?",
-      "choices": [
-        { "label": "A", "text": "@api", "isCorrect": false, "explanation": "@api exposes a public property; the framework tracks it but it's for parent binding." },
-        { "label": "B", "text": "@wire", "isCorrect": false, "explanation": "@wire subscribes to data." },
-        { "label": "C", "text": "@track", "isCorrect": true, "explanation": "@track makes object/array properties reactive (primitives are automatically reactive)." },
-        { "label": "D", "text": "@reactive", "isCorrect": false, "explanation": "There is no @reactive decorator." }
-      ],
-      "explanation": "Use @track for nested object/array reactivity; primitives are reactive by default.",
-      "citations": [
-        { "title": "@track Decorator", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reactivity_track", "sourceType": "Salesforce Help", "relevanceNote": "Reactivity reference." }
-      ]
+    "questionBank": {
+        "name": "LWC Basics Pack",
+        "version": "1.0.0",
+        "sourceType": "Manual",
+        "status": "Draft",
+        "externalId": "BANK-LWC-001"
     },
-    {
-      "externalId": "LWC-Q3",
-      "domain": "Data Binding",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "How do you bind a property `name` from JS into an LWC template?",
-      "choices": [
-        { "label": "A", "text": "{{name}}", "isCorrect": false, "explanation": "That's mustache syntax used elsewhere; LWC uses single braces." },
-        { "label": "B", "text": "{name}", "isCorrect": true, "explanation": "LWC uses single-brace binding." },
-        { "label": "C", "text": "[name]", "isCorrect": false, "explanation": "Brackets are not the binding syntax." },
-        { "label": "D", "text": "$name$", "isCorrect": false, "explanation": "Not the LWC syntax." }
-      ],
-      "explanation": "LWC templates use single-brace expressions for property binding.",
-      "citations": [
-        { "title": "Bind Data in a Template", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_html_data_binding", "sourceType": "Salesforce Help", "relevanceNote": "Binding syntax." }
-      ]
-    },
-    {
-      "externalId": "LWC-Q4",
-      "domain": "Events",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which event option makes a custom event cross shadow-DOM boundaries to parent listeners?",
-      "choices": [
-        { "label": "A", "text": "bubbles: true only", "isCorrect": false, "explanation": "Bubbles alone stops at shadow root." },
-        { "label": "B", "text": "composed: true (typically with bubbles: true)", "isCorrect": true, "explanation": "composed lets events cross shadow boundaries." },
-        { "label": "C", "text": "detail: true", "isCorrect": false, "explanation": "detail is the event payload, not a flag." },
-        { "label": "D", "text": "cancelable: true", "isCorrect": false, "explanation": "cancelable allows preventDefault but doesn't affect propagation." }
-      ],
-      "explanation": "Set composed: true to let events propagate through shadow DOM boundaries.",
-      "citations": [
-        { "title": "Event Propagation", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.events_propagation", "sourceType": "Salesforce Help", "relevanceNote": "composed and bubbles flags." }
-      ]
-    },
-    {
-      "externalId": "LWC-Q5",
-      "domain": "Apex Integration",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which Apex annotation enables cacheable wired reads from LWC?",
-      "choices": [
-        { "label": "A", "text": "@AuraEnabled", "isCorrect": false, "explanation": "Required, but not sufficient for caching." },
-        { "label": "B", "text": "@AuraEnabled(cacheable=true)", "isCorrect": true, "explanation": "cacheable=true is required for @wire reads." },
-        { "label": "C", "text": "@RemoteAction", "isCorrect": false, "explanation": "@RemoteAction is for Visualforce." },
-        { "label": "D", "text": "@InvocableMethod", "isCorrect": false, "explanation": "Used by Flow, not LWC @wire." }
-      ],
-      "explanation": "@AuraEnabled(cacheable=true) enables Lightning Data Service caching and @wire usage.",
-      "citations": [
-        { "title": "Call Apex from LWC", "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.apex_apex_methods", "sourceType": "Salesforce Help", "relevanceNote": "Apex/@wire reference." }
-      ]
-    }
-  ]
+    "questions": [
+        {
+            "externalId": "LWC-Q1",
+            "domain": "Component Authoring",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which file extension is used for the JavaScript class of an LWC?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": ".cmp",
+                    "isCorrect": false,
+                    "explanation": "That's an Aura component file."
+                },
+                {
+                    "label": "B",
+                    "text": ".html",
+                    "isCorrect": false,
+                    "explanation": "That's the template file."
+                },
+                {
+                    "label": "C",
+                    "text": ".js",
+                    "isCorrect": true,
+                    "explanation": "LWC JavaScript modules use the .js extension."
+                },
+                {
+                    "label": "D",
+                    "text": ".lwc",
+                    "isCorrect": false,
+                    "explanation": "There is no .lwc extension."
+                }
+            ],
+            "explanation": "LWC modules export an ES6 class from a .js file.",
+            "citations": [
+                {
+                    "title": "LWC Anatomy",
+                    "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_introduction",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Component file structure."
+                }
+            ]
+        },
+        {
+            "externalId": "LWC-Q2",
+            "domain": "Reactivity",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which decorator makes a property reactive when it changes from inside the component?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "@api",
+                    "isCorrect": false,
+                    "explanation": "@api exposes a public property; the framework tracks it but it's for parent binding."
+                },
+                {
+                    "label": "B",
+                    "text": "@wire",
+                    "isCorrect": false,
+                    "explanation": "@wire subscribes to data."
+                },
+                {
+                    "label": "C",
+                    "text": "@track",
+                    "isCorrect": true,
+                    "explanation": "@track makes object/array properties reactive (primitives are automatically reactive)."
+                },
+                {
+                    "label": "D",
+                    "text": "@reactive",
+                    "isCorrect": false,
+                    "explanation": "There is no @reactive decorator."
+                }
+            ],
+            "explanation": "Use @track for nested object/array reactivity; primitives are reactive by default.",
+            "citations": [
+                {
+                    "title": "@track Decorator",
+                    "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.reactivity_track",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Reactivity reference."
+                }
+            ]
+        },
+        {
+            "externalId": "LWC-Q3",
+            "domain": "Data Binding",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "How do you bind a property `name` from JS into an LWC template?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "{{name}}",
+                    "isCorrect": false,
+                    "explanation": "That's mustache syntax used elsewhere; LWC uses single braces."
+                },
+                {
+                    "label": "B",
+                    "text": "{name}",
+                    "isCorrect": true,
+                    "explanation": "LWC uses single-brace binding."
+                },
+                {
+                    "label": "C",
+                    "text": "[name]",
+                    "isCorrect": false,
+                    "explanation": "Brackets are not the binding syntax."
+                },
+                {
+                    "label": "D",
+                    "text": "$name$",
+                    "isCorrect": false,
+                    "explanation": "Not the LWC syntax."
+                }
+            ],
+            "explanation": "LWC templates use single-brace expressions for property binding.",
+            "citations": [
+                {
+                    "title": "Bind Data in a Template",
+                    "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_html_data_binding",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Binding syntax."
+                }
+            ]
+        },
+        {
+            "externalId": "LWC-Q4",
+            "domain": "Events",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which event option makes a custom event cross shadow-DOM boundaries to parent listeners?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "bubbles: true only",
+                    "isCorrect": false,
+                    "explanation": "Bubbles alone stops at shadow root."
+                },
+                {
+                    "label": "B",
+                    "text": "composed: true (typically with bubbles: true)",
+                    "isCorrect": true,
+                    "explanation": "composed lets events cross shadow boundaries."
+                },
+                {
+                    "label": "C",
+                    "text": "detail: true",
+                    "isCorrect": false,
+                    "explanation": "detail is the event payload, not a flag."
+                },
+                {
+                    "label": "D",
+                    "text": "cancelable: true",
+                    "isCorrect": false,
+                    "explanation": "cancelable allows preventDefault but doesn't affect propagation."
+                }
+            ],
+            "explanation": "Set composed: true to let events propagate through shadow DOM boundaries.",
+            "citations": [
+                {
+                    "title": "Event Propagation",
+                    "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.events_propagation",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "composed and bubbles flags."
+                }
+            ]
+        },
+        {
+            "externalId": "LWC-Q5",
+            "domain": "Apex Integration",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which Apex annotation enables cacheable wired reads from LWC?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "@AuraEnabled",
+                    "isCorrect": false,
+                    "explanation": "Required, but not sufficient for caching."
+                },
+                {
+                    "label": "B",
+                    "text": "@AuraEnabled(cacheable=true)",
+                    "isCorrect": true,
+                    "explanation": "cacheable=true is required for @wire reads."
+                },
+                {
+                    "label": "C",
+                    "text": "@RemoteAction",
+                    "isCorrect": false,
+                    "explanation": "@RemoteAction is for Visualforce."
+                },
+                {
+                    "label": "D",
+                    "text": "@InvocableMethod",
+                    "isCorrect": false,
+                    "explanation": "Used by Flow, not LWC @wire."
+                }
+            ],
+            "explanation": "@AuraEnabled(cacheable=true) enables Lightning Data Service caching and @wire usage.",
+            "citations": [
+                {
+                    "title": "Call Apex from LWC",
+                    "url": "https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.apex_apex_methods",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Apex/@wire reference."
+                }
+            ]
+        }
+    ]
 }

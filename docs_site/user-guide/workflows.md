@@ -44,17 +44,17 @@ python scripts/validate-question-json.py \
 
 ### Pack JSON schema
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| `exam.name` / `exam.code` | yes | Code is the upsert key. |
-| `questionBank.name` / `.version` / `.sourceType` / `.status` | yes | Start status as `Draft`. |
-| `questionBank.externalId` | recommended | For idempotent re-import. |
-| `questions[].externalId` | yes | Per-question idempotency. |
-| `questions[].domain` | yes | Free-text domain grouping. |
-| `questions[].difficulty` | yes | `Beginner`/`Intermediate`/`Advanced`/`Expert`. |
-| `questions[].questionType` | yes | `Single Select`/`Multi Select`/`True/False`. |
-| `questions[].choices[]` | ≥2 | Exactly one `isCorrect:true` for Single Select. |
-| `questions[].citations[]` | ≥1 | `title`, `url`, `sourceType`, `relevanceNote`. |
+| Field                                                        | Required    | Notes                                           |
+| ------------------------------------------------------------ | ----------- | ----------------------------------------------- |
+| `exam.name` / `exam.code`                                    | yes         | Code is the upsert key.                         |
+| `questionBank.name` / `.version` / `.sourceType` / `.status` | yes         | Start status as `Draft`.                        |
+| `questionBank.externalId`                                    | recommended | For idempotent re-import.                       |
+| `questions[].externalId`                                     | yes         | Per-question idempotency.                       |
+| `questions[].domain`                                         | yes         | Free-text domain grouping.                      |
+| `questions[].difficulty`                                     | yes         | `Beginner`/`Intermediate`/`Advanced`/`Expert`.  |
+| `questions[].questionType`                                   | yes         | `Single Select`/`Multi Select`/`True/False`.    |
+| `questions[].choices[]`                                      | ≥2          | Exactly one `isCorrect:true` for Single Select. |
+| `questions[].citations[]`                                    | ≥1          | `title`, `url`, `sourceType`, `relevanceNote`.  |
 
 Working example: [sample_data/adm201-question-pack.sample.json](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/sample_data/adm201-question-pack.sample.json).
 
@@ -68,8 +68,8 @@ Working example: [sample_data/adm201-question-pack.sample.json](https://github.c
 4. Click **Publish** (or **Reject** with a reason).
 
 !!! warning
-    `Status__c = Published` is the only state that becomes playable. Generated questions
-    arrive as `Draft` (or `Generated` in some pipelines) — they never auto-publish.
+`Status__c = Published` is the only state that becomes playable. Generated questions
+arrive as `Draft` (or `Generated` in some pipelines) — they never auto-publish.
 
 ---
 
@@ -114,9 +114,9 @@ of it plays.
 
 1. **Cert Game Manager → Tournaments**.
 2. Enter:
-   - Name (required).
-   - Certification exam (required).
-   - Bracket type: `Round Robin` / `Single Elimination` / `Open Ladder`.
+    - Name (required).
+    - Certification exam (required).
+    - Bracket type: `Round Robin` / `Single Elimination` / `Open Ladder`.
 3. **Create tournament**.
 4. Paste a CSV of `Player__c` Ids → **Build bracket**. Bracket JSON is stored on
    `Tournament__c.Bracket_Json__c`.

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>PartnerFundRequest$Name</field>
@@ -21,7 +21,8 @@
     <columns>
         <field>PartnerFundRequest.PartnerFundClaims$CreatedDate</field>
     </columns>
-    <description>What are the open market development fund claims submitted by partners?</description>
+    <description
+    >What are the open market development fund claims submitted by partners?</description>
     <filter>
         <criteriaItems>
             <column>PartnerFundRequest.PartnerFundClaims$Status</column>

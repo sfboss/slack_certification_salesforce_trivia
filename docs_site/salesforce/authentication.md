@@ -7,12 +7,12 @@ All secrets live in **Named Credentials + External Credentials**. Nothing is har
 Located at
 [force-app/main/default/namedCredentials](https://github.com/sfboss/slack_certification_salesforce_trivia/tree/main/force-app/main/default/namedCredentials).
 
-| Named Credential | Outbound usage | Bound secret |
-| --- | --- | --- |
-| `Slack_Bot` | `chat.postMessage`, `views.open`, `views.publish` via `SlackApiClient`. | Bot User OAuth Token (`xoxb-…`). |
-| `Slack_Signing` | Used by `SlackSignatureVerifier` to verify inbound HMAC. | Slack Signing Secret. |
-| `OpenAI` | `OpenAIQuestionProvider` chat completions. | OpenAI API key (`sk-…`). |
-| `Stripe` | `CertGameBillingService` (Customer Portal); inbound webhook verification. | Stripe restricted/secret key + webhook signing secret. |
+| Named Credential | Outbound usage                                                            | Bound secret                                           |
+| ---------------- | ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `Slack_Bot`      | `chat.postMessage`, `views.open`, `views.publish` via `SlackApiClient`.   | Bot User OAuth Token (`xoxb-…`).                       |
+| `Slack_Signing`  | Used by `SlackSignatureVerifier` to verify inbound HMAC.                  | Slack Signing Secret.                                  |
+| `OpenAI`         | `OpenAIQuestionProvider` chat completions.                                | OpenAI API key (`sk-…`).                               |
+| `Stripe`         | `CertGameBillingService` (Customer Portal); inbound webhook verification. | Stripe restricted/secret key + webhook signing secret. |
 
 ## How to attach secrets
 
@@ -23,7 +23,7 @@ For each Named Credential:
    `Cert_Game_All_Admin` (or the Site Guest User profile, for Slack/Stripe) is mapped.
 3. Open **Principal** for that mapping and paste the secret into the appropriate header
    parameter (commonly `Authorization` with value `Bearer <secret>`).
-4. For Slack and Stripe signing secrets, *additionally* set them in `App_Setting__mdt.Default`:
+4. For Slack and Stripe signing secrets, _additionally_ set them in `App_Setting__mdt.Default`:
     - `Slack_Signing_Secret__c`
     - `Stripe_Webhook_Secret__c`
 

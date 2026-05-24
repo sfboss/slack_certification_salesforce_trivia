@@ -16,31 +16,31 @@ detailed contract.
 
 ### Required headers
 
-| Header | Required when | Notes |
-| --- | --- | --- |
-| `X-Slack-Signature` | All HMAC paths | `v0=hex(hmacSHA256(signingSecret, "v0:{ts}:{body}"))`. |
-| `X-Slack-Request-Timestamp` | Always | Unix seconds; enforced ±300s. |
-| `Content-Type` | Always | See above. |
+| Header                      | Required when  | Notes                                                  |
+| --------------------------- | -------------- | ------------------------------------------------------ |
+| `X-Slack-Signature`         | All HMAC paths | `v0=hex(hmacSHA256(signingSecret, "v0:{ts}:{body}"))`. |
+| `X-Slack-Request-Timestamp` | Always         | Unix seconds; enforced ±300s.                          |
+| `Content-Type`              | Always         | See above.                                             |
 
 ### Payload types
 
-| `type` | Source | Dispatched to |
-| --- | --- | --- |
-| `url_verification` | Slack handshake | Echo `challenge` (no auth). |
-| `slash_command` | `/certgame ...` | `SlackCertGameCommandHandler` |
-| `block_actions` | Button / select click | `SlackCertGameInteractionHandler` |
-| `view_submission` | Modal submit | `SlackCertGameModalHandler` |
-| `view_closed` | Modal cancel | `SlackCertGameModalHandler` |
-| `event_callback` | Subscribed events | `SlackCertGameEventHandler` |
+| `type`             | Source                | Dispatched to                     |
+| ------------------ | --------------------- | --------------------------------- |
+| `url_verification` | Slack handshake       | Echo `challenge` (no auth).       |
+| `slash_command`    | `/certgame ...`       | `SlackCertGameCommandHandler`     |
+| `block_actions`    | Button / select click | `SlackCertGameInteractionHandler` |
+| `view_submission`  | Modal submit          | `SlackCertGameModalHandler`       |
+| `view_closed`      | Modal cancel          | `SlackCertGameModalHandler`       |
+| `event_callback`   | Subscribed events     | `SlackCertGameEventHandler`       |
 
 ### Responses
 
-| Code | When |
-| --- | --- |
-| `200` + JSON body | Successful slash command (Block Kit JSON). |
-| `200` + `challenge` | URL verification. |
-| `200` + empty | Acknowledged event / duplicate / non-error. |
-| `401` `invalid signature` | HMAC + token fallback both failed. |
+| Code                      | When                                        |
+| ------------------------- | ------------------------------------------- |
+| `200` + JSON body         | Successful slash command (Block Kit JSON).  |
+| `200` + `challenge`       | URL verification.                           |
+| `200` + empty             | Acknowledged event / duplicate / non-error. |
+| `401` `invalid signature` | HMAC + token fallback both failed.          |
 
 ### URL verification example
 
@@ -86,20 +86,20 @@ Response body is Block Kit JSON the user sees as the slash command's reply.
 
 ### Required headers
 
-| Header | Notes |
-| --- | --- |
+| Header             | Notes                                         |
+| ------------------ | --------------------------------------------- |
 | `Stripe-Signature` | `t=...,v1=...`. Verified with timestamp skew. |
-| `Content-Type` | `application/json`. |
+| `Content-Type`     | `application/json`.                           |
 
 ### Handled events
 
-| Event | Effect |
-| --- | --- |
-| `checkout.session.completed` | Set `Tenant__c.Plan__c = 'Pro'` (or `Enterprise`), `Status__c = 'Active'`. |
-| `customer.subscription.updated` | Update plan + `Current_Period_End__c`. |
-| `customer.subscription.deleted` | `Plan__c = 'Free'`, `Status__c = 'Cancelled'`. |
-| `invoice.payment_failed` | `Status__c = 'Past_Due'`. |
-| anything else | Stored on `License_Event__c`, no mutation. |
+| Event                           | Effect                                                                     |
+| ------------------------------- | -------------------------------------------------------------------------- |
+| `checkout.session.completed`    | Set `Tenant__c.Plan__c = 'Pro'` (or `Enterprise`), `Status__c = 'Active'`. |
+| `customer.subscription.updated` | Update plan + `Current_Period_End__c`.                                     |
+| `customer.subscription.deleted` | `Plan__c = 'Free'`, `Status__c = 'Cancelled'`.                             |
+| `invoice.payment_failed`        | `Status__c = 'Past_Due'`.                                                  |
+| anything else                   | Stored on `License_Event__c`, no mutation.                                 |
 
 ### Responses
 
@@ -117,16 +117,16 @@ Response body is Block Kit JSON the user sees as the slash command's reply.
 These are reachable only from authenticated LWCs; they enforce `WITH USER_MODE` SOQL and
 `with sharing`.
 
-| Method | Class |
-| --- | --- |
-| `importPack(String json)` | `CertGameImportService` |
-| `listDrafts(filters)` | `QuestionReviewController` |
-| `publishQuestion(Id)` | `QuestionReviewController` |
-| `rejectQuestion(Id, String reason)` | `QuestionReviewController` |
-| `getDashboardStats(...)` | `CertGameAdminDashboardController` |
-| `getPlayerStats(...)` | `CertGamePlayerDashboardController` |
-| `getLeaderboard(...)` | `CertGameLeaderboardController` |
-| `openCustomerPortal(Id tenantId)` | `CertGameBillingController` |
+| Method                              | Class                               |
+| ----------------------------------- | ----------------------------------- |
+| `importPack(String json)`           | `CertGameImportService`             |
+| `listDrafts(filters)`               | `QuestionReviewController`          |
+| `publishQuestion(Id)`               | `QuestionReviewController`          |
+| `rejectQuestion(Id, String reason)` | `QuestionReviewController`          |
+| `getDashboardStats(...)`            | `CertGameAdminDashboardController`  |
+| `getPlayerStats(...)`               | `CertGamePlayerDashboardController` |
+| `getLeaderboard(...)`               | `CertGameLeaderboardController`     |
+| `openCustomerPortal(Id tenantId)`   | `CertGameBillingController`         |
 
 Method signatures live in the source under
 [force-app/main/default/classes/](https://github.com/sfboss/slack_certification_salesforce_trivia/tree/main/force-app/main/default/classes).

@@ -1,97 +1,226 @@
 {
-  "exam": { "name": "Platform Developer I Quickfire", "code": "CRT-PD1", "vendor": "Salesforce" },
-  "questionBank": {
-    "name": "PD1 Quickfire Pack",
-    "version": "1.0.0",
-    "sourceType": "Manual",
-    "status": "Draft",
-    "externalId": "BANK-PD1-001"
-  },
-  "questions": [
-    {
-      "externalId": "PD1-Q1",
-      "domain": "Apex Basics",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "What is the maximum number of SOQL queries allowed in a synchronous Apex transaction?",
-      "choices": [
-        { "label": "A", "text": "50", "isCorrect": false, "explanation": "50 is incorrect." },
-        { "label": "B", "text": "100", "isCorrect": true, "explanation": "Synchronous transactions allow 100 SOQL queries." },
-        { "label": "C", "text": "150", "isCorrect": false, "explanation": "150 applies to DML rows, not queries." },
-        { "label": "D", "text": "200", "isCorrect": false, "explanation": "200 is not a governor limit value here." }
-      ],
-      "explanation": "Synchronous Apex allows 100 SOQL queries per transaction.",
-      "citations": [
-        { "title": "Apex Governor Limits", "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm", "sourceType": "Salesforce Help", "relevanceNote": "Lists all governor limits." }
-      ]
+    "exam": {
+        "name": "Platform Developer I Quickfire",
+        "code": "CRT-PD1",
+        "vendor": "Salesforce"
     },
-    {
-      "externalId": "PD1-Q2",
-      "domain": "Apex Basics",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which keyword on an Apex class enforces the running user's record sharing rules?",
-      "choices": [
-        { "label": "A", "text": "without sharing", "isCorrect": false, "explanation": "without sharing bypasses sharing." },
-        { "label": "B", "text": "inherited sharing", "isCorrect": false, "explanation": "Inherited sharing defers to the caller." },
-        { "label": "C", "text": "with sharing", "isCorrect": true, "explanation": "with sharing enforces the user's sharing rules." },
-        { "label": "D", "text": "private", "isCorrect": false, "explanation": "private is an access modifier, unrelated to sharing." }
-      ],
-      "explanation": "Use `with sharing` to honor record sharing rules of the running user.",
-      "citations": [
-        { "title": "Using the with sharing or without sharing Keywords", "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_sharing.htm", "sourceType": "Salesforce Help", "relevanceNote": "Official sharing keyword reference." }
-      ]
+    "questionBank": {
+        "name": "PD1 Quickfire Pack",
+        "version": "1.0.0",
+        "sourceType": "Manual",
+        "status": "Draft",
+        "externalId": "BANK-PD1-001"
     },
-    {
-      "externalId": "PD1-Q3",
-      "domain": "Data Modeling",
-      "difficulty": "Beginner",
-      "questionType": "Single Select",
-      "question": "Which field type allows you to enforce uniqueness across all records in a custom object?",
-      "choices": [
-        { "label": "A", "text": "Text", "isCorrect": false, "explanation": "Plain Text isn't unique by default." },
-        { "label": "B", "text": "Text with the Unique attribute checked", "isCorrect": true, "explanation": "Marking the field Unique enforces no-duplicates." },
-        { "label": "C", "text": "Auto Number", "isCorrect": false, "explanation": "Auto Number is always unique but doesn't accept arbitrary values." },
-        { "label": "D", "text": "Picklist", "isCorrect": false, "explanation": "Picklists are not unique fields." }
-      ],
-      "explanation": "Marking a text/email/number field as Unique enforces uniqueness.",
-      "citations": [
-        { "title": "Custom Field Attributes", "url": "https://help.salesforce.com/s/articleView?id=sf.adding_fields.htm", "sourceType": "Salesforce Help", "relevanceNote": "Documents the Unique attribute." }
-      ]
-    },
-    {
-      "externalId": "PD1-Q4",
-      "domain": "Testing",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "What is the minimum overall Apex code coverage required to deploy to production?",
-      "choices": [
-        { "label": "A", "text": "65%", "isCorrect": false, "explanation": "65% is below the production minimum." },
-        { "label": "B", "text": "75%", "isCorrect": true, "explanation": "Production deploys require 75% overall Apex coverage." },
-        { "label": "C", "text": "85%", "isCorrect": false, "explanation": "85% is a common internal target but not the platform minimum." },
-        { "label": "D", "text": "100%", "isCorrect": false, "explanation": "100% is not required by the platform." }
-      ],
-      "explanation": "Salesforce requires 75% overall Apex code coverage to deploy to a production org.",
-      "citations": [
-        { "title": "Code Coverage Requirements", "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm", "sourceType": "Salesforce Help", "relevanceNote": "Defines the 75% minimum." }
-      ]
-    },
-    {
-      "externalId": "PD1-Q5",
-      "domain": "SOQL/SOSL",
-      "difficulty": "Intermediate",
-      "questionType": "Single Select",
-      "question": "Which search language searches across multiple objects and field types in a single query?",
-      "choices": [
-        { "label": "A", "text": "SOQL", "isCorrect": false, "explanation": "SOQL queries one object at a time (with subqueries for related)." },
-        { "label": "B", "text": "SOSL", "isCorrect": true, "explanation": "SOSL searches across many objects at once." },
-        { "label": "C", "text": "SQL", "isCorrect": false, "explanation": "SQL is not a Salesforce query language." },
-        { "label": "D", "text": "GraphQL", "isCorrect": false, "explanation": "GraphQL is supported but isn't the cross-object search language here." }
-      ],
-      "explanation": "SOSL (Salesforce Object Search Language) is designed for full-text cross-object search.",
-      "citations": [
-        { "title": "SOSL Overview", "url": "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_sosl_about.htm", "sourceType": "Salesforce Help", "relevanceNote": "SOSL fundamentals." }
-      ]
-    }
-  ]
+    "questions": [
+        {
+            "externalId": "PD1-Q1",
+            "domain": "Apex Basics",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "What is the maximum number of SOQL queries allowed in a synchronous Apex transaction?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "50",
+                    "isCorrect": false,
+                    "explanation": "50 is incorrect."
+                },
+                {
+                    "label": "B",
+                    "text": "100",
+                    "isCorrect": true,
+                    "explanation": "Synchronous transactions allow 100 SOQL queries."
+                },
+                {
+                    "label": "C",
+                    "text": "150",
+                    "isCorrect": false,
+                    "explanation": "150 applies to DML rows, not queries."
+                },
+                {
+                    "label": "D",
+                    "text": "200",
+                    "isCorrect": false,
+                    "explanation": "200 is not a governor limit value here."
+                }
+            ],
+            "explanation": "Synchronous Apex allows 100 SOQL queries per transaction.",
+            "citations": [
+                {
+                    "title": "Apex Governor Limits",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Lists all governor limits."
+                }
+            ]
+        },
+        {
+            "externalId": "PD1-Q2",
+            "domain": "Apex Basics",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which keyword on an Apex class enforces the running user's record sharing rules?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "without sharing",
+                    "isCorrect": false,
+                    "explanation": "without sharing bypasses sharing."
+                },
+                {
+                    "label": "B",
+                    "text": "inherited sharing",
+                    "isCorrect": false,
+                    "explanation": "Inherited sharing defers to the caller."
+                },
+                {
+                    "label": "C",
+                    "text": "with sharing",
+                    "isCorrect": true,
+                    "explanation": "with sharing enforces the user's sharing rules."
+                },
+                {
+                    "label": "D",
+                    "text": "private",
+                    "isCorrect": false,
+                    "explanation": "private is an access modifier, unrelated to sharing."
+                }
+            ],
+            "explanation": "Use `with sharing` to honor record sharing rules of the running user.",
+            "citations": [
+                {
+                    "title": "Using the with sharing or without sharing Keywords",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_sharing.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Official sharing keyword reference."
+                }
+            ]
+        },
+        {
+            "externalId": "PD1-Q3",
+            "domain": "Data Modeling",
+            "difficulty": "Beginner",
+            "questionType": "Single Select",
+            "question": "Which field type allows you to enforce uniqueness across all records in a custom object?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "Text",
+                    "isCorrect": false,
+                    "explanation": "Plain Text isn't unique by default."
+                },
+                {
+                    "label": "B",
+                    "text": "Text with the Unique attribute checked",
+                    "isCorrect": true,
+                    "explanation": "Marking the field Unique enforces no-duplicates."
+                },
+                {
+                    "label": "C",
+                    "text": "Auto Number",
+                    "isCorrect": false,
+                    "explanation": "Auto Number is always unique but doesn't accept arbitrary values."
+                },
+                {
+                    "label": "D",
+                    "text": "Picklist",
+                    "isCorrect": false,
+                    "explanation": "Picklists are not unique fields."
+                }
+            ],
+            "explanation": "Marking a text/email/number field as Unique enforces uniqueness.",
+            "citations": [
+                {
+                    "title": "Custom Field Attributes",
+                    "url": "https://help.salesforce.com/s/articleView?id=sf.adding_fields.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Documents the Unique attribute."
+                }
+            ]
+        },
+        {
+            "externalId": "PD1-Q4",
+            "domain": "Testing",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "What is the minimum overall Apex code coverage required to deploy to production?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "65%",
+                    "isCorrect": false,
+                    "explanation": "65% is below the production minimum."
+                },
+                {
+                    "label": "B",
+                    "text": "75%",
+                    "isCorrect": true,
+                    "explanation": "Production deploys require 75% overall Apex coverage."
+                },
+                {
+                    "label": "C",
+                    "text": "85%",
+                    "isCorrect": false,
+                    "explanation": "85% is a common internal target but not the platform minimum."
+                },
+                {
+                    "label": "D",
+                    "text": "100%",
+                    "isCorrect": false,
+                    "explanation": "100% is not required by the platform."
+                }
+            ],
+            "explanation": "Salesforce requires 75% overall Apex code coverage to deploy to a production org.",
+            "citations": [
+                {
+                    "title": "Code Coverage Requirements",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_code_coverage_intro.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "Defines the 75% minimum."
+                }
+            ]
+        },
+        {
+            "externalId": "PD1-Q5",
+            "domain": "SOQL/SOSL",
+            "difficulty": "Intermediate",
+            "questionType": "Single Select",
+            "question": "Which search language searches across multiple objects and field types in a single query?",
+            "choices": [
+                {
+                    "label": "A",
+                    "text": "SOQL",
+                    "isCorrect": false,
+                    "explanation": "SOQL queries one object at a time (with subqueries for related)."
+                },
+                {
+                    "label": "B",
+                    "text": "SOSL",
+                    "isCorrect": true,
+                    "explanation": "SOSL searches across many objects at once."
+                },
+                {
+                    "label": "C",
+                    "text": "SQL",
+                    "isCorrect": false,
+                    "explanation": "SQL is not a Salesforce query language."
+                },
+                {
+                    "label": "D",
+                    "text": "GraphQL",
+                    "isCorrect": false,
+                    "explanation": "GraphQL is supported but isn't the cross-object search language here."
+                }
+            ],
+            "explanation": "SOSL (Salesforce Object Search Language) is designed for full-text cross-object search.",
+            "citations": [
+                {
+                    "title": "SOSL Overview",
+                    "url": "https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_sosl_about.htm",
+                    "sourceType": "Salesforce Help",
+                    "relevanceNote": "SOSL fundamentals."
+                }
+            ]
+        }
+    ]
 }

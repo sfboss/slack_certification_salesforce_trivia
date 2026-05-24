@@ -2,11 +2,11 @@
 
 ## Branches
 
-| Prefix | When |
-| --- | --- |
-| `feat/...` | New behavior. |
-| `fix/...` | Bug fix. |
-| `chore/...` | Tooling, refactors, deps. |
+| Prefix          | When                                      |
+| --------------- | ----------------------------------------- |
+| `feat/...`      | New behavior.                             |
+| `fix/...`       | Bug fix.                                  |
+| `chore/...`     | Tooling, refactors, deps.                 |
 | `phase-<N>-...` | Multi-PR work tied to an AGENTS.md phase. |
 
 ## Commits
@@ -55,12 +55,12 @@ Quotas, model names, feature flags belong in `App_Setting__mdt`. Read via
 
 ## Linters
 
-| Tool | Config |
-| --- | --- |
-| ESLint | [eslint.config.js](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/eslint.config.js) |
-| Prettier | `prettier-plugin-apex` |
-| Apex PMD | [pmd-ruleset.xml](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/pmd-ruleset.xml) |
-| Salesforce Scanner | `sf scanner run --target force-app --severity-threshold 2` |
+| Tool               | Config                                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------- |
+| ESLint             | [eslint.config.js](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/eslint.config.js) |
+| Prettier           | `prettier-plugin-apex`                                                                                         |
+| Apex PMD           | [pmd-ruleset.xml](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/pmd-ruleset.xml)   |
+| Salesforce Scanner | `sf scanner run --target force-app --severity-threshold 2`                                                     |
 
 ## Pull request gates
 
