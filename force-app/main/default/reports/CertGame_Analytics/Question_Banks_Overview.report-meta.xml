@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Question Banks Overview</name>
     <description>All question banks with source type (Manual, Generated, Imported), status, model provenance, and version.</description>
-    <reportType>CertGame_Question_Banks</reportType>
+    <reportType>CertGame_Question_Banks__c</reportType>
     <format>Summary</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>

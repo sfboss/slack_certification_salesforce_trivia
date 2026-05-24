@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>LLM Generation Cost by Job</name>
     <description>Question generation jobs with provider, model, requested vs generated counts, status, and token cost. Use to track LLM spend per tenant.</description>
-    <reportType>CertGame_Question_Generation_Jobs</reportType>
+    <reportType>CertGame_Question_Generation_Jobs__c</reportType>
     <format>Summary</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>

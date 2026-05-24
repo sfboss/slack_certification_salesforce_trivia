@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Usage Metrics by Tenant</name>
     <description>Per-tenant usage rollups (games started, questions served, active players, LLM tokens and cost) by period. Drives quota enforcement and billing.</description>
-    <reportType>CertGame_Usage_Metrics</reportType>
+    <reportType>CertGame_Usage_Metrics__c</reportType>
     <format>Matrix</format>
     <scope>organization</scope>
     <showDetails>false</showDetails>

@@ -2,21 +2,21 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Misconception Hotspots</name>
     <description>Wrong answers grouped by misconception tag and question domain. Surfaces the most common mistakes for content remediation and study guidance.</description>
-    <reportType>CertGame_Sessions_With_Answers</reportType>
+    <reportType>CertGame_Sessions_With_Answers__c</reportType>
     <format>Summary</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
     <columns><field>Game_Session__c$Certification_Exam__c</field></columns>
-    <columns><field>Player_Answer__c$Trivia_Question__c</field></columns>
-    <columns><field>Player_Answer__c$Player__c</field></columns>
-    <columns><field>Player_Answer__c$Selected_Choice_Labels__c</field></columns>
-    <columns><field>Player_Answer__c$Response_Time_Ms__c</field></columns>
-    <columns><field>Player_Answer__c$Answered_At__c</field></columns>
+    <columns><field>Game_Session__c.Answers__r$Trivia_Question__c</field></columns>
+    <columns><field>Game_Session__c.Answers__r$Player__c</field></columns>
+    <columns><field>Game_Session__c.Answers__r$Selected_Choice_Labels__c</field></columns>
+    <columns><field>Game_Session__c.Answers__r$Response_Time_Ms__c</field></columns>
+    <columns><field>Game_Session__c.Answers__r$Answered_At__c</field></columns>
     <filter>
         <criteriaItems>
-            <column>Player_Answer__c$Is_Correct__c</column>
+            <column>Game_Session__c.Answers__r$Is_Correct__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
@@ -24,12 +24,12 @@
         </criteriaItems>
     </filter>
     <groupingsDown>
-        <field>Player_Answer__c$Question_Domain__c</field>
+        <field>Game_Session__c.Answers__r$Question_Domain__c</field>
         <sortOrder>Asc</sortOrder>
         <dateGranularity>Day</dateGranularity>
     </groupingsDown>
     <groupingsDown>
-        <field>Player_Answer__c$Misconception_Tag__c</field>
+        <field>Game_Session__c.Answers__r$Misconception_Tag__c</field>
         <sortOrder>Asc</sortOrder>
         <dateGranularity>Day</dateGranularity>
     </groupingsDown>

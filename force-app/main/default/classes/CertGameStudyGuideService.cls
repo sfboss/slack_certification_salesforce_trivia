@@ -34,14 +34,14 @@ public with sharing class CertGameStudyGuideService {
 
     private static Id mostRecentExamForPlayer(Id playerId) {
         if (playerId == null) return null;
-        List<Game_Session__c> sessions = [
-            SELECT Certification_Exam__c
-            FROM Game_Session__c
-            WHERE Player__c = :playerId AND Certification_Exam__c != null
+        List<Player_Answer__c> rows = [
+            SELECT Game_Session__r.Certification_Exam__c
+            FROM Player_Answer__c
+            WHERE Player__c = :playerId AND Game_Session__r.Certification_Exam__c != null
             WITH SYSTEM_MODE
-            ORDER BY CreatedDate DESC LIMIT 1
+            ORDER BY Answered_At__c DESC NULLS LAST LIMIT 1
         ];
-        return sessions.isEmpty() ? null : sessions[0].Certification_Exam__c;
+        return rows.isEmpty() ? null : rows[0].Game_Session__r.Certification_Exam__c;
     }
 
     private static List<CertGameReadinessReportService.ThemeOption> safeListThemes() {

@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Published Questions by Difficulty</name>
     <description>Distribution of Published questions across difficulty levels per certification exam. Highlights gaps where an exam is missing easy/medium/hard coverage.</description>
-    <reportType>CertGame_Questions_With_Citations</reportType>
+    <reportType>CertGame_Questions_With_Citations__c</reportType>
     <format>Matrix</format>
     <scope>organization</scope>
     <showDetails>false</showDetails>

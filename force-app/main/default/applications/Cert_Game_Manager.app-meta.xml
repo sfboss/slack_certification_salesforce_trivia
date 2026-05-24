@@ -16,5 +16,6 @@
     <tabs>Cert_Game_Tournaments</tabs>
     <tabs>Cert_Game_My_Stats</tabs>
     <tabs>Cert_Game_Billing</tabs>
+    <tabs>Study_Guide_Theme__c</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

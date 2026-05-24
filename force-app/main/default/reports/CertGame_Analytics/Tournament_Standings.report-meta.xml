@@ -2,27 +2,26 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Tournament Standings</name>
     <description>Active and recent tournaments with their participant rankings, points, and completion stats.</description>
-    <reportType>CertGame_Tournaments_With_Participants</reportType>
+    <reportType>CertGame_Tournaments_With_Participants__c</reportType>
     <format>Summary</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
-    <columns><field>Tournament__c$Name</field></columns>
     <columns><field>Tournament__c$Bracket_Type__c</field></columns>
     <columns><field>Tournament__c$Status__c</field></columns>
     <columns><field>Tournament__c$Certification_Exam__c</field></columns>
-    <columns><field>Tournament_Participant__c$Player__c</field></columns>
-    <columns><field>Tournament_Participant__c$Rank__c</field></columns>
-    <columns><field>Tournament_Participant__c$Total_Points__c</field></columns>
-    <columns><field>Tournament_Participant__c$Questions_Answered__c</field></columns>
-    <columns><field>Tournament_Participant__c$Questions_Correct__c</field></columns>
-    <columns><field>Tournament_Participant__c$Status__c</field></columns>
+    <columns><field>Tournament__c.Participants__r$Player__c</field></columns>
+    <columns><field>Tournament__c.Participants__r$Rank__c</field></columns>
+    <columns><field>Tournament__c.Participants__r$Total_Points__c</field></columns>
+    <columns><field>Tournament__c.Participants__r$Questions_Answered__c</field></columns>
+    <columns><field>Tournament__c.Participants__r$Questions_Correct__c</field></columns>
+    <columns><field>Tournament__c.Participants__r$Status__c</field></columns>
     <groupingsDown>
         <field>Tournament__c$Name</field>
         <sortOrder>Asc</sortOrder>
         <dateGranularity>Day</dateGranularity>
     </groupingsDown>
-    <sortColumn>Tournament_Participant__c$Rank__c</sortColumn>
+    <sortColumn>Tournament__c.Participants__r$Rank__c</sortColumn>
     <sortOrder>Asc</sortOrder>
 </Report>

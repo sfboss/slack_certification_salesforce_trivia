@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Draft Questions Awaiting Review</name>
     <description>Trivia questions still in Draft status that need human review before they can be published.</description>
-    <reportType>CertGame_Questions_With_Citations</reportType>
+    <reportType>CertGame_Questions_With_Citations__c</reportType>
     <format>Tabular</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>

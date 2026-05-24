@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Player Engagement Leaderboard</name>
     <description>All players ranked by total points with games played, accuracy, current streak, and last-played timestamp.</description>
-    <reportType>CertGame_Players_With_Topic_Stats</reportType>
+    <reportType>CertGame_Players_With_Topic_Stats__c</reportType>
     <format>Tabular</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>

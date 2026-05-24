@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Question Quality Score Distribution</name>
     <description>Questions sorted by Quality_Score with status, fact-check, and citation context. Quickly find low-quality questions that need rework.</description>
-    <reportType>CertGame_Questions_With_Citations</reportType>
+    <reportType>CertGame_Questions_With_Citations__c</reportType>
     <format>Summary</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>

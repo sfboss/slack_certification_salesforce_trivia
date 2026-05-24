@@ -2,7 +2,7 @@
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Game Sessions Last 30 Days</name>
     <description>All game sessions started in the last 30 days, grouped by mode (Solo, Duel, Tournament) and status. Use to monitor engagement velocity.</description>
-    <reportType>CertGame_Sessions_With_Answers</reportType>
+    <reportType>CertGame_Sessions_With_Answers__c</reportType>
     <format>Summary</format>
     <scope>organization</scope>
     <showDetails>true</showDetails>

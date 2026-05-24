@@ -19,6 +19,7 @@
         <columns><checkedByDefault>false</checkedByDefault><field>Started_At__c</field><table>Game_Session__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Completed_At__c</field><table>Game_Session__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Total_Questions__c</field><table>Game_Session__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Timer_Seconds__c</field><table>Game_Session__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Slack_Channel_Id__c</field><table>Game_Session__c</table></columns>
         <columns><checkedByDefault>false</checkedByDefault><field>Started_By_Slack_User_Id__c</field><table>Game_Session__c</table></columns>
         <masterLabel>Game Session Fields</masterLabel>
