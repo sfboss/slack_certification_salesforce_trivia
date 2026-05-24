@@ -84,7 +84,6 @@ public with sharing class SlackCertGameInteractionHandler {
             // URL buttons inside the card (`report:open:<themeKey>`) also fire this handler
             // when Slack tracks the click, but we treat them as no-ops since the user has
             // already navigated to the signed URL.
-            List<String> remainder = parts.size() > 2 ? new List<String>() : null;
             if (parts.size() <= 2) {
                 return postCardDm(userId, 'Your Study Guide',
                     CertGameStudyGuideService.renderReport(teamId, userId));
