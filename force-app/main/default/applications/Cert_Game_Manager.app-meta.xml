@@ -10,8 +10,10 @@
     <navType>Standard</navType>
     <tabs>Cert_Game_Admin_Home</tabs>
     <tabs>Cert_Game_Dashboard</tabs>
+    <tabs>Exams_Workspace</tabs>
     <tabs>Question_Bank_Workspace</tabs>
     <tabs>Cert_Game_Leaderboard</tabs>
+    <tabs>Cert_Game_Tournaments</tabs>
     <tabs>Cert_Game_My_Stats</tabs>
     <tabs>Cert_Game_Billing</tabs>
     <uiType>Lightning</uiType>

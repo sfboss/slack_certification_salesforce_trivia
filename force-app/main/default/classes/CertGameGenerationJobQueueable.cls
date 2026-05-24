@@ -13,7 +13,8 @@ public with sharing class CertGameGenerationJobQueueable implements Queueable, D
         try {
             List<Question_Generation_Job__c> jobs = [
                 SELECT Id, Tenant__c, Certification_Exam__c, Certification_Exam__r.Certification_Code__c,
-                       Requested_Question_Count__c, Provider__c, Status__c, Prompt_Text__c
+                       Requested_Question_Count__c, Provider__c, Status__c, Prompt_Text__c,
+                       Domain_Focus__c, Difficulty_Focus__c
                 FROM Question_Generation_Job__c WHERE Id = :jobId WITH SYSTEM_MODE LIMIT 1
             ];
             if (jobs.isEmpty()) return;
@@ -29,7 +30,14 @@ public with sharing class CertGameGenerationJobQueueable implements Queueable, D
 
             QuestionGenerationProvider p = QuestionGenerationProviderFactory.provider();
             String examCode = job.Certification_Exam__r == null ? null : job.Certification_Exam__r.Certification_Code__c;
-            String genJson = p.generate(examCode, new List<String>(), null, count);
+            List<String> domains = new List<String>();
+            if (String.isNotBlank(job.Domain_Focus__c)) {
+                for (String d : job.Domain_Focus__c.split(',')) {
+                    if (String.isNotBlank(d)) domains.add(d.trim());
+                }
+            }
+            String diff = (job.Difficulty_Focus__c == null || job.Difficulty_Focus__c == 'Mixed') ? null : job.Difficulty_Focus__c;
+            String genJson = p.generate(examCode, domains, diff, count);
 
             QuestionJsonValidator.Result vr = QuestionJsonValidator.validate(genJson);
             if (!vr.valid) {

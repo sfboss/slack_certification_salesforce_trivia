@@ -2,6 +2,7 @@ import { LightningElement, track, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import fetchQueue from '@salesforce/apex/QuestionReviewController.fetchQueue';
+import getStatusCounts from '@salesforce/apex/QuestionReviewController.getStatusCounts';
 import saveEdits from '@salesforce/apex/QuestionReviewController.saveEdits';
 import markFactsVerified from '@salesforce/apex/QuestionReviewController.markFactsVerified';
 import clearFactsVerified from '@salesforce/apex/QuestionReviewController.clearFactsVerified';
@@ -50,7 +51,9 @@ export default class QuestionReviewConsole extends LightningElement {
     @track dirty = false;
     @track current = null;
     @track citationStatusById = {};
+    @track statusCounts = {};
     wiredResult;
+    wiredCounts;
 
     statusOptions = STATUS_OPTIONS;
     sortOptions = SORT_OPTIONS;
@@ -75,6 +78,31 @@ export default class QuestionReviewConsole extends LightningElement {
         } else if (result.error) {
             this.toast('Error', this.errMsg(result.error), 'error');
         }
+    }
+
+    @wire(getStatusCounts)
+    wireCounts(result) {
+        this.wiredCounts = result;
+        if (result.data) {
+            this.statusCounts = result.data;
+        }
+    }
+
+    get kpiTiles() {
+        const c = this.statusCounts || {};
+        const sum = (...keys) => keys.reduce((t, k) => t + (c[k] || 0), 0);
+        return [
+            { key: 'needs', label: 'Needs Review', value: c['Needs Review'] || 0, tone: 'brand', status: 'Needs Review' },
+            { key: 'draft', label: 'Drafts', value: c['Draft'] || 0, tone: 'warning', status: 'Draft' },
+            { key: 'verified', label: 'Fact Verified', value: c['Fact Verified'] || 0, tone: 'info', status: 'Fact Verified' },
+            { key: 'published', label: 'Published', value: c['Published'] || 0, tone: 'success', status: 'Published' },
+            { key: 'total', label: 'All questions', value: sum('Draft','Needs Review','Needs Revision','Reviewed','Fact Verified','Published','Retired'), tone: 'muted', status: null }
+        ];
+    }
+
+    handleKpiClick(e) {
+        const s = e.currentTarget.dataset.status;
+        if (s) { this.status = s; this.dirty = false; }
     }
 
     // ------------------------------ getters
@@ -320,6 +348,7 @@ export default class QuestionReviewConsole extends LightningElement {
         if (this.index >= this.queue.length) this.index = Math.max(0, this.queue.length - 1);
         this.loadCurrent();
         try { await refreshApex(this.wiredResult); } catch (e) { /* swallow */ }
+        try { await refreshApex(this.wiredCounts); } catch (e) { /* swallow */ }
     }
 
     // ------------------------------ keyboard shortcuts

@@ -263,6 +263,10 @@ public without sharing class WebPlayService {
             s.accuracy = s.totalAnswered == 0 ? 0 : (Decimal.valueOf(s.totalCorrect) / s.totalAnswered);
             out.summary = s;
             out.next = nxt;
+
+            // Tournament rollup hook (no-op if session is not tied to a tournament).
+            try { WebTournamentService.onSessionComplete(playerId, round.Game_Session__c); }
+            catch (Exception ex) { AppLogger.error('WebPlayService', 'submitAnswer', 'tournament_rollup', ex); }
         } else {
             out.next = nxt;
         }

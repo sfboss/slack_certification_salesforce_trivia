@@ -1,0 +1,238 @@
+<template>
+    <lightning-card icon-name="standard:certificate">
+        <h2 slot="title" class="slds-card__header-title">
+            <span class="qew-title">Exams Workspace</span>
+            <span class="qew-subtitle">Certification catalog · Question coverage · Mobile practice URLs</span>
+        </h2>
+        <div slot="actions">
+            <template if:true={isListView}>
+                <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" title="Refresh"
+                                       onclick={handleRefresh} class="slds-m-right_x-small"></lightning-button-icon>
+                <lightning-button label="📱 New practice link" variant="brand" onclick={handleOpenMintFromList}></lightning-button>
+            </template>
+            <template if:false={isListView}>
+                <lightning-button label="← Back to exams" variant="neutral" onclick={handleBackToList}></lightning-button>
+            </template>
+        </div>
+
+        <!-- KPI strip -->
+        <div class="slds-grid slds-wrap slds-p-around_medium qew-kpi-row">
+            <div class="qew-kpi" data-tone="brand">
+                <div class="qew-kpi-value">{summary.totalExams}</div>
+                <div class="qew-kpi-label">Exams in catalog</div>
+            </div>
+            <div class="qew-kpi" data-tone="success">
+                <div class="qew-kpi-value">{summary.activeExams}</div>
+                <div class="qew-kpi-label">Active</div>
+            </div>
+            <div class="qew-kpi" data-tone="info">
+                <div class="qew-kpi-value">{summary.examsWithPublished}</div>
+                <div class="qew-kpi-label">With published Qs</div>
+            </div>
+            <div class="qew-kpi" data-tone="warning">
+                <div class="qew-kpi-value">{summary.totalQuestions}</div>
+                <div class="qew-kpi-label">Questions total</div>
+            </div>
+            <div class="qew-kpi" data-tone="inverse">
+                <div class="qew-kpi-value">{summary.totalPublishedQuestions}</div>
+                <div class="qew-kpi-label">Published Qs</div>
+            </div>
+        </div>
+
+        <!-- ============ LIST VIEW ============ -->
+        <template if:true={isListView}>
+            <div class="qew-toolbar slds-grid slds-wrap slds-gutters slds-p-horizontal_medium slds-p-bottom_small">
+                <div class="slds-col slds-size_2-of-5">
+                    <lightning-input type="search" label="Filter" variant="label-hidden"
+                                     placeholder="Search by name, code, or track…"
+                                     value={filterText} onchange={handleFilterTextChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-5">
+                    <lightning-combobox label="Track" variant="label-hidden" options={trackOptions}
+                                        value={filterTrack} onchange={handleTrackChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_2-of-5 slds-align-middle qew-published-toggle">
+                    <lightning-input type="checkbox" label="Show only exams with published questions"
+                                     checked={filterPublished} onchange={handlePublishedToggle}></lightning-input>
+                    <span class="slds-text-color_weak slds-text-body_small qew-count">{filteredCount} shown</span>
+                </div>
+            </div>
+
+            <template if:false={hasExams}>
+                <div class="qew-empty slds-text-align_center slds-p-around_x-large">
+                    <lightning-icon icon-name="utility:certificate" size="large" alternative-text="No exams"></lightning-icon>
+                    <h3 class="slds-text-heading_medium slds-m-top_small">No exams in the catalog yet</h3>
+                    <p class="slds-text-color_weak slds-m-bottom_medium">
+                        Import the master CSV with <code>sf data bulk upsert -s Certification_Exam__c -f scripts/certification_exams.csv -i Certification_Code__c</code> and refresh.
+                    </p>
+                </div>
+            </template>
+
+            <template if:true={hasExams}>
+                <div class="qew-table-wrap">
+                    <table class="qew-table">
+                        <thead>
+                            <tr>
+                                <th>Exam</th>
+                                <th>Code</th>
+                                <th>Track</th>
+                                <th>Level</th>
+                                <th class="qew-th-num">Questions</th>
+                                <th class="qew-th-num">Published</th>
+                                <th class="qew-th-num">Drafts</th>
+                                <th class="qew-th-num">Banks</th>
+                                <th class="qew-th-num">Jobs</th>
+                                <th>Readiness</th>
+                                <th>Status</th>
+                                <th>Last activity</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={filteredExams} for:item="e">
+                                <tr key={e.id} data-id={e.id} class="qew-row" onclick={handleExamClick}>
+                                    <td><strong>{e.name}</strong></td>
+                                    <td>{e.code}</td>
+                                    <td>{e.track}</td>
+                                    <td>{e.level}</td>
+                                    <td class="qew-td-num">{e.questionCount}</td>
+                                    <td class="qew-td-num qew-td-published">{e.publishedCount}</td>
+                                    <td class="qew-td-num qew-td-draft">{e.draftCount}</td>
+                                    <td class="qew-td-num">{e.bankCount}</td>
+                                    <td class="qew-td-num">{e.jobCount}</td>
+                                    <td><span class={e.readinessClass}>{e.readinessLabel}</span></td>
+                                    <td><span class={e.activeClass}>{e.activeLabel}</span></td>
+                                    <td>{e.lastActivityDisplay}</td>
+                                    <td class="qew-td-actions">
+                                        <lightning-button-icon icon-name="utility:link" alternative-text="Mint practice link"
+                                                               title="Mint mobile practice link"
+                                                               data-id={e.id} onclick={handleOpenMintForExam}></lightning-button-icon>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+        </template>
+
+        <!-- ============ DETAIL VIEW ============ -->
+        <template if:true={isDetailView}>
+            <div class="qew-panel slds-p-around_medium">
+                <header class="slds-m-bottom_medium">
+                    <h2 class="slds-text-heading_medium">
+                        {examDetail.exam.name}
+                        <span class="slds-text-body_small slds-text-color_weak">— {examDetail.exam.code}</span>
+                    </h2>
+                </header>
+
+                <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium qew-detail-grid">
+                    <div class="slds-col slds-size_1-of-4"><strong>Track:</strong> {examDetail.exam.track}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Level:</strong> {examDetail.exam.level}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Vendor:</strong> {examDetail.exam.vendor}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Cost:</strong> {examDetail.exam.costDisplay}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Questions:</strong> {examDetail.exam.questionCount}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Published:</strong> {examDetail.exam.publishedCount}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Drafts:</strong> {examDetail.exam.draftCount}</div>
+                    <div class="slds-col slds-size_1-of-4"><strong>Banks:</strong> {examDetail.exam.bankCount}</div>
+                </div>
+
+                <lightning-button label="📱 Mint practice link" variant="brand"
+                                  onclick={handleOpenMintFromDetail} class="slds-m-bottom_medium"></lightning-button>
+
+                <h3 class="slds-text-heading_small slds-m-top_medium">Domains ({examDetail.domains.length})</h3>
+                <template if:true={examDetail.domains.length}>
+                    <ul class="qew-domain-list">
+                        <template for:each={examDetail.domains} for:item="d">
+                            <li key={d.id}>
+                                <span class="qew-domain-name">{d.name}</span>
+                                <template if:true={d.weightPercent}>
+                                    <span class="qew-domain-weight">{d.weightPercent}%</span>
+                                </template>
+                                <span class="qew-domain-count">{d.questionCount} questions</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={examDetail.domains.length}>
+                    <p class="slds-text-color_weak">No Exam_Domain__c rows yet.</p>
+                </template>
+
+                <h3 class="slds-text-heading_small slds-m-top_large">Question Banks ({examDetail.banks.length})</h3>
+                <template if:true={examDetail.banks.length}>
+                    <ul class="qew-list">
+                        <template for:each={examDetail.banks} for:item="b">
+                            <li key={b.id}>
+                                <strong>{b.name}</strong>
+                                <span class="qew-sub">{b.status} · {b.sourceType}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={examDetail.banks.length}>
+                    <p class="slds-text-color_weak">No banks yet.</p>
+                </template>
+
+                <h3 class="slds-text-heading_small slds-m-top_large">Generation Jobs ({examDetail.jobs.length})</h3>
+                <template if:true={examDetail.jobs.length}>
+                    <ul class="qew-list">
+                        <template for:each={examDetail.jobs} for:item="j">
+                            <li key={j.id}>
+                                <strong>{j.name}</strong>
+                                <span class="qew-sub">{j.status} · {j.provider} · {j.generatedCount} generated</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={examDetail.jobs.length}>
+                    <p class="slds-text-color_weak">No generation runs yet.</p>
+                </template>
+            </div>
+        </template>
+
+        <!-- ============ MINT PRACTICE LINK VIEW ============ -->
+        <template if:true={isMintView}>
+            <div class="qew-panel slds-p-around_medium">
+                <header class="slds-m-bottom_medium">
+                    <h2 class="slds-text-heading_medium">Mint a mobile practice link</h2>
+                    <p class="slds-text-color_weak slds-m-top_xx-small slds-text-body_small">
+                        The link opens the public CertGameWeb page; the candidate signs in with Google on their phone and starts a practice run. Answers persist to Game_Session__c just like Slack play.
+                    </p>
+                </header>
+
+                <lightning-input type="checkbox" label="Random across all exams (no specific exam)"
+                                 checked={mintRandomMix} onchange={handleMintRandomToggle}
+                                 class="slds-m-bottom_small"></lightning-input>
+
+                <template if:false={mintRandomMix}>
+                    <lightning-combobox label="Exam" options={mintExamOptions} value={mintExamId}
+                                        onchange={handleMintExamChange}
+                                        placeholder="Pick an exam"></lightning-combobox>
+                </template>
+
+                <lightning-input type="number" label="How many questions?" value={mintQuestionCount}
+                                 min="1" max="60" onchange={handleMintCountChange}
+                                 field-level-help="Capped at 60 server-side."
+                                 class="slds-m-top_medium"></lightning-input>
+
+                <div class="slds-m-top_medium">
+                    <lightning-button label="Mint link" variant="brand" onclick={handleMint}
+                                      disabled={mintDisabled}></lightning-button>
+                </div>
+
+                <template if:true={mintedUrl}>
+                    <div class="qew-mint-result slds-m-top_large slds-p-around_medium slds-box">
+                        <p class="slds-text-heading_small slds-m-bottom_x-small">Practice link ready</p>
+                        <p class="slds-text-color_weak slds-text-body_small slds-m-bottom_small">{mintExamLabel}</p>
+                        <pre class="qew-mint-url">{mintedUrl}</pre>
+                        <lightning-button-group class="slds-m-top_small">
+                            <lightning-button label="Copy" icon-name="utility:copy" onclick={handleCopyUrl}></lightning-button>
+                            <lightning-button label="Open in new tab" icon-name="utility:new_window" onclick={handleOpenUrlInNewTab}></lightning-button>
+                        </lightning-button-group>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+    </lightning-card>
+</template>

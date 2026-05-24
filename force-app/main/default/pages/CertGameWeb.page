@@ -35,6 +35,19 @@
   .ok { color:var(--good); }
   #signinHost { margin-top: 12px; }
   .footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+  .tbanner { background:linear-gradient(135deg,#1d3557,#2a4a7f); padding:14px 16px; border-radius:10px; margin-bottom:12px; }
+  .tbanner h3 { margin:0 0 4px; font-size:16px; }
+  .tbanner .tmeta { font-size:12px; opacity:0.85; }
+  .tstats { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-top:10px; }
+  .tstats > div { background: rgba(255,255,255,0.08); border-radius:6px; padding:8px; text-align:center; }
+  .tstats strong { display:block; font-size:18px; }
+  .tstats span { font-size:11px; opacity:0.8; }
+  .lb-table { width:100%; border-collapse:collapse; margin-top:8px; }
+  .lb-table th, .lb-table td { padding:8px 10px; border-bottom:1px solid var(--border); font-size:13px; text-align:left; }
+  .lb-table th { color:var(--muted); font-weight:500; }
+  .lb-row.me { background: rgba(91,141,239,0.15); }
+  .lb-rank { width:40px; font-weight:700; }
+  .lb-pic { width:24px; height:24px; border-radius:50%; vertical-align:middle; margin-right:8px; }
 </style>
 </head>
 <body>
@@ -49,6 +62,28 @@
     <p class="muted">Google sign-in. Your account creates a player profile in Salesforce that tracks every question you attempt.</p>
     <div id="signinHost"></div>
     <div id="loginErr" class="err"></div>
+  </div>
+
+  <div id="tournamentCard" class="card" style="display:none">
+    <div class="tbanner">
+      <h3 id="tName"></h3>
+      <div class="tmeta" id="tMeta"></div>
+      <div class="tstats" id="tStats"></div>
+    </div>
+    <div id="tDescription" class="muted" style="margin:8px 0"></div>
+    <div id="tPrize" class="muted" style="margin:6px 0"></div>
+    <div class="row" style="margin-top:10px">
+      <button id="tJoinBtn" style="display:none">Join Tournament</button>
+      <button id="tPlayBtn" style="display:none">Play Now</button>
+      <button id="tResumeBtn" style="display:none">Resume</button>
+      <a id="tLobbyLink" href="#" class="btn secondary" style="text-decoration:none">Back to lobby</a>
+    </div>
+    <div id="tErr" class="err"></div>
+    <h3 style="margin-top:20px;margin-bottom:6px">Leaderboard</h3>
+    <table class="lb-table">
+      <thead><tr><th class="lb-rank">#</th><th>Player</th><th>Pts</th><th>Answered</th></tr></thead>
+      <tbody id="tLeaderBody"></tbody>
+    </table>
   </div>
 
   <div id="lobbyCard" class="card" style="display:none">
@@ -104,7 +139,9 @@
     currentRound: null,
     sessionId: null,
     answered: 0,
-    correct: 0
+    correct: 0,
+    tournamentToken: null,
+    tournament: null
   };
 
   function $(id){ return document.getElementById(id); }
@@ -164,7 +201,23 @@
   }
 
   function enterLobby(){
+    if (state.tournamentToken) {
+      // Tournament link takes precedence over the regular lobby.
+      show('loginCard', false);
+      show('playCard', false);
+      show('finaleCard', false);
+      show('lobbyCard', false);
+      var who = $('who'); who.style.display = 'flex'; who.innerHTML = '';
+      if (state.session.player.pictureUrl) {
+        var img = document.createElement('img'); img.src = state.session.player.pictureUrl; who.appendChild(img);
+      }
+      var span = document.createElement('span'); span.textContent = state.session.player.name + ' (' + state.session.player.email + ')';
+      who.appendChild(span);
+      loadTournament().then(renderTournament);
+      return;
+    }
     show('loginCard', false);
+    show('tournamentCard', false);
     show('playCard', false);
     show('finaleCard', false);
     show('lobbyCard', true);
@@ -189,6 +242,30 @@
         var opt = document.createElement('option'); opt.value = e.id; opt.textContent = e.code + ' — ' + e.name;
         sel.appendChild(opt);
       });
+      // Deep-link: ?exam=<id>&n=<count> selects the exam and pre-fills the question count.
+      try {
+        var qs = new URLSearchParams(window.location.search);
+        var deepExam = qs.get('exam');
+        if (deepExam) {
+          for (var i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value === deepExam) { sel.selectedIndex = i; break; }
+          }
+        }
+        var deepN = qs.get('n');
+        if (deepN) {
+          var qc = $('qCount');
+          // If the requested count isn't one of the preset options, add it as a new option and select it.
+          var found = false;
+          for (var j = 0; j < qc.options.length; j++) {
+            if (qc.options[j].value === deepN) { qc.selectedIndex = j; found = true; break; }
+          }
+          if (!found) {
+            var nopt = document.createElement('option');
+            nopt.value = deepN; nopt.textContent = deepN + ' questions';
+            qc.appendChild(nopt); qc.value = deepN;
+          }
+        }
+      } catch (e) { /* old browser, ignore */ }
       if (me.body) {
         $('statsBox').innerHTML = '<span class="pill">Answers: ' + (me.body.totalAnswers||0) + '</span>'
           + '<span class="pill">Correct: ' + (me.body.totalCorrect||0) + '</span>'
@@ -205,6 +282,85 @@
   }
 
   function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+
+  function getTournamentToken(){
+    try { return new URLSearchParams(window.location.search).get('t'); }
+    catch(e) { return null; }
+  }
+
+  function fmtDateRange(s, e){
+    function f(x){ if(!x) return ''; try { return new Date(x).toLocaleString(); } catch(_) { return x; } }
+    if (s && e) return f(s) + ' → ' + f(e);
+    if (s) return 'Starts ' + f(s);
+    return '';
+  }
+
+  function loadTournament(){
+    if (!state.tournamentToken) return Promise.resolve(null);
+    return api('GET', '/tournament/' + encodeURIComponent(state.tournamentToken), null, true).then(function(res){
+      if (res.status !== 200) {
+        $('tErr').textContent = (res.body && res.body.error) || 'Tournament not found.';
+        state.tournament = null;
+        return null;
+      }
+      state.tournament = res.body;
+      return res.body;
+    });
+  }
+
+  function renderTournament(){
+    var t = state.tournament;
+    if (!t) return;
+    show('lobbyCard', false); show('playCard', false); show('finaleCard', false);
+    show('tournamentCard', true);
+    $('tName').textContent = t.name + ' • ' + (t.examCode || t.examName || '');
+    $('tMeta').textContent = (t.status || '') + ' • ' + fmtDateRange(t.startAt, t.endAt);
+    $('tDescription').textContent = t.description || '';
+    $('tPrize').textContent = t.prizeDescription ? ('Prize: ' + t.prizeDescription) : '';
+    $('tStats').innerHTML =
+        '<div><strong>' + (t.participantCount||0) + '</strong><span>Players</span></div>'
+      + '<div><strong>' + (t.questionsPerMatch||10) + '</strong><span>Questions</span></div>'
+      + '<div><strong>' + (t.myPoints!=null ? t.myPoints : '—') + '</strong><span>My Pts</span></div>'
+      + '<div><strong>' + (t.myRank!=null ? '#'+t.myRank : '—') + '</strong><span>My Rank</span></div>';
+
+    var canPlay = (t.status === 'Active') && t.joined && !t.played;
+    var canResume = canPlay && t.mySessionId && t.mySessionStatus && t.mySessionStatus !== 'Complete';
+    var canJoin = !t.joined && t.publicJoinEnabled && (t.status === 'Scheduled' || t.status === 'Active');
+    show('tJoinBtn', canJoin);
+    show('tPlayBtn', canPlay && !canResume);
+    show('tResumeBtn', canResume);
+
+    var body = $('tLeaderBody'); body.innerHTML = '';
+    (t.leaderboard || []).forEach(function(r){
+      var tr = document.createElement('tr');
+      tr.className = 'lb-row' + (r.isMe ? ' me' : '');
+      var pic = r.pictureUrl ? '<img class="lb-pic" src="'+escapeHtml(r.pictureUrl)+'"/>' : '';
+      tr.innerHTML = '<td class="lb-rank">'+ (r.rank!=null?r.rank:'') +'</td>'
+        + '<td>'+ pic + escapeHtml(r.name||'') + (r.isMe?' (you)':'') +'</td>'
+        + '<td>'+ (r.points||0) +'</td>'
+        + '<td>'+ (r.answered||0) +'</td>';
+      body.appendChild(tr);
+    });
+  }
+
+  function joinTournament(){
+    $('tErr').textContent = '';
+    api('POST', '/tournament/' + encodeURIComponent(state.tournamentToken) + '/join', {}, true).then(function(res){
+      if (res.status !== 200) { $('tErr').textContent = (res.body && res.body.error) || 'Join failed.'; return; }
+      loadTournament().then(renderTournament);
+    });
+  }
+
+  function playTournament(){
+    $('tErr').textContent = '';
+    api('POST', '/tournament/' + encodeURIComponent(state.tournamentToken) + '/start', {}, true).then(function(res){
+      if (res.status !== 200) { $('tErr').textContent = (res.body && res.body.error) || 'Start failed.'; return; }
+      state.sessionId = res.body.sessionId;
+      state.answered = 0; state.correct = 0;
+      renderRound(res.body);
+      show('tournamentCard', false); show('playCard', true);
+    });
+  }
 
   function startGame(){
     $('lobbyErr').textContent = '';
@@ -263,6 +419,9 @@
       + '<span class="pill">Correct: ' + s.totalCorrect + '</span>'
       + '<span class="pill">Points: ' + s.totalPoints + '</span>'
       + '<span class="pill">Accuracy: ' + Math.round((s.accuracy||0)*100) + '%</span>';
+    if (state.tournamentToken) {
+      $('againBtn').textContent = 'Back to Tournament';
+    }
   }
 
   function signOut(){
@@ -275,10 +434,27 @@
   }
 
   $('startBtn').onclick = startGame;
-  $('againBtn').onclick = function(){ enterLobby(); };
+  $('againBtn').onclick = function(){
+    if (state.tournamentToken) {
+      show('finaleCard', false);
+      loadTournament().then(renderTournament);
+    } else {
+      enterLobby();
+    }
+  };
   $('signoutLink').onclick = function(e){ e.preventDefault(); signOut(); };
+  $('tJoinBtn').onclick = joinTournament;
+  $('tPlayBtn').onclick = playTournament;
+  $('tResumeBtn').onclick = playTournament;
+  $('tLobbyLink').onclick = function(e){
+    e.preventDefault();
+    state.tournamentToken = null;
+    try { history.replaceState(null, '', window.location.pathname); } catch(_){}
+    enterLobby();
+  };
 
   // Boot
+  state.tournamentToken = getTournamentToken();
   loadConfig().then(function(){
     var saved = localStorage.getItem('certgame_session');
     if (saved) {

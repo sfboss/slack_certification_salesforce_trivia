@@ -17,7 +17,7 @@ inputs:
     default: ${{ github.workflow }}
   extra_fields:
     description: |
-      Optional JSON array sof additional Block Kit field rows, each `{ "label": "...", "value": "..." }`.
+      Optional JSON array of additional Block Kit field rows, each `{ "label": "...", "value": "..." }`.
       Rendered as 2-column mrkdwn fields after the standard metadata.
     required: false
     default: "[]"
@@ -82,22 +82,21 @@ runs:
           EXTRA_FIELDS="$EXTRA_FIELDS" LOG_TAIL_TRIMMED="$LOG_TAIL_TRIMMED" \
           jq -n '
             ( env.EXTRA_FIELDS | fromjson ) as $extra
-            | [
-                {
-                  type: "section",
-                  fields: (
-                    [
-                      { type: "mrkdwn", text: ("*Repo:*\n" + env.GH_REPO) },
-                      { type: "mrkdwn", text: ("*Branch:*\n" + env.GH_REF) },
-                      { type: "mrkdwn", text: ("*Commit:*\n<" + env.RUN_URL + "|" + env.SHORT_SHA + ">") },
-                      { type: "mrkdwn", text: ("*Actor:*\n" + env.GH_ACTOR) },
-                      { type: "mrkdwn", text: ("*Workflow:*\n" + env.WORKFLOW_LABEL) },
-                      { type: "mrkdwn", text: ("*Trigger:*\n" + env.GH_EVENT) }
-                    ]
-                    + ( $extra | map({ type: "mrkdwn", text: ("*" + .label + ":*\n" + .value) }) )
-                  )
-                }
-              ] as $meta
+            | (
+                [
+                  { type: "mrkdwn", text: ("*Repo:*\n" + env.GH_REPO) },
+                  { type: "mrkdwn", text: ("*Branch:*\n" + env.GH_REF) },
+                  { type: "mrkdwn", text: ("*Commit:*\n<" + env.RUN_URL + "|" + env.SHORT_SHA + ">") },
+                  { type: "mrkdwn", text: ("*Actor:*\n" + env.GH_ACTOR) },
+                  { type: "mrkdwn", text: ("*Workflow:*\n" + env.WORKFLOW_LABEL) },
+                  { type: "mrkdwn", text: ("*Trigger:*\n" + env.GH_EVENT) }
+                ]
+                + ( $extra | map({ type: "mrkdwn", text: ("*" + (.label|tostring) + ":*\n" + (.value|tostring)) }) )
+              ) as $all_fields
+            | (
+                [range(0; ($all_fields | length); 10)]
+                | map({ type: "section", fields: ($all_fields[.:(.+10)]) })
+              ) as $meta
             | (
                 if (env.COMMIT_LINE // "") == "" then []
                 else [
@@ -138,13 +137,34 @@ runs:
 
         # Post to Slack. Hide URL from logs.
         HTTP_CODE="$(
-          curl -sS -o /tmp/slack_resp.txt -w '%{http_code}' \
+          curl -sS -o slack_resp.txt -w '%{http_code}' \
                -X POST -H 'Content-Type: application/json' \
                --data "$PAYLOAD" \
                "$SLACK_WEBHOOK_URL"
         )"
         if [ "$HTTP_CODE" != "200" ]; then
           echo "::warning::Slack webhook responded with HTTP $HTTP_CODE"
-          cat /tmp/slack_resp.txt || true
+          cat slack_resp.txt || true
+
+          # Fallback to plain text so we still notify on block formatting issues.
+          FALLBACK_PAYLOAD="$(jq -n \
+            --arg emoji "$EMOJI" \
+            --arg title "$TITLE" \
+            --arg status "$STATUS_TEXT" \
+            --arg repo "$GH_REPO" \
+            --arg ref "$GH_REF" \
+            --arg actor "$GH_ACTOR" \
+            --arg run "$RUN_URL" \
+            '{text: ($emoji + " " + $title + " " + $status + "\nRepo: " + $repo + "\nBranch: " + $ref + "\nActor: " + $actor + "\nRun: " + $run)}')"
+          FALLBACK_HTTP_CODE="$(
+            curl -sS -o slack_resp_fallback.txt -w '%{http_code}' \
+                 -X POST -H 'Content-Type: application/json' \
+                 --data "$FALLBACK_PAYLOAD" \
+                 "$SLACK_WEBHOOK_URL"
+          )"
+          if [ "$FALLBACK_HTTP_CODE" != "200" ]; then
+            echo "::warning::Slack fallback webhook responded with HTTP $FALLBACK_HTTP_CODE"
+            cat slack_resp_fallback.txt || true
+          fi
         fi
 #

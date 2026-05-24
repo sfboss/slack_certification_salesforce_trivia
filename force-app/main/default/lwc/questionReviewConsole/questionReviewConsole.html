@@ -1,6 +1,17 @@
 <template>
     <div class="qrc-root">
         <lightning-card title="Question Review Console" icon-name="standard:question_feed">
+            <!-- KPI strip -->
+            <div class="slds-grid slds-wrap slds-p-horizontal_medium slds-p-bottom_small qrc-kpi-row">
+                <template for:each={kpiTiles} for:item="t">
+                    <div key={t.key} class="qrc-kpi" data-tone={t.tone} data-status={t.status}
+                        onclick={handleKpiClick} role="button" tabindex="0">
+                        <div class="qrc-kpi-value">{t.value}</div>
+                        <div class="qrc-kpi-label">{t.label}</div>
+                    </div>
+                </template>
+            </div>
+
             <!-- Top bar -->
             <div class="slds-grid slds-grid_vertical-align-end slds-wrap slds-p-horizontal_medium slds-gutters_x-small">
                 <div class="slds-col slds-size_1-of-4">

@@ -41,16 +41,47 @@ public with sharing class OpenAIQuestionProvider implements QuestionGenerationPr
 
     @TestVisible
     private static String buildPrompt(String examCode, List<String> domains, String difficulty, Integer count) {
+        String schema = '{ '
+            + '"exam": { "code": "<exam code>", "name": "<exam name>", "vendor": "Salesforce" }, '
+            + '"questionBank": { "externalId": "BANK-<exam>-<yyyymmddhhmm>", "name": "<short pack name>", '
+            +   '"version": "1.0.0", "sourceType": "Generated", "status": "Draft" }, '
+            + '"questions": [ { '
+            +   '"externalId": "<exam>-Q<n>", '
+            +   '"domain": "<one of the listed domains>", '
+            +   '"difficulty": "<Beginner|Intermediate|Advanced>", '
+            +   '"questionType": "Single Select", '
+            +   '"question": "<one-sentence stem>", '
+            +   '"scenarioText": "<optional 1-3 sentence scenario, may be empty>", '
+            +   '"choices": ['
+            +     ' { "label": "A", "text": "...", "isCorrect": false, "explanation": "<why this is wrong>" },'
+            +     ' { "label": "B", "text": "...", "isCorrect": true,  "explanation": "<why this is right>" },'
+            +     ' { "label": "C", "text": "...", "isCorrect": false, "explanation": "<why this is wrong>" },'
+            +     ' { "label": "D", "text": "...", "isCorrect": false, "explanation": "<why this is wrong>" }'
+            +   ' ], '
+            +   '"explanation": "<2-4 sentence overall explanation a candidate would learn from>", '
+            +   '"primaryReferenceUrl": "<single canonical Salesforce docs URL>", '
+            +   '"referenceSummary": "<one-sentence summary of what the reference covers>", '
+            +   '"keywords": "<comma-separated keywords>", '
+            +   '"citations": ['
+            +     ' { "title": "<doc title>", "url": "<full URL>", "sourceType": "Salesforce Help", '
+            +       '"relevanceNote": "<why this source backs the answer>" }'
+            +   ' ]'
+            + ' } ] }';
+
         return 'You are generating Salesforce certification trivia questions. '
-             + 'Respond ONLY with JSON matching this schema: { "exam": { "code": "...", "name": "..." }, '
-             + '"questionBank": { "externalId": "...", "name": "..." }, '
-             + '"questions": [ { "externalId": "...", "domain": "...", "difficulty": "...", "questionType": "Single Select", '
-             + '"questionText": "...", "scenarioText": "...", "choices": [ { "label": "A", "text": "...", "isCorrect": false } ], '
-             + '"citations": [ { "title": "...", "url": "...", "sourceType": "Official Docs" } ] } ] }. '
-             + 'Exam code: ' + examCode + '. '
-             + (domains == null || domains.isEmpty() ? '' : 'Domains: ' + String.join(domains, ', ') + '. ')
-             + (String.isBlank(difficulty) ? '' : 'Difficulty: ' + difficulty + '. ')
-             + 'Number of questions: ' + count + '. Each question must include at least one citation to official Salesforce docs.';
+             + 'Respond ONLY with raw JSON (no Markdown fence, no commentary) matching this schema:\n'
+             + schema + '\n\n'
+             + 'Rules:\n'
+             + '- Exactly one correct choice per Single Select question.\n'
+             + '- Provide 4 choices per question (A-D).\n'
+             + '- Every choice must have a non-empty explanation.\n'
+             + '- Every question must include at least one citation to official Salesforce documentation.\n'
+             + '- Use the actual exam code and a plausible exam name; the importer will upsert by code.\n'
+             + '- Question externalIds must be unique within the pack.\n\n'
+             + 'Exam code: ' + examCode + '.\n'
+             + (domains == null || domains.isEmpty() ? '' : 'Bias toward these domains (spread questions across them): ' + String.join(domains, ', ') + '.\n')
+             + (String.isBlank(difficulty) ? 'Difficulty: mix of Beginner / Intermediate / Advanced.\n' : 'Difficulty: ' + difficulty + ' for every question.\n')
+             + 'Number of questions: ' + count + '.';
     }
 
     @TestVisible

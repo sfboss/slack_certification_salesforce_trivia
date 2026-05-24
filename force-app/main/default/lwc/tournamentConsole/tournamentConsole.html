@@ -1,0 +1,365 @@
+<template>
+    <div class="tournament-console">
+
+        <!-- LIST VIEW -->
+        <template if:true={isAdminView}>
+            <div class="console-header slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-wrap slds-p-around_medium">
+                <div class="slds-col">
+                    <h1 class="title">Tournaments</h1>
+                    <p class="subtitle">Run async point-race tournaments. Players sign in with Google, play their match, climb the leaderboard.</p>
+                </div>
+                <div class="slds-col slds-no-flex header-actions">
+                    <lightning-combobox
+                        label="Status"
+                        variant="label-hidden"
+                        value={statusFilter}
+                        options={statusFilters}
+                        onchange={handleStatusFilter}
+                        class="filter-combo">
+                    </lightning-combobox>
+                    <lightning-button label="Refresh" icon-name="utility:refresh" onclick={handleRefresh}></lightning-button>
+                    <lightning-button label="New Tournament" variant="brand" icon-name="utility:add" onclick={handleOpenCreate}></lightning-button>
+                </div>
+            </div>
+
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-around_medium">{error}</div>
+            </template>
+
+            <template if:true={loading}>
+                <div class="slds-is-relative slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:false={hasTournaments}>
+                <div class="empty-state slds-text-align_center slds-p-around_x-large">
+                    <lightning-icon icon-name="standard:event" size="large" class="slds-m-bottom_small"></lightning-icon>
+                    <p class="slds-text-heading_medium">No tournaments yet.</p>
+                    <p class="slds-text-body_regular slds-text-color_weak">Spin one up — players sign in with Google and compete for the top spot.</p>
+                    <lightning-button label="Create your first tournament" variant="brand" class="slds-m-top_medium" onclick={handleOpenCreate}></lightning-button>
+                </div>
+            </template>
+
+            <template if:true={hasTournaments}>
+                <div class="card-grid slds-p-horizontal_medium slds-p-bottom_medium">
+                    <template for:each={computedTournaments} for:item="t">
+                        <article key={t.id} class="t-card" data-id={t.id} onclick={handleOpenTournament}>
+                            <header class="t-card-head">
+                                <span class={t.statusBadge}>{t.status}</span>
+                                <span class="t-bracket">{t.bracketType}</span>
+                            </header>
+                            <h2 class="t-name">{t.name}</h2>
+                            <p class="t-exam">{t.examName}</p>
+                            <div class="t-stats">
+                                <div><strong>{t.participantCount}</strong><span>Participants</span></div>
+                                <div><strong>{t.activeCount}</strong><span>Active</span></div>
+                                <div><strong>{t.completedCount}</strong><span>Played</span></div>
+                            </div>
+                            <footer class="t-foot">
+                                <span>Start: {t.displayStart}</span>
+                                <template if:true={t.winnerName}>
+                                    <span class="winner">🏆 {t.winnerName}</span>
+                                </template>
+                            </footer>
+                        </article>
+                    </template>
+                </div>
+            </template>
+        </template>
+
+        <!-- DETAIL VIEW -->
+        <template if:false={isAdminView}>
+            <template if:true={detailLoading}>
+                <div class="slds-is-relative slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </div>
+            </template>
+            <template if:true={detail}>
+                <div class="detail-header slds-p-around_medium">
+                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-wrap">
+                        <div class="slds-col">
+                            <lightning-button label="All tournaments" icon-name="utility:back" variant="base" onclick={handleBackToList}></lightning-button>
+                            <h1 class="title slds-m-top_x-small">{detail.tournament.name}</h1>
+                            <p class="subtitle">
+                                <span class={detail.tournament.statusBadge}>{detail.tournament.status}</span>
+                                &nbsp;&middot;&nbsp; {detail.tournament.examName} ({detail.tournament.examCode})
+                                &nbsp;&middot;&nbsp; {detail.tournament.bracketType}
+                            </p>
+                        </div>
+                        <div class="slds-col slds-no-flex header-actions">
+                            <template if:true={canStart}>
+                                <lightning-button label="Start" variant="brand" icon-name="utility:play" onclick={handleStart}></lightning-button>
+                            </template>
+                            <template if:true={canComplete}>
+                                <lightning-button label="Complete" variant="success" icon-name="utility:check" onclick={handleComplete}></lightning-button>
+                            </template>
+                            <lightning-button label="Recompute" icon-name="utility:refresh" onclick={handleRecompute}></lightning-button>
+                            <template if:true={canCancel}>
+                                <lightning-button label="Cancel" variant="destructive-text" onclick={handleCancel}></lightning-button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="detail-tabs slds-tabs_default slds-m-top_small">
+                        <ul class="slds-tabs_default__nav" role="tablist">
+                            <template for:each={computedTabs} for:item="tab">
+                                <li key={tab.key} class={tab.cls} role="presentation">
+                                    <a class="slds-tabs_default__link" href="#" role="tab" data-tab={tab.key} onclick={handleTabClick}>
+                                        <lightning-icon icon-name={tab.icon} size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                        {tab.label}
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- OVERVIEW -->
+                <template if:true={overviewActive}>
+                    <div class="slds-p-around_medium">
+                        <div class="kpi-row">
+                            <div class="kpi"><strong>{detail.tournament.participantCount}</strong><span>Participants</span></div>
+                            <div class="kpi"><strong>{detail.tournament.activeCount}</strong><span>Still Playing</span></div>
+                            <div class="kpi"><strong>{detail.tournament.completedCount}</strong><span>Finished</span></div>
+                            <div class="kpi"><strong>{detail.totalAnswers}</strong><span>Answers</span></div>
+                            <div class="kpi"><strong>{detail.totalCorrect}</strong><span>Correct</span></div>
+                            <div class="kpi"><strong>{detail.tournament.questionsPerMatch}</strong><span>Q / Match</span></div>
+                        </div>
+
+                        <template if:true={detail.description}>
+                            <div class="slds-box slds-m-top_medium description">{detail.description}</div>
+                        </template>
+
+                        <template if:true={detail.tournament.winnerName}>
+                            <div class="winner-banner slds-m-top_medium">
+                                🏆 Champion: <strong>{detail.tournament.winnerName}</strong>
+                                <template if:true={detail.tournament.prizeDescription}>
+                                    <div class="prize">{detail.tournament.prizeDescription}</div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <div class="slds-m-top_medium share-block">
+                            <h3 class="slds-text-heading_small">Public join link</h3>
+                            <p class="slds-text-body_small slds-text-color_weak">Share with players. Google sign-in required to join.</p>
+                            <div class="share-row">
+                                <input class="share-input" type="text" value={publicLink} readonly />
+                                <lightning-button label="Copy" icon-name="utility:copy" onclick={handleCopyLink}></lightning-button>
+                            </div>
+                        </div>
+
+                        <div class="slds-m-top_medium top-three">
+                            <h3 class="slds-text-heading_small">Top 3</h3>
+                            <div class="podium-row">
+                                <template for:each={topThree} for:item="p">
+                                    <div key={p.id} class={p.podiumClass}>
+                                        <div class="avatar"><span>{p.initials}</span></div>
+                                        <div class="rank">#{p.rank}</div>
+                                        <div class="pname">{p.name}</div>
+                                        <div class="pts">{p.points} pts</div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- LEADERBOARD -->
+                <template if:true={leaderboardActive}>
+                    <div class="slds-p-around_medium">
+                        <table class="leader slds-table slds-table_bordered slds-table_cell-buffer">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Player</th>
+                                    <th>Status</th>
+                                    <th>Points</th>
+                                    <th>Correct</th>
+                                    <th>Answered</th>
+                                    <th>Accuracy</th>
+                                    <th>Last Played</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={computedParticipants} for:item="p">
+                                    <tr key={p.id}>
+                                        <td class="rank-cell">{p.rank}</td>
+                                        <td>
+                                            <div class="player-cell">
+                                                <div class="avatar small"><span>{p.initials}</span></div>
+                                                <div>
+                                                    <div class="pname">{p.name}</div>
+                                                    <div class="pemail">{p.email}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class={p.statusBadge}>{p.status}</span></td>
+                                        <td><strong>{p.points}</strong></td>
+                                        <td>{p.correct}</td>
+                                        <td>{p.answered}</td>
+                                        <td>{p.accuracyPct}</td>
+                                        <td>{p.lastPlayedAt}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+
+                <!-- PARTICIPANTS -->
+                <template if:true={participantsActive}>
+                    <div class="slds-p-around_medium">
+                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                            <p class="slds-text-body_regular">{detail.tournament.participantCount} enrolled</p>
+                            <lightning-button label="Enroll players" variant="brand" icon-name="utility:add" onclick={handleOpenEnroll}></lightning-button>
+                        </div>
+                        <table class="leader slds-table slds-table_bordered slds-table_cell-buffer">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Joined</th>
+                                    <th>Points</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={computedParticipants} for:item="p">
+                                    <tr key={p.id}>
+                                        <td>
+                                            <div class="player-cell">
+                                                <div class="avatar small"><span>{p.initials}</span></div>
+                                                <div class="pname">{p.name}</div>
+                                            </div>
+                                        </td>
+                                        <td>{p.email}</td>
+                                        <td><span class={p.statusBadge}>{p.status}</span></td>
+                                        <td>{p.source}</td>
+                                        <td>{p.joinedAt}</td>
+                                        <td>{p.points}</td>
+                                        <td>
+                                            <lightning-button-icon icon-name="utility:close" variant="bare" alternative-text="Remove" data-id={p.id} onclick={handleRemove}></lightning-button-icon>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+
+                <!-- SETTINGS -->
+                <template if:true={settingsActive}>
+                    <div class="slds-p-around_medium settings-pane">
+                        <lightning-button label="Edit tournament" variant="brand" icon-name="utility:edit" onclick={handleOpenEdit}></lightning-button>
+                        <dl class="kv slds-m-top_medium">
+                            <dt>Status</dt><dd>{detail.tournament.status}</dd>
+                            <dt>Exam</dt><dd>{detail.tournament.examName} ({detail.tournament.examCode})</dd>
+                            <dt>Bracket type</dt><dd>{detail.tournament.bracketType}</dd>
+                            <dt>Questions per match</dt><dd>{detail.tournament.questionsPerMatch}</dd>
+                            <dt>Max participants</dt><dd>{detail.tournament.maxParticipants}</dd>
+                            <dt>Public join</dt><dd>{detail.tournament.publicJoinEnabled}</dd>
+                            <dt>Start</dt><dd>{detail.tournament.startAt}</dd>
+                            <dt>End</dt><dd>{detail.tournament.endAt}</dd>
+                            <dt>Completed</dt><dd>{detail.tournament.completedAt}</dd>
+                            <dt>Prize</dt><dd>{detail.tournament.prizeDescription}</dd>
+                        </dl>
+                    </div>
+                </template>
+            </template>
+        </template>
+
+        <!-- CREATE / EDIT MODAL -->
+        <template if:true={showCreate}>
+            <section class="slds-modal slds-fade-in-open" role="dialog">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-modal__title slds-hyphenate">
+                            <template if:true={editing}>Edit tournament</template>
+                            <template if:false={editing}>New tournament</template>
+                        </h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-input label="Name" value={form.name} data-field="name" onchange={handleFormChange} required></lightning-input>
+                        <lightning-textarea label="Description" value={form.description} data-field="description" onchange={handleFormChange}></lightning-textarea>
+                        <lightning-combobox label="Certification exam" value={form.examId} options={examOptions} data-field="examId" onchange={handleFormChange} required></lightning-combobox>
+                        <lightning-combobox label="Bracket type" value={form.bracketType} options={bracketOptions} data-field="bracketType" onchange={handleFormChange}></lightning-combobox>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col"><lightning-input type="datetime" label="Start at" value={form.startAt} data-field="startAt" onchange={handleFormChange}></lightning-input></div>
+                            <div class="slds-col"><lightning-input type="datetime" label="End at" value={form.endAt} data-field="endAt" onchange={handleFormChange}></lightning-input></div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col"><lightning-input type="number" label="Questions per match" min="1" max="50" value={form.questionsPerMatch} data-field="questionsPerMatch" onchange={handleFormChange}></lightning-input></div>
+                            <div class="slds-col"><lightning-input type="number" label="Max participants" min="2" value={form.maxParticipants} data-field="maxParticipants" onchange={handleFormChange}></lightning-input></div>
+                        </div>
+                        <lightning-input type="checkbox" label="Public join enabled" checked={form.publicJoinEnabled} data-field="publicJoinEnabled" onchange={handleFormChange}></lightning-input>
+                        <lightning-textarea label="Prize description" value={form.prizeDescription} data-field="prizeDescription" onchange={handleFormChange}></lightning-textarea>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={handleCancelCreate}></lightning-button>
+                        <lightning-button label="Save" variant="brand" class="slds-m-left_x-small" onclick={handleSaveTournament}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- ENROLL MODAL -->
+        <template if:true={showEnroll}>
+            <section class="slds-modal slds-fade-in-open" role="dialog">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-modal__title">Enroll players</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="slds-tabs_default">
+                            <ul class="slds-tabs_default__nav">
+                                <li class="slds-tabs_default__item" data-active={isEnrollSearchTab}>
+                                    <a class="slds-tabs_default__link" href="#" data-tab="search" onclick={handleEnrollTab}>Search players</a>
+                                </li>
+                                <li class="slds-tabs_default__item" data-active={isEnrollBulkTab}>
+                                    <a class="slds-tabs_default__link" href="#" data-tab="bulk" onclick={handleEnrollTab}>Bulk by email</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <template if:true={isEnrollSearchTab}>
+                            <lightning-input label="Search by name or email" type="search" value={searchQuery} onchange={handleSearchInput} class="slds-m-top_small"></lightning-input>
+                            <ul class="player-list slds-m-top_small">
+                                <template for:each={searchResults} for:item="p">
+                                    <li key={p.id} class="player-row">
+                                        <div class="player-cell">
+                                            <div class="avatar small"><span>{p.name}</span></div>
+                                            <div>
+                                                <div class="pname">{p.name}</div>
+                                                <div class="pemail">{p.email}</div>
+                                            </div>
+                                        </div>
+                                        <template if:true={p.alreadyEnrolled}>
+                                            <span class="badge badge-muted">Enrolled</span>
+                                        </template>
+                                        <template if:false={p.alreadyEnrolled}>
+                                            <lightning-button label="Add" variant="brand" data-id={p.id} onclick={handleAddPlayer} disabled={enrolling}></lightning-button>
+                                        </template>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <template if:true={isEnrollBulkTab}>
+                            <lightning-textarea label="Emails (comma, space, or newline separated)" value={bulkEmails} onchange={handleBulkInput} class="slds-m-top_small"></lightning-textarea>
+                            <p class="slds-text-body_small slds-text-color_weak">Players must already exist (i.e. have signed in via Google at least once). Unknown emails will be reported.</p>
+                            <lightning-button label="Enroll all" variant="brand" class="slds-m-top_small" onclick={handleBulkSubmit} disabled={enrolling}></lightning-button>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Done" variant="brand" onclick={handleCloseEnroll}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

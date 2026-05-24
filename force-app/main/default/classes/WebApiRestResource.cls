@@ -3,12 +3,16 @@
  * Base: /services/apexrest/web/*
  *
  * Routes:
- *   POST /web/auth/google     { credential }                       -> { sessionToken, player }
- *   GET  /web/me                                                   -> player stats (auth)
- *   GET  /web/exams                                                -> list active exams (auth)
- *   POST /web/session/start   { examId, numQuestions }             -> first RoundDTO (auth)
- *   POST /web/answer          { roundId, choiceId }                -> AnswerDTO (auth)
- *   GET  /web/session/{sid}/next                                   -> next RoundDTO (auth)
+ *   POST /web/auth/google          { credential }                       -> { sessionToken, player }
+ *   GET  /web/me                                                        -> player stats (auth)
+ *   GET  /web/exams                                                     -> list active exams (auth)
+ *   POST /web/session/start        { examId, numQuestions }             -> first RoundDTO (auth)
+ *   POST /web/answer               { roundId, choiceId }                -> AnswerDTO (auth)
+ *   GET  /web/session/{sid}/next                                        -> next RoundDTO (auth)
+ *   GET  /web/tournaments                                               -> list open tournaments (auth)
+ *   GET  /web/tournament/{token}                                        -> tournament detail + my standing
+ *   POST /web/tournament/{token}/join                                   -> register player (auth)
+ *   POST /web/tournament/{token}/start                                  -> begin a tournament session (auth)
  */
 @RestResource(urlMapping='/web/*')
 global without sharing class WebApiRestResource {
@@ -32,6 +36,21 @@ global without sharing class WebApiRestResource {
                     'orgId' => UserInfo.getOrganizationId()
                 });
                 return;
+            }
+            if (path == '/tournaments') {
+                requireAuth();
+                writeJson(WebTournamentService.listOpenTournaments(currentPlayerId()));
+                return;
+            }
+            if (path != null && path.startsWith('/tournament/')) {
+                String token = path.substring('/tournament/'.length());
+                if (token.endsWith('/')) token = token.substring(0, token.length() - 1);
+                // No path components beyond token on GET
+                if (!token.contains('/')) {
+                    requireAuth();
+                    writeJson(WebTournamentService.getTournamentByToken(currentPlayerId(), token));
+                    return;
+                }
             }
             notFound(path);
         } catch (AuthException ae) {
@@ -77,6 +96,21 @@ global without sharing class WebApiRestResource {
                 String choiceId = (String) json.get('choiceId');
                 writeJson(WebPlayService.submitAnswer(currentPlayerId(), (Id) roundId, (Id) choiceId));
                 return;
+            }
+            if (path != null && path.startsWith('/tournament/')) {
+                String tail = path.substring('/tournament/'.length());
+                if (tail.endsWith('/join')) {
+                    requireAuth();
+                    String token = tail.substring(0, tail.length() - '/join'.length());
+                    writeJson(WebTournamentService.join(currentPlayerId(), token));
+                    return;
+                }
+                if (tail.endsWith('/start')) {
+                    requireAuth();
+                    String token = tail.substring(0, tail.length() - '/start'.length());
+                    writeJson(WebTournamentService.startTournamentSession(currentPlayerId(), token));
+                    return;
+                }
             }
             notFound(path);
         } catch (AuthException ae) {

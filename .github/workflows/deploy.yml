@@ -139,6 +139,18 @@ jobs:
           DEPLOY_EXIT=$?
           set -e
           DEPLOY_ID="$(jq -r '.result.id // .result.deployId // empty' reports/deploy.json 2>/dev/null || echo '')"
+          DEPLOY_STATE="$(jq -r '.result.status // .status // "unknown"' reports/deploy.json 2>/dev/null || echo 'unknown')"
+          DEPLOY_COMP_ERR="$(jq -r '.result.numberComponentErrors // 0' reports/deploy.json 2>/dev/null || echo 0)"
+          DEPLOY_TEST_ERR="$(jq -r '.result.numberTestErrors // 0' reports/deploy.json 2>/dev/null || echo 0)"
+
+          # Defensive guard: some CLI paths can report structured failures while returning exit 0.
+          if [ "${DEPLOY_EXIT}" = "0" ]; then
+            if [ "${DEPLOY_STATE}" != "Succeeded" ] || [ "${DEPLOY_COMP_ERR}" != "0" ] || [ "${DEPLOY_TEST_ERR}" != "0" ]; then
+              echo "::error::Deploy reported failure in JSON (state=${DEPLOY_STATE}, componentErrors=${DEPLOY_COMP_ERR}, testErrors=${DEPLOY_TEST_ERR})"
+              DEPLOY_EXIT=1
+            fi
+          fi
+
           echo "deployId=$DEPLOY_ID" >> "$GITHUB_OUTPUT"
           echo "exitCode=$DEPLOY_EXIT" >> "$GITHUB_OUTPUT"
           tail -n 80 reports/deploy.json 2>/dev/null || true
