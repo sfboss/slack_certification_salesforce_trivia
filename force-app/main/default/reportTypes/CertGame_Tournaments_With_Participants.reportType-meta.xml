@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Tournament__c</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>Tournaments with participant standings.</description>
+    <join>
+        <outerJoin>true</outerJoin>
+        <relationship>Participants__r</relationship>
+    </join>
+    <label>CertGame Tournaments with Participants</label>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Bracket_Type__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Status__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Certification_Exam__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Tenant__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Start_At__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>End_At__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Max_Participants__c</field><table>Tournament__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Winner_Player__c</field><table>Tournament__c</table></columns>
+        <masterLabel>Tournament Fields</masterLabel>
+    </sections>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Player__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Rank__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Total_Points__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Questions_Answered__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Questions_Correct__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Status__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Joined_At__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Last_Played_At__c</field><table>Tournament__c.Participants__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Source__c</field><table>Tournament__c.Participants__r</table></columns>
+        <masterLabel>Participant Fields</masterLabel>
+    </sections>
+</ReportType>

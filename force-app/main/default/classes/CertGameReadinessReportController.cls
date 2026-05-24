@@ -18,6 +18,7 @@ public without sharing class CertGameReadinessReportController {
             String examId = params.get('e');
             String token = params.get('t');
             String demo = params.get('demo');
+            String theme = params.get('theme');
 
             Id playerId;
             if (String.isNotBlank(pid)) {
@@ -45,7 +46,7 @@ public without sharing class CertGameReadinessReportController {
             if (String.isNotBlank(examId)) {
                 try { eId = (Id) examId; } catch (Exception ignored) { eId = null; }
             }
-            mergedHtml = CertGameReadinessReportService.renderHtml(playerId, eId);
+            mergedHtml = CertGameReadinessReportService.renderHtml(playerId, eId, theme);
         } catch (Exception e) {
             errorMessage = 'Report failed to render: ' + e.getMessage();
             AppLogger.error('CertGameReadinessReportController', 'ctor', e.getMessage(), e);
@@ -54,6 +55,10 @@ public without sharing class CertGameReadinessReportController {
 
     /** Public mint helper used by Slack render code to embed a signed report URL. */
     public static String mintReportUrl(Id playerId, Id examId) {
+        return mintReportUrl(playerId, examId, null);
+    }
+
+    public static String mintReportUrl(Id playerId, Id examId, String themeKey) {
         if (playerId == null) return null;
         String token = WebSessionToken.mint(playerId);
         String base = Site.getBaseSecureUrl();
@@ -63,6 +68,7 @@ public without sharing class CertGameReadinessReportController {
         }
         String url = base + '/CertGameReadinessReport?p=' + playerId + '&t=' + EncodingUtil.urlEncode(token, 'UTF-8');
         if (examId != null) url += '&e=' + examId;
+        if (String.isNotBlank(themeKey)) url += '&theme=' + EncodingUtil.urlEncode(themeKey, 'UTF-8');
         return url;
     }
 }

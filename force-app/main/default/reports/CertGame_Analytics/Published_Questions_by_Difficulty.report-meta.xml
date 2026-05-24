@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Published Questions by Difficulty</name>
+    <description>Distribution of Published questions across difficulty levels per certification exam. Highlights gaps where an exam is missing easy/medium/hard coverage.</description>
+    <reportType>CertGame_Questions_With_Citations</reportType>
+    <format>Matrix</format>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Trivia_Question__c$Name</field></columns>
+    <columns><field>Trivia_Question__c$Quality_Score__c</field></columns>
+    <filter>
+        <criteriaItems>
+            <column>Trivia_Question__c$Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Published</value>
+        </criteriaItems>
+    </filter>
+    <groupingsDown>
+        <field>Trivia_Question__c$Certification_Exam__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <groupingsAcross>
+        <field>Trivia_Question__c$Difficulty__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsAcross>
+</Report>

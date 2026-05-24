@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Question_Generation_Job__c</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>LLM-driven question generation jobs with provider, model, token cost, and outcome.</description>
+    <label>CertGame Question Generation Jobs</label>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Status__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Provider__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Model__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Certification_Exam__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Tenant__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Domain_Focus__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Difficulty_Focus__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Requested_Question_Count__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Generated_Question_Count__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Token_Cost_USD__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Requested_By__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Error_Message__c</field><table>Question_Generation_Job__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>CreatedDate</field><table>Question_Generation_Job__c</table></columns>
+        <masterLabel>Generation Job Fields</masterLabel>
+    </sections>
+</ReportType>

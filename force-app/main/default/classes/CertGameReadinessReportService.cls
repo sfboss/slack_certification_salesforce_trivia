@@ -16,9 +16,65 @@ public without sharing class CertGameReadinessReportService {
     private static final Integer DEFAULT_TOTAL_QUESTIONS = 60;
 
     public static String renderHtml(Id playerId, Id examId) {
-        String template = loadTemplate();
+        return renderHtml(playerId, examId, null);
+    }
+
+    public static String renderHtml(Id playerId, Id examId, String themeKey) {
+        String template = loadTemplate(themeKey);
         Map<String, String> mergeFields = gather(playerId, examId);
+        mergeFields.put('theme_key', escape(resolveThemeKey(themeKey)));
         return applyMerge(template, mergeFields);
+    }
+
+    /**
+     * Lightweight DTO surfaced to the admin LWC and Slack pickers.
+     */
+    public class ThemeOption {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String key;
+        @AuraEnabled public String name;
+        @AuraEnabled public String description;
+        @AuraEnabled public Boolean isDefault;
+        @AuraEnabled public Boolean active;
+        @AuraEnabled public Integer sortOrder;
+    }
+
+    public static List<ThemeOption> listActiveThemes() {
+        List<ThemeOption> out = new List<ThemeOption>();
+        for (Study_Guide_Theme__c t : [
+            SELECT Id, Name, Theme_Key__c, Description__c, Active__c, Is_Default__c, Sort_Order__c
+            FROM Study_Guide_Theme__c
+            WHERE Active__c = true
+            WITH SYSTEM_MODE
+            ORDER BY Is_Default__c DESC, Sort_Order__c ASC NULLS LAST, Name ASC
+            LIMIT 100
+        ]) {
+            ThemeOption o = new ThemeOption();
+            o.id = t.Id;
+            o.key = t.Theme_Key__c;
+            o.name = t.Name;
+            o.description = t.Description__c;
+            o.isDefault = t.Is_Default__c == true;
+            o.active = t.Active__c == true;
+            o.sortOrder = t.Sort_Order__c == null ? null : t.Sort_Order__c.intValue();
+            out.add(o);
+        }
+        return out;
+    }
+
+    public static String resolveThemeKey(String requested) {
+        if (String.isNotBlank(requested)) return requested.toLowerCase();
+        List<Study_Guide_Theme__c> defs = [
+            SELECT Theme_Key__c
+            FROM Study_Guide_Theme__c
+            WHERE Active__c = true AND Is_Default__c = true
+            WITH SYSTEM_MODE
+            ORDER BY LastModifiedDate DESC LIMIT 1
+        ];
+        if (!defs.isEmpty() && String.isNotBlank(defs[0].Theme_Key__c)) {
+            return defs[0].Theme_Key__c.toLowerCase();
+        }
+        return 'editorial';
     }
 
     public static Map<String, String> gather(Id playerId, Id examId) {
@@ -529,9 +585,43 @@ public without sharing class CertGameReadinessReportService {
 
     @TestVisible
     private static String loadTemplate() {
-        List<StaticResource> srs = [SELECT Body FROM StaticResource WHERE Name = 'readinessReportTemplate' LIMIT 1];
-        if (srs.isEmpty()) return '<html><body><h1>Template missing</h1></body></html>';
-        return srs[0].Body.toString();
+        return loadTemplate(null);
+    }
+
+    /**
+     * Resolution order:
+     *  1) Active Study_Guide_Theme__c whose Theme_Key__c matches `themeKey`.
+     *  2) Active Study_Guide_Theme__c flagged Is_Default__c (if `themeKey` blank or no match).
+     *  3) Static resource whose Name matches the resolved key (legacy path).
+     *  4) Original `readinessReportTemplate` static resource (legacy compatibility).
+     */
+    @TestVisible
+    private static String loadTemplate(String themeKey) {
+        String key = String.isBlank(themeKey) ? null : themeKey.toLowerCase();
+        if (String.isNotBlank(key)) {
+            List<Study_Guide_Theme__c> byKey = [
+                SELECT Body__c FROM Study_Guide_Theme__c
+                WHERE Active__c = true AND Theme_Key__c = :key
+                WITH SYSTEM_MODE LIMIT 1
+            ];
+            if (!byKey.isEmpty() && String.isNotBlank(byKey[0].Body__c)) return byKey[0].Body__c;
+        }
+        List<Study_Guide_Theme__c> defaults = [
+            SELECT Body__c, Theme_Key__c FROM Study_Guide_Theme__c
+            WHERE Active__c = true AND Is_Default__c = true
+            WITH SYSTEM_MODE
+            ORDER BY LastModifiedDate DESC LIMIT 1
+        ];
+        if (!defaults.isEmpty() && String.isNotBlank(defaults[0].Body__c)) return defaults[0].Body__c;
+
+        // Static-resource fallback. Try keyed name first, then the legacy fixed name.
+        if (String.isNotBlank(key)) {
+            List<StaticResource> srs = [SELECT Body FROM StaticResource WHERE Name = :key LIMIT 1];
+            if (!srs.isEmpty()) return srs[0].Body.toString();
+        }
+        List<StaticResource> legacy = [SELECT Body FROM StaticResource WHERE Name = 'readinessReportTemplate' LIMIT 1];
+        if (legacy.isEmpty()) return '<html><body><h1>Template missing</h1></body></html>';
+        return legacy[0].Body.toString();
     }
 
     @TestVisible

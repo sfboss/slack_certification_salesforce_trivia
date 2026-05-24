@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Answer Volume and Accuracy by Day</name>
+    <description>Daily volume of player answers with correct counts. Trendline for engagement and content effectiveness over the last 90 days.</description>
+    <reportType>CertGame_Sessions_With_Answers</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Player_Answer__c$Is_Correct__c</field></columns>
+    <columns><field>Player_Answer__c$Points_Awarded__c</field></columns>
+    <columns><field>Player_Answer__c$Response_Time_Ms__c</field></columns>
+    <timeFrameFilter>
+        <dateColumn>Player_Answer__c$Answered_At__c</dateColumn>
+        <interval>INTERVAL_LAST90</interval>
+    </timeFrameFilter>
+    <groupingsDown>
+        <field>Player_Answer__c$Answered_At__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <groupingsAcross>
+        <field>Game_Session__c$Mode__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsAcross>
+</Report>

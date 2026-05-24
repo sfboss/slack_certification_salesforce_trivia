@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Usage_Metric__c</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>Per-tenant per-period usage rollups for quota enforcement and billing.</description>
+    <label>CertGame Usage Metrics</label>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Tenant__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Period__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Games_Started__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Questions_Served__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Active_Players__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>LLM_Tokens_In__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>LLM_Tokens_Out__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>LLM_Cost_USD__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Unique_Key__c</field><table>Usage_Metric__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>CreatedDate</field><table>Usage_Metric__c</table></columns>
+        <masterLabel>Usage Metric Fields</masterLabel>
+    </sections>
+</ReportType>

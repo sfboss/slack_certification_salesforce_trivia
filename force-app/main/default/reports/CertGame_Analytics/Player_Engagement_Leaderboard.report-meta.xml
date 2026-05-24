@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Player Engagement Leaderboard</name>
+    <description>All players ranked by total points with games played, accuracy, current streak, and last-played timestamp.</description>
+    <reportType>CertGame_Players_With_Topic_Stats</reportType>
+    <format>Tabular</format>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Player__c$Display_Name__c</field></columns>
+    <columns><field>Player__c$Tenant__c</field></columns>
+    <columns><field>Player__c$Slack_Team_Id__c</field></columns>
+    <columns><field>Player__c$Total_Points__c</field></columns>
+    <columns><field>Player__c$Total_Games__c</field></columns>
+    <columns><field>Player__c$Accuracy__c</field></columns>
+    <columns><field>Player__c$Current_Streak_Days__c</field></columns>
+    <columns><field>Player__c$Longest_Streak_Days__c</field></columns>
+    <columns><field>Player__c$Last_Played_At__c</field></columns>
+    <sortColumn>Player__c$Total_Points__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+</Report>

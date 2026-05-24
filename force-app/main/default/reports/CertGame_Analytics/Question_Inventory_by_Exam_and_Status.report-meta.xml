@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Question Inventory by Exam and Status</name>
+    <description>Counts of trivia questions broken out by certification exam and lifecycle status (Draft, Reviewed, Published, Retired). Surfaces where the question bank is thin or stale.</description>
+    <reportType>CertGame_Questions_With_Citations</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Trivia_Question__c$Name</field></columns>
+    <columns><field>Trivia_Question__c$Question_Type__c</field></columns>
+    <columns><field>Trivia_Question__c$Difficulty__c</field></columns>
+    <columns><field>Trivia_Question__c$Quality_Score__c</field></columns>
+    <columns><field>Trivia_Question__c$Times_Asked__c</field></columns>
+    <columns><field>Trivia_Question__c$Times_Correct__c</field></columns>
+    <groupingsDown>
+        <field>Trivia_Question__c$Certification_Exam__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <groupingsDown>
+        <field>Trivia_Question__c$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+</Report>

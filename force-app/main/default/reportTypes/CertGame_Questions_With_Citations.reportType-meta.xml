@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Trivia_Question__c</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>Trivia questions with their citation sources, for citation-quality and broken-link reporting.</description>
+    <join>
+        <outerJoin>true</outerJoin>
+        <relationship>Citations__r</relationship>
+    </join>
+    <label>CertGame Questions with Citations</label>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Status__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Question_Type__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Difficulty__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Quality_Score__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Certification_Exam__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Primary_Reference_URL__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Last_Verified_Date__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Times_Asked__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Times_Correct__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Fact_Check_Passed__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Citation_Mode__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Question_Bank__c</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>CreatedDate</field><table>Trivia_Question__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>CreatedBy</field><table>Trivia_Question__c</table></columns>
+        <masterLabel>Trivia Question Fields</masterLabel>
+    </sections>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Title__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>URL__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Source_Type__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Broken_Link__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Last_Verified_Date__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Verified_By__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Quote_Or_Reference__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Relevance_Note__c</field><table>Trivia_Question__c.Citations__r</table></columns>
+        <masterLabel>Citation Fields</masterLabel>
+    </sections>
+</ReportType>

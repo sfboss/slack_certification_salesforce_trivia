@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LLM Generation Cost by Job</name>
+    <description>Question generation jobs with provider, model, requested vs generated counts, status, and token cost. Use to track LLM spend per tenant.</description>
+    <reportType>CertGame_Question_Generation_Jobs</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Question_Generation_Job__c$Name</field></columns>
+    <columns><field>Question_Generation_Job__c$Certification_Exam__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Domain_Focus__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Difficulty_Focus__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Model__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Requested_Question_Count__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Generated_Question_Count__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Token_Cost_USD__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Status__c</field></columns>
+    <columns><field>Question_Generation_Job__c$Requested_By__c</field></columns>
+    <columns><field>Question_Generation_Job__c$CreatedDate</field></columns>
+    <groupingsDown>
+        <field>Question_Generation_Job__c$Tenant__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <groupingsDown>
+        <field>Question_Generation_Job__c$Provider__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <sortColumn>Question_Generation_Job__c$CreatedDate</sortColumn>
+    <sortOrder>Desc</sortOrder>
+</Report>

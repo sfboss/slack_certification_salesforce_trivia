@@ -79,6 +79,17 @@ public with sharing class SlackCertGameInteractionHandler {
             return postCardDm(userId, 'Cert Game stats',
                 CertGameLeaderboardService.renderStats(teamId, userId));
         }
+        if (domain == 'report' && (verb == 'open' || verb == 'theme')) {
+            // The picker fires `report:theme:<playerId>[|<examId>]` on every selection;
+            // the URL button is statically rendered with action_id `report:open:default`
+            // and carries the signed URL inline, so we do not need to mint a second URL.
+            // We just DM the card so the user always has a fresh signed link from App Home.
+            if (verb == 'open') {
+                return postCardDm(userId, 'Your Study Guide',
+                    CertGameStudyGuideService.renderReport(teamId, userId));
+            }
+            return '';
+        }
         if (domain == 'tournament' && verb == 'join') {
             String tournamentId = parts.size() > 2 ? parts[2] : null;
             return CertGameTournamentService.joinFromSlack(teamId, userId, tournamentId);

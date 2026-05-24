@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Question Banks Overview</name>
+    <description>All question banks with source type (Manual, Generated, Imported), status, model provenance, and version.</description>
+    <reportType>CertGame_Question_Banks</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Question_Bank__c$Name</field></columns>
+    <columns><field>Question_Bank__c$Certification_Exam__c</field></columns>
+    <columns><field>Question_Bank__c$Source_Type__c</field></columns>
+    <columns><field>Question_Bank__c$Generated_By_Model__c</field></columns>
+    <columns><field>Question_Bank__c$Prompt_Version__c</field></columns>
+    <columns><field>Question_Bank__c$Version__c</field></columns>
+    <columns><field>Question_Bank__c$Premium__c</field></columns>
+    <columns><field>Question_Bank__c$Tenant__c</field></columns>
+    <columns><field>Question_Bank__c$CreatedDate</field></columns>
+    <groupingsDown>
+        <field>Question_Bank__c$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+</Report>

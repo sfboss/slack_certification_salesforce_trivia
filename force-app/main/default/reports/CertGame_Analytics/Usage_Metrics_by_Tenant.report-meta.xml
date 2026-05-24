@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Usage Metrics by Tenant</name>
+    <description>Per-tenant usage rollups (games started, questions served, active players, LLM tokens and cost) by period. Drives quota enforcement and billing.</description>
+    <reportType>CertGame_Usage_Metrics</reportType>
+    <format>Matrix</format>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Usage_Metric__c$Games_Started__c</field></columns>
+    <columns><field>Usage_Metric__c$Questions_Served__c</field></columns>
+    <columns><field>Usage_Metric__c$Active_Players__c</field></columns>
+    <columns><field>Usage_Metric__c$LLM_Tokens_In__c</field></columns>
+    <columns><field>Usage_Metric__c$LLM_Tokens_Out__c</field></columns>
+    <columns><field>Usage_Metric__c$LLM_Cost_USD__c</field></columns>
+    <groupingsDown>
+        <field>Usage_Metric__c$Tenant__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <groupingsAcross>
+        <field>Usage_Metric__c$Period__c</field>
+        <sortOrder>Desc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsAcross>
+</Report>

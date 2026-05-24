@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Certification_Exam__c</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>Certification exams with their domain breakdown and weights.</description>
+    <join>
+        <outerJoin>true</outerJoin>
+        <relationship>Domains__r</relationship>
+    </join>
+    <label>CertGame Exams with Domains</label>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Certification_Code__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Vendor__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Track__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Role_Family__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Level__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Difficulty__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Active__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Premium_Only__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Cost__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Passing_Score_Percent__c</field><table>Certification_Exam__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Default_Timer_Seconds__c</field><table>Certification_Exam__c</table></columns>
+        <masterLabel>Exam Fields</masterLabel>
+    </sections>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Certification_Exam__c.Domains__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Domain_Order__c</field><table>Certification_Exam__c.Domains__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Weight_Percent__c</field><table>Certification_Exam__c.Domains__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Official_Objective_Text__c</field><table>Certification_Exam__c.Domains__r</table></columns>
+        <masterLabel>Domain Fields</masterLabel>
+    </sections>
+</ReportType>

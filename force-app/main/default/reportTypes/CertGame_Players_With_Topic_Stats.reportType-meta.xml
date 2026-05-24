@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Player__c</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>Players with their per-topic accuracy stats for skill-gap analysis.</description>
+    <join>
+        <outerJoin>true</outerJoin>
+        <relationship>Topic_Stats__r</relationship>
+    </join>
+    <label>CertGame Players with Topic Stats</label>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Name</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Display_Name__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Tenant__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Slack_Team_Id__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Slack_User_Id__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Total_Games__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Total_Points__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Accuracy__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Current_Streak_Days__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Longest_Streak_Days__c</field><table>Player__c</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Last_Played_At__c</field><table>Player__c</table></columns>
+        <masterLabel>Player Fields</masterLabel>
+    </sections>
+    <sections>
+        <columns><checkedByDefault>true</checkedByDefault><field>Topic_Type__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Topic_Value__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Times_Seen__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Times_Correct__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Times_Incorrect__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <columns><checkedByDefault>true</checkedByDefault><field>Accuracy_Pct__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <columns><checkedByDefault>false</checkedByDefault><field>Last_Seen_At__c</field><table>Player__c.Topic_Stats__r</table></columns>
+        <masterLabel>Topic Stat Fields</masterLabel>
+    </sections>
+</ReportType>

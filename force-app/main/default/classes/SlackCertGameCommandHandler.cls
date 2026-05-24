@@ -26,6 +26,7 @@ public with sharing class SlackCertGameCommandHandler {
         if (sub == 'games') return CertGameExamCatalogService.renderForSlack(teamId);
         if (sub == 'leaderboard') return CertGameLeaderboardService.renderLeaderboard(teamId, channelId, parts);
         if (sub == 'stats') return CertGameLeaderboardService.renderStats(teamId, userId);
+        if (sub == 'report' || sub == 'studyguide' || sub == 'study') return CertGameStudyGuideService.renderReport(teamId, userId);
         if (sub == 'plan') return CertGameStudyPlanService.openPlanModal(teamId, userId, triggerId);
         if (sub == 'billing') return CertGameBillingService.openBillingModal(teamId, userId, triggerId);
         if (sub == 'debug') return renderDebug();

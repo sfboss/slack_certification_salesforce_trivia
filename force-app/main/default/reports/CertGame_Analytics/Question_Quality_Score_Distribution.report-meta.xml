@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Question Quality Score Distribution</name>
+    <description>Questions sorted by Quality_Score with status, fact-check, and citation context. Quickly find low-quality questions that need rework.</description>
+    <reportType>CertGame_Questions_With_Citations</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Trivia_Question__c$Name</field></columns>
+    <columns><field>Trivia_Question__c$Certification_Exam__c</field></columns>
+    <columns><field>Trivia_Question__c$Question_Type__c</field></columns>
+    <columns><field>Trivia_Question__c$Difficulty__c</field></columns>
+    <columns><field>Trivia_Question__c$Quality_Score__c</field></columns>
+    <columns><field>Trivia_Question__c$Fact_Check_Passed__c</field></columns>
+    <columns><field>Trivia_Question__c$Citation_Mode__c</field></columns>
+    <columns><field>Trivia_Question__c$Primary_Reference_URL__c</field></columns>
+    <columns><field>Trivia_Question__c$Last_Verified_Date__c</field></columns>
+    <groupingsDown>
+        <field>Trivia_Question__c$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+    <sortColumn>Trivia_Question__c$Quality_Score__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+</Report>

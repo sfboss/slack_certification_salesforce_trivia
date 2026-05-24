@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Questions with Broken Citations</name>
+    <description>Citations flagged as broken links. Used by content reviewers to repair sourcing before re-publishing.</description>
+    <reportType>CertGame_Questions_With_Citations</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Trivia_Question__c$Name</field></columns>
+    <columns><field>Trivia_Question__c$Status__c</field></columns>
+    <columns><field>Trivia_Question__c$Certification_Exam__c</field></columns>
+    <columns><field>Question_Citation__c$Title__c</field></columns>
+    <columns><field>Question_Citation__c$URL__c</field></columns>
+    <columns><field>Question_Citation__c$Source_Type__c</field></columns>
+    <columns><field>Question_Citation__c$Last_Verified_Date__c</field></columns>
+    <columns><field>Question_Citation__c$Verified_By__c</field></columns>
+    <filter>
+        <criteriaItems>
+            <column>Question_Citation__c$Broken_Link__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+    </filter>
+    <groupingsDown>
+        <field>Trivia_Question__c$Certification_Exam__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+</Report>

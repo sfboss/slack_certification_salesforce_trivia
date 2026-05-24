@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Certification Exam Catalog</name>
+    <description>Full catalog of certification exams configured in the org with vendor, track, level, difficulty, pricing, and active status.</description>
+    <reportType>CertGame_Exams_With_Domains</reportType>
+    <format>Summary</format>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <columns><field>Certification_Exam__c$Name</field></columns>
+    <columns><field>Certification_Exam__c$Certification_Code__c</field></columns>
+    <columns><field>Certification_Exam__c$Track__c</field></columns>
+    <columns><field>Certification_Exam__c$Role_Family__c</field></columns>
+    <columns><field>Certification_Exam__c$Level__c</field></columns>
+    <columns><field>Certification_Exam__c$Difficulty__c</field></columns>
+    <columns><field>Certification_Exam__c$Cost__c</field></columns>
+    <columns><field>Certification_Exam__c$Passing_Score_Percent__c</field></columns>
+    <columns><field>Certification_Exam__c$Default_Timer_Seconds__c</field></columns>
+    <columns><field>Certification_Exam__c$Active__c</field></columns>
+    <columns><field>Certification_Exam__c$Premium_Only__c</field></columns>
+    <groupingsDown>
+        <field>Certification_Exam__c$Vendor__c</field>
+        <sortOrder>Asc</sortOrder>
+        <dateGranularity>Day</dateGranularity>
+    </groupingsDown>
+</Report>

@@ -362,8 +362,9 @@ public with sharing class CertGameSlackRenderService {
             if (String.isNotBlank(reportUrl)) {
                 actionEls.add(new Map<String, Object>{
                     'type' => 'button',
-                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':bar_chart: View full report', 'emoji' => true },
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':notebook: Open Study Guide', 'emoji' => true },
                     'action_id' => 'report:view',
+                    'style' => 'primary',
                     'url' => reportUrl
                 });
             }
@@ -436,6 +437,11 @@ public with sharing class CertGameSlackRenderService {
                 },
                 new Map<String, Object>{
                     'type' => 'button',
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':notebook: Study Guide', 'emoji' => true },
+                    'action_id' => 'report:open'
+                },
+                new Map<String, Object>{
+                    'type' => 'button',
                     'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => 'Run Doctor', 'emoji' => true },
                     'action_id' => 'home:doctor:run'
                 },
@@ -451,7 +457,7 @@ public with sharing class CertGameSlackRenderService {
                 }
             }
         });
-        blocks.add(context('Tip: Doctor checks setup and shows recent errors. Test notifications DMs you a self-test message.'));
+        blocks.add(context('Tip: the Study Guide shows your accuracy, weak domains, and timing trends - pulled from your real play data.'));
         return JSON.serialize(new Map<String, Object>{
             'type' => 'home',
             'blocks' => blocks
@@ -715,6 +721,65 @@ public with sharing class CertGameSlackRenderService {
         return JSON.serialize(new Map<String, Object>{
             'response_type' => 'in_channel',
             'text' => fallback,
+            'blocks' => blocks
+        });
+    }
+
+    /**
+     * Ephemeral Study Guide card: one URL button per active theme. Posted in response
+     * to `/certgame report` and to the App Home `report:open` block_action.
+     * If examId is null the report falls back to "all exams played" via the service layer.
+     * The default theme is rendered first with primary style; remaining themes follow.
+     */
+    public static String studyGuideCard(Id playerId, Id examId, List<CertGameReadinessReportService.ThemeOption> themes) {
+        List<Object> blocks = new List<Object>();
+        blocks.add(header(':notebook:  Your Study Guide'));
+        blocks.add(section('A personalized readiness report built from your accuracy, streaks, and weakest domains. Pick a theme to open it in your browser.'));
+        blocks.add(divider());
+
+        List<Object> actionElements = new List<Object>();
+        Boolean rendered = false;
+
+        if (themes != null && !themes.isEmpty()) {
+            // Default first, then remaining; cap at 5 so the actions block stays clean.
+            List<CertGameReadinessReportService.ThemeOption> ordered = new List<CertGameReadinessReportService.ThemeOption>();
+            for (CertGameReadinessReportService.ThemeOption t : themes) if (t.isDefault) ordered.add(t);
+            for (CertGameReadinessReportService.ThemeOption t : themes) if (!t.isDefault) ordered.add(t);
+            Integer cap = Math.min(5, ordered.size());
+            for (Integer i = 0; i < cap; i++) {
+                CertGameReadinessReportService.ThemeOption t = ordered[i];
+                String url = CertGameReadinessReportController.mintReportUrl(playerId, examId, t.key);
+                String label = String.isBlank(t.name) ? t.key : t.name;
+                Map<String, Object> btn = new Map<String, Object>{
+                    'type' => 'button',
+                    'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':rocket:  ' + truncate(label, 70), 'emoji' => true },
+                    'url' => url,
+                    'action_id' => 'report:open:' + t.key
+                };
+                if (i == 0) btn.put('style', 'primary');
+                actionElements.add(btn);
+                rendered = true;
+            }
+        }
+
+        if (!rendered) {
+            // No themes seeded yet - fall back to a single button using the legacy template.
+            String url = CertGameReadinessReportController.mintReportUrl(playerId, examId, null);
+            actionElements.add(new Map<String, Object>{
+                'type' => 'button',
+                'style' => 'primary',
+                'text' => new Map<String, Object>{ 'type' => 'plain_text', 'text' => ':rocket:  Open Study Guide', 'emoji' => true },
+                'url' => url,
+                'action_id' => 'report:open:default'
+            });
+        }
+
+        blocks.add(new Map<String, Object>{ 'type' => 'actions', 'elements' => actionElements });
+        blocks.add(context(':lock: Link is signed to you and expires in 7 days. Re-run `/certgame report` to refresh it.'));
+
+        return JSON.serialize(new Map<String, Object>{
+            'response_type' => 'ephemeral',
+            'text' => 'Your Study Guide is ready.',
             'blocks' => blocks
         });
     }
