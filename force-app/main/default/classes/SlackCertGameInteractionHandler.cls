@@ -79,12 +79,13 @@ public with sharing class SlackCertGameInteractionHandler {
             return postCardDm(userId, 'Cert Game stats',
                 CertGameLeaderboardService.renderStats(teamId, userId));
         }
-        if (domain == 'report' && (verb == 'open' || verb == 'theme')) {
-            // The picker fires `report:theme:<playerId>[|<examId>]` on every selection;
-            // the URL button is statically rendered with action_id `report:open:default`
-            // and carries the signed URL inline, so we do not need to mint a second URL.
-            // We just DM the card so the user always has a fresh signed link from App Home.
-            if (verb == 'open') {
+        if (domain == 'report' && verb == 'open') {
+            // App Home `report:open` (no resource): DM the user a fresh Study Guide card.
+            // URL buttons inside the card (`report:open:<themeKey>`) also fire this handler
+            // when Slack tracks the click, but we treat them as no-ops since the user has
+            // already navigated to the signed URL.
+            List<String> remainder = parts.size() > 2 ? new List<String>() : null;
+            if (parts.size() <= 2) {
                 return postCardDm(userId, 'Your Study Guide',
                     CertGameStudyGuideService.renderReport(teamId, userId));
             }
