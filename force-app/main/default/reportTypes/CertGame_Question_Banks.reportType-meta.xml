@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
     <baseObject>Question_Bank__c</baseObject>
     <category>other</category>
     <deployed>true</deployed>
-    <description
-    >Question banks with provenance (source, model, version) for content audit.</description>
+    <description>Question banks with provenance (source, model, version) for content audit.</description>
     <label>CertGame Question Banks</label>
     <sections>
         <columns>

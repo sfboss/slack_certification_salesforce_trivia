@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Certification_Exam__c$Name</field>
@@ -33,8 +33,7 @@
     <columns>
         <field>Certification_Exam__c$Premium_Only__c</field>
     </columns>
-    <description
-    >Full catalog of certification exams configured in the org with vendor, track, level, difficulty, pricing, and active status.</description>
+    <description>Full catalog of certification exams configured in the org with vendor, track, level, difficulty, pricing, and active status.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

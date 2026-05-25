@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Certification_Exam__c$Certification_Code__c</field>
@@ -16,11 +16,9 @@
         <field>Certification_Exam__c.Domains__r$Weight_Percent__c</field>
     </columns>
     <columns>
-        <field
-        >Certification_Exam__c.Domains__r$Official_Objective_Text__c</field>
+        <field>Certification_Exam__c.Domains__r$Official_Objective_Text__c</field>
     </columns>
-    <description
-    >Per-exam domain breakdown with official weight percentages. Use to confirm question-bank coverage maps to blueprint weights.</description>
+    <description>Per-exam domain breakdown with official weight percentages. Use to confirm question-bank coverage maps to blueprint weights.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

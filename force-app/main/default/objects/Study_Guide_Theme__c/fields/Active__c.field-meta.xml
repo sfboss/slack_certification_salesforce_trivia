@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Active__c</fullName>
     <defaultValue>true</defaultValue>
-    <description
-    >If false, the theme is hidden from pickers and not selectable for rendering.</description>
+    <description>If false, the theme is hidden from pickers and not selectable for rendering.</description>
     <externalId>false</externalId>
     <label>Active</label>
     <trackHistory>false</trackHistory>

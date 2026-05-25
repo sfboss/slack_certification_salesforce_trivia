@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Question_Bank__c$Name</field>
@@ -27,8 +27,7 @@
     <columns>
         <field>Question_Bank__c$CreatedDate</field>
     </columns>
-    <description
-    >All question banks with source type (Manual, Generated, Imported), status, model provenance, and version.</description>
+    <description>All question banks with source type (Manual, Generated, Imported), status, model provenance, and version.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Trivia_Question__c$Name</field>
@@ -9,8 +9,7 @@
     <columns>
         <field>Trivia_Question__c$Difficulty__c</field>
     </columns>
-    <description
-    >Counts of trivia questions broken out by certification exam and lifecycle status (Draft, Reviewed, Published, Retired). Surfaces where the question bank is thin or stale.</description>
+    <description>Counts of trivia questions broken out by certification exam and lifecycle status (Draft, Reviewed, Published, Retired). Surfaces where the question bank is thin or stale.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

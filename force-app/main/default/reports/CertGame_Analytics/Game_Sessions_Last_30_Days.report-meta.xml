@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Game_Session__c$Name</field>
@@ -24,8 +24,7 @@
     <columns>
         <field>Game_Session__c$Started_By_Slack_User_Id__c</field>
     </columns>
-    <description
-    >All game sessions started in the last 30 days, grouped by mode (Solo, Duel, Tournament) and status. Use to monitor engagement velocity.</description>
+    <description>All game sessions started in the last 30 days, grouped by mode (Solo, Duel, Tournament) and status. Use to monitor engagement velocity.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

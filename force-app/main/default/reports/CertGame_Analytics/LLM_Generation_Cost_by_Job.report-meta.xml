@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Question_Generation_Job__c$Name</field>
@@ -33,8 +33,7 @@
     <columns>
         <field>Question_Generation_Job__c$CreatedDate</field>
     </columns>
-    <description
-    >Question generation jobs with provider, model, requested vs generated counts, status, and token cost. Use to track LLM spend per tenant.</description>
+    <description>Question generation jobs with provider, model, requested vs generated counts, status, and token cost. Use to track LLM spend per tenant.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

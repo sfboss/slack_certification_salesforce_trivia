@@ -1,5 +1,4 @@
-<apex:page
-    showHeader="false"
+<apex:page showHeader="false"
     title="{!$Label.site.file_not_found}"
     cache="false"
 >
@@ -9,8 +8,7 @@
                 <apex:panelGrid bgcolor="white" columns="1">
                     <br />
                     <br />
-                    <apex:panelGrid
-                        width="758"
+                    <apex:panelGrid width="758"
                         cellpadding="0"
                         cellspacing="0"
                         bgcolor="white"
@@ -19,32 +17,26 @@
                     >
                         <br />
                         <apex:outputPanel layout="block" styleClass="topPanel">
-                            <apex:panelGrid
-                                width="758"
+                            <apex:panelGrid width="758"
                                 cellpadding="0"
                                 cellspacing="0"
                                 bgcolor="white"
                                 columns="3"
                             >
-                                <apex:image
-                                    url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"
+                                <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"
                                 />
-                                <apex:image
-                                    url="{!URLFOR($Resource.SiteSamples, 'img/warning.png')}"
+                                <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/warning.png')}"
                                 />
-                                <apex:panelGroup>
-                                    <apex:outputText
-                                        styleClass="title"
+                                <apex:panelGroup >
+                                    <apex:outputText styleClass="title"
                                         value="{!$Label.site.page_not_found_detail}"
                                     >
-                                        <apex:param
-                                            value="{!$Site.OriginalUrl}"
+                                        <apex:param value="{!$Site.OriginalUrl}"
                                         />
                                     </apex:outputText>
                                     <br />
                                     <br />
-                                    <apex:outputText
-                                        value="{!$Label.site.stay_tuned}"
+                                    <apex:outputText value="{!$Label.site.stay_tuned}"
                                     />
                                 </apex:panelGroup>
                             </apex:panelGrid>

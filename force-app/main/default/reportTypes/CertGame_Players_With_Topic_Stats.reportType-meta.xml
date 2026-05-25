@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
     <baseObject>Player__c</baseObject>
     <category>other</category>
     <deployed>true</deployed>
-    <description
-    >Players with their per-topic accuracy stats for skill-gap analysis.</description>
+    <description>Players with their per-topic accuracy stats for skill-gap analysis.</description>
     <join>
         <outerJoin>true</outerJoin>
         <relationship>Topic_Stats__r</relationship>

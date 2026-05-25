@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Dashboard xmlns="http://soap.sforce.com/2006/04/metadata">
     <backgroundEndColor>#FFFFFF</backgroundEndColor>
     <backgroundFadeDirection>Diagonal</backgroundFadeDirection>
@@ -25,8 +25,7 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingColumn
-                >PartnerFundRequest$ChannelPartner</groupingColumn>
+                <groupingColumn>PartnerFundRequest$ChannelPartner</groupingColumn>
                 <groupingSortProperties>
                     <groupingSorts>
                         <groupingLevel>g1</groupingLevel>
@@ -34,8 +33,7 @@
                     </groupingSorts>
                 </groupingSortProperties>
                 <legendPosition>Bottom</legendPosition>
-                <report
-                >prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_mdf_submitted_request_by_partnerSPLIT1778882788469</report>
+                <report>prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_mdf_submitted_request_by_partnerSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>true</showValues>
@@ -63,8 +61,7 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingColumn
-                >PartnerFundRequest$ChannelPartner</groupingColumn>
+                <groupingColumn>PartnerFundRequest$ChannelPartner</groupingColumn>
                 <groupingSortProperties>
                     <groupingSorts>
                         <groupingLevel>g1</groupingLevel>
@@ -72,8 +69,7 @@
                     </groupingSorts>
                 </groupingSortProperties>
                 <legendPosition>Bottom</legendPosition>
-                <report
-                >prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_approved_claim_by_partnerSPLIT1778882788469</report>
+                <report>prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_approved_claim_by_partnerSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>true</showValues>
@@ -93,15 +89,13 @@
                 <flexComponentProperties>
                     <decimalPrecision>-1</decimalPrecision>
                     <flexTableColumn>
-                        <reportColumn
-                        >PartnerMarketingBudget.ChannelPartner.Name</reportColumn>
+                        <reportColumn>PartnerMarketingBudget.ChannelPartner.Name</reportColumn>
                         <showSubTotal>false</showSubTotal>
                         <showTotal>false</showTotal>
                         <type>grouping</type>
                     </flexTableColumn>
                     <flexTableColumn>
-                        <reportColumn
-                        >s!PartnerMarketingBudget.Amount</reportColumn>
+                        <reportColumn>s!PartnerMarketingBudget.Amount</reportColumn>
                         <showSubTotal>false</showSubTotal>
                         <showTotal>false</showTotal>
                         <type>aggregate</type>
@@ -117,8 +111,7 @@
                         <sortOrder>a</sortOrder>
                     </groupingSorts>
                 </groupingSortProperties>
-                <report
-                >prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_total_marketing_budgetSPLIT1778882788469</report>
+                <report>prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_total_marketing_budgetSPLIT1778882788469</report>
                 <title>Total Partner Marketing Budget</title>
             </dashboardComponent>
             <rowIndex>0</rowIndex>
@@ -141,8 +134,7 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingColumn
-                >PartnerFundRequest$ChannelPartner</groupingColumn>
+                <groupingColumn>PartnerFundRequest$ChannelPartner</groupingColumn>
                 <groupingSortProperties>
                     <groupingSorts>
                         <groupingLevel>g1</groupingLevel>
@@ -150,8 +142,7 @@
                     </groupingSorts>
                 </groupingSortProperties>
                 <legendPosition>Bottom</legendPosition>
-                <report
-                >prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_submitted_claim_by_partnerSPLIT1778882788469</report>
+                <report>prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_submitted_claim_by_partnerSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>true</showValues>
@@ -179,8 +170,7 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingColumn
-                >PartnerFundRequest$ChannelPartner</groupingColumn>
+                <groupingColumn>PartnerFundRequest$ChannelPartner</groupingColumn>
                 <groupingSortProperties>
                     <groupingSorts>
                         <groupingLevel>g1</groupingLevel>
@@ -188,8 +178,7 @@
                     </groupingSorts>
                 </groupingSortProperties>
                 <legendPosition>Bottom</legendPosition>
-                <report
-                >prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_mdf_approved_request_by_partnerSPLIT1778882788469</report>
+                <report>prm_spring24_ch_marketing_reports_folderSPLIT1778882788469/prm_mdf_approved_request_by_partnerSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>true</showValues>
@@ -204,8 +193,7 @@
         <rowHeight>36</rowHeight>
     </dashboardGridLayout>
     <dashboardType>SpecifiedUser</dashboardType>
-    <description
-    >Track key metrics on marketing budget status and progress.</description>
+    <description>Track key metrics on marketing budget status and progress.</description>
     <isGridLayout>true</isGridLayout>
     <owner>autoproc@00drk00000tsvim2ar</owner>
     <runningUser>test-bh7kr3httx7r@example.com</runningUser>

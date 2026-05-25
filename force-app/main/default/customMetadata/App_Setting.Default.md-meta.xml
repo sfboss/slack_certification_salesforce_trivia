@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<CustomMetadata
-    xmlns="http://soap.sforce.com/2006/04/metadata"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
->
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <label>Default</label>
     <protected>false</protected>
     <values>
@@ -56,9 +52,7 @@
     </values>
     <values>
         <field>Slack_Bot_Token__c</field>
-        <value
-            xsi:type="xsd:string"
-        >xoxb-1509154061287-11141634831254-UjUaTAi619Ltfp9e3pgdCWza</value>
+        <value xsi:type="xsd:string">xoxb-1509154061287-11141634831254-UjUaTAi619Ltfp9e3pgdCWza</value>
     </values>
     <values>
         <field>Slack_Signing_Secret_Named_Credential__c</field>
@@ -82,14 +76,10 @@
     </values>
     <values>
         <field>Web_Google_Client_Id__c</field>
-        <value
-            xsi:type="xsd:string"
-        >996785802571-uiqssvghelteip5skm0f6kmcur270ih0.apps.googleusercontent.com</value>
+        <value xsi:type="xsd:string">996785802571-uiqssvghelteip5skm0f6kmcur270ih0.apps.googleusercontent.com</value>
     </values>
     <values>
         <field>Web_Session_Secret__c</field>
-        <value
-            xsi:type="xsd:string"
-        >f8659cbba8701779f9447dcc66536f750eb4965a95945f4c010bc9f514f6b195</value>
+        <value xsi:type="xsd:string">f8659cbba8701779f9447dcc66536f750eb4965a95945f4c010bc9f514f6b195</value>
     </values>
 </CustomMetadata>

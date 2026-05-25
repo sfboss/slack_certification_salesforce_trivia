@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Game_Session__c.Answers__r$Is_Correct__c</field>
@@ -9,8 +9,7 @@
     <columns>
         <field>Game_Session__c.Answers__r$Response_Time_Ms__c</field>
     </columns>
-    <description
-    >Daily volume of player answers with correct counts. Trendline for engagement and content effectiveness over the last 90 days.</description>
+    <description>Daily volume of player answers with correct counts. Trendline for engagement and content effectiveness over the last 90 days.</description>
     <format>Matrix</format>
     <groupingsAcross>
         <dateGranularity>Day</dateGranularity>

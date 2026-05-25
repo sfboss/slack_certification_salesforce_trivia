@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Dashboard xmlns="http://soap.sforce.com/2006/04/metadata">
     <backgroundEndColor>#FFFFFF</backgroundEndColor>
     <backgroundFadeDirection>Diagonal</backgroundFadeDirection>
@@ -19,9 +19,8 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingSortProperties />
-                <report
-                >prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_open_opportunity_by_partnerSPLIT1778882788469</report>
+                <groupingSortProperties/>
+                <report>prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_open_opportunity_by_partnerSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>false</showValues>
@@ -43,9 +42,8 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingSortProperties />
-                <report
-                >prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_lead_conversionSPLIT1778882788469</report>
+                <groupingSortProperties/>
+                <report>prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_lead_conversionSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>false</showValues>
@@ -67,9 +65,8 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingSortProperties />
-                <report
-                >prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_open_opportunity_by_stageSPLIT1778882788469</report>
+                <groupingSortProperties/>
+                <report>prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_open_opportunity_by_stageSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>false</showValues>
@@ -124,9 +121,8 @@
                     </flexTableSortInfo>
                     <hideChatterPhotos>true</hideChatterPhotos>
                 </flexComponentProperties>
-                <groupingSortProperties />
-                <report
-                >prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_opportunity_by_amountSPLIT1778882788469</report>
+                <groupingSortProperties/>
+                <report>prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_opportunity_by_amountSPLIT1778882788469</report>
                 <title>Top Opportunities</title>
             </dashboardComponent>
             <rowIndex>8</rowIndex>
@@ -143,9 +139,8 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingSortProperties />
-                <report
-                >prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_revenue_closedSPLIT1778882788469</report>
+                <groupingSortProperties/>
+                <report>prm_winter24_ch_sales_reports_folderSPLIT1778882788469/prm_revenue_closedSPLIT1778882788469</report>
                 <showPercentage>false</showPercentage>
                 <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>false</showValues>

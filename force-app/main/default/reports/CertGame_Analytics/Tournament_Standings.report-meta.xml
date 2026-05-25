@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Tournament__c$Bracket_Type__c</field>
@@ -27,8 +27,7 @@
     <columns>
         <field>Tournament__c.Participants__r$Status__c</field>
     </columns>
-    <description
-    >Active and recent tournaments with their participant rankings, points, and completion stats.</description>
+    <description>Active and recent tournaments with their participant rankings, points, and completion stats.</description>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Usage_Metric__c$Games_Started__c</field>
@@ -18,8 +18,7 @@
     <columns>
         <field>Usage_Metric__c$LLM_Cost_USD__c</field>
     </columns>
-    <description
-    >Per-tenant usage rollups (games started, questions served, active players, LLM tokens and cost) by period. Drives quota enforcement and billing.</description>
+    <description>Per-tenant usage rollups (games started, questions served, active players, LLM tokens and cost) by period. Drives quota enforcement and billing.</description>
     <format>Matrix</format>
     <groupingsAcross>
         <dateGranularity>Day</dateGranularity>

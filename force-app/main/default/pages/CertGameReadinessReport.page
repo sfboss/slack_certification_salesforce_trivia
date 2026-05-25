@@ -1,5 +1,4 @@
-<apex:page
-    controller="CertGameReadinessReportController"
+<apex:page controller="CertGameReadinessReportController"
     showHeader="false"
     sidebar="false"
     standardStylesheets="false"
@@ -36,8 +35,7 @@
             </body>
         </html>
     </apex:outputPanel>
-    <apex:outputText
-        rendered="{!ISBLANK(errorMessage)}"
+    <apex:outputText rendered="{!ISBLANK(errorMessage)}"
         value="{!mergedHtml}"
         escape="false"
     />

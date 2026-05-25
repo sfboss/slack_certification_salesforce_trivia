@@ -2,15 +2,13 @@
     <apex:composition template="{!$Site.Template}">
         <apex:define name="body">
             <center>
-                <apex:panelGrid
-                    bgcolor="white"
+                <apex:panelGrid bgcolor="white"
                     columns="1"
                     style="align: center"
                 >
                     <br />
                     <br />
-                    <apex:panelGrid
-                        width="758"
+                    <apex:panelGrid width="758"
                         cellpadding="0"
                         cellspacing="0"
                         bgcolor="white"
@@ -18,33 +16,27 @@
                         style="topPanel"
                     >
                         <br />
-                        <apex:outputPanel
-                            layout="block"
+                        <apex:outputPanel layout="block"
                             styleClass="topPanelContainer"
                         >
-                            <apex:panelGrid
-                                width="758"
+                            <apex:panelGrid width="758"
                                 cellpadding="0"
                                 cellspacing="0"
                                 bgcolor="white"
                                 columns="2"
                             >
-                                <apex:image
-                                    url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"
+                                <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"
                                 />
-                                <apex:panelGroup>
+                                <apex:panelGroup >
                                     <br />
-                                    <apex:outputText
-                                        styleClass="title"
+                                    <apex:outputText styleClass="title"
                                         value="{!$Label.site.thank_you_for_registering}"
                                     />
                                     <br />
                                     <br />
-                                    <apex:outputLink
-                                        value="{!$Page.SiteLogin}"
+                                    <apex:outputLink value="{!$Page.SiteLogin}"
                                         rendered="{!$Site.LoginEnabled}"
-                                        >{!$Label.site.go_to_login_page}</apex:outputLink
-                                    >
+                                        >{!$Label.site.go_to_login_page}</apex:outputLink>
                                     <br />
                                 </apex:panelGroup>
                             </apex:panelGrid>

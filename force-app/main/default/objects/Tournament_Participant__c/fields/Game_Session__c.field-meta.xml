@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Game_Session__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description
-    >The Game Session created when this participant played their tournament match.</description>
+    <description>The Game Session created when this participant played their tournament match.</description>
     <externalId>false</externalId>
     <label>Game Session</label>
     <referenceTo>Game_Session__c</referenceTo>
