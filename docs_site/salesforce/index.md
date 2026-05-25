@@ -8,7 +8,7 @@ In this section:
 
 - [Overview](overview.md) — what lives in Salesforce and why.
 - [Setup](setup.md) — orgs, permission sets, custom metadata.
-- [Data Model](data-model.md) — the 27 custom objects.
+- [Data Model](../data-model/index.md) — the 27 custom objects.
 - [APIs](apis.md) — public Apex REST endpoints exposed via Salesforce Site.
 - [Authentication](authentication.md) — Named Credentials, signing secrets.
 - [Deployment](deployment.md) — sandbox, production, 2GP packaging.

@@ -107,10 +107,26 @@ nav:
           - salesforce/index.md
           - Overview: salesforce/overview.md
           - Setup: salesforce/setup.md
-          - Data Model: salesforce/data-model.md
           - APIs: salesforce/apis.md
           - Authentication: salesforce/authentication.md
           - Deployment: salesforce/deployment.md
+    - Data Model:
+          - data-model/index.md
+          - Conventions & Legend: data-model/conventions.md
+          - Entity Relationship Diagram: data-model/erd.md
+          - Lifecycles: data-model/lifecycles.md
+          - Tenancy & Identity: data-model/tenancy.md
+          - Content & Curation: data-model/content.md
+          - Gameplay: data-model/gameplay.md
+          - Tournaments: data-model/tournaments.md
+          - Engagement & Insights: data-model/engagement.md
+          - Platform & Operations: data-model/platform.md
+    - Question Generation:
+          - generation/index.md
+          - Pipeline: generation/pipeline.md
+          - Production Prompts: generation/prompts.md
+          - Recommended Templates: generation/prompt-templates.md
+          - Import Contract (JSON): generation/import-contract.md
     - Slack:
           - slack/index.md
           - Overview: slack/overview.md

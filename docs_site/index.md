@@ -14,7 +14,7 @@ just the surface.
 
 <div class="ctt-hero__cta" markdown>
 [:material-rocket-launch: Quick start](getting-started/quick-start.md){ .primary }
-[:material-database-outline: Data model](salesforce/data-model.md){ .ghost }
+[:material-database-outline: Data model](data-model/index.md){ .ghost }
 [:simple-github: View on GitHub](https://github.com/sfboss/slack_certification_salesforce_trivia){ .ghost }
 </div>
 
@@ -79,9 +79,13 @@ flowchart LR
 
     Manifest install, scopes, signing secret.
 
-- :material-database: **[Data model](salesforce/data-model.md)**
+- :material-database: **[Data model](data-model/index.md)**
 
-    All 27 custom objects and how they relate.
+    All 27 custom objects, every field, with calculated vs editable distinction and ERDs.
+
+- :material-robot-outline: **[Question generation](generation/index.md)**
+
+    LLM pipeline, prompts in production, and recommended templates for max metadata yield.
 
 - :material-api: **[API reference](api-reference/index.md)**
 
@@ -101,10 +105,10 @@ flowchart LR
 | ----------------------------------- | -------------- | ------------------------------------------------ |
 | **Slack `/certgame` command**       | Players        | [Slash commands](slack/commands.md)              |
 | **Cert Game Manager Lightning app** | Admins         | [User guide → features](user-guide/features.md)  |
-| **27 custom objects**               | Salesforce     | [Data model](salesforce/data-model.md)           |
+| **27 custom objects**               | Salesforce     | [Data model](data-model/index.md)                |
 | **REST endpoints**                  | Slack & Stripe | [Salesforce APIs](salesforce/apis.md)            |
 | **10 Lightning Web Components**     | Admins         | [LWC reference](api-reference/lwc.md)            |
-| **Question generation pipeline**    | Reviewers      | [Workflows](user-guide/workflows.md)             |
+| **Question generation pipeline**    | Reviewers      | [Generation](generation/index.md)                |
 | **Stripe billing webhook**          | Tenants        | [API reference](api-reference/salesforce-api.md) |
 
 ---

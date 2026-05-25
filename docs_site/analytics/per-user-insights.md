@@ -113,7 +113,7 @@ controls the tag, so the messaging stays accurate.
 
 ## Sample data
 
-[`sample_data/adm201-question-pack.enhanced.sample.json`](../../sample_data/adm201-question-pack.enhanced.sample.json)
+[`sample_data/adm201-question-pack.enhanced.sample.json`](https://github.com/sfboss/slack_certification_salesforce_trivia/blob/main/sample_data/adm201-question-pack.enhanced.sample.json)
 shows one fully-tagged question:
 
 - `keywords`, `tags`, `namedEntities`, `glossaryTerms`, `primaryReferenceUrl`
@@ -129,5 +129,6 @@ shows one fully-tagged question:
 - Decay weighting: `Last_Seen_At__c` driving an exponential half-life so stale
   topics don't dominate the cloud.
 
-See [QUESTION_METADATA_ENHANCEMENTS.md](../../QUESTION_METADATA_ENHANCEMENTS.md)
-in the repo root for the full schema diff and migration notes.
+See [Data Model → Engagement & Insights](../data-model/engagement.md)
+for the canonical field reference and [Generation → Import Contract](../generation/import-contract.md)
+for the JSON shape that populates these fields.

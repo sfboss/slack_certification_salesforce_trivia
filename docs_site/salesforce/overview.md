@@ -90,6 +90,6 @@ Plans (`Free`, `Pro`, `Enterprise`) live on `Tenant__c.Plan__c` and feed `Entitl
 
 ## Read next
 
-- [Data model](data-model.md) for object-by-object reference.
+- [Data model](../data-model/index.md) for object-by-object reference.
 - [APIs](apis.md) for HTTP endpoints.
 - [Setup](setup.md) to deploy.
